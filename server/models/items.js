@@ -4,7 +4,7 @@ ItemName:{
     type:String,
     required:[true,"name of item is require"]
 },
-url:{
+src:{
     type:String,
     // require:[true,"item must include picture"]
 },
