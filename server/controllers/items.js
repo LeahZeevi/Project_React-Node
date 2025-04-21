@@ -1,5 +1,6 @@
 const Item = require("../models/items")
-console.log("enter delete");
+const multer = require('multer');
+
 
 // exports.addItem = async (req, res) => {
 //     console.log(req.body);
@@ -11,7 +12,6 @@ console.log("enter delete");
 //     res.json(item)
 // }
 
-const multer = require('multer');
 
 // הגדרת אחסון התמונות
 const storage = multer.diskStorage({
@@ -42,7 +42,6 @@ const uploadPic = multer({
 exports.addItem = async (req, res) => {
   console.log(req.body);
   console.log(req.file); // בודקים את הקובץ שהועלה
-
   // אם לא הועלתה תמונה
   if (!req.file) {
     return res.status(400).json({ message: 'חייבת להיבחר תמונה' });
@@ -50,7 +49,7 @@ exports.addItem = async (req, res) => {
 
   const itemData = {
     ...req.body, // כל הנתונים ששולחים בטופס
-    imageUrl: req.file.path // שמירת הנתיב לתמונה
+    url: req.file.path // שמירת הנתיב לתמונה
   };
 
   try {

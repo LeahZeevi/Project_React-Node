@@ -57,7 +57,7 @@
 // });
 
 
-// // דוגמה לשליפת מזג האוויר עבור תל אביב
+// דוגמה לשליפת מזג האוויר עבור תל אביב
 // getWeather('Jerusalem').then((weather) => {
 //     if (weather) {
 //         console.log(`מזג האוויר ב-${weather.city}:`);
