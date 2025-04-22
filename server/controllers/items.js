@@ -1,20 +1,48 @@
+const { status } = require("express/lib/response");
 const Item = require("../models/items")
+// const { saveImage } = require('../middlware/uploudPic');
+const User = require('../models/users');
 
 exports.addItem = async (req, res) => {
-    console.log(req.body);
-    // const { path :image}=req.file
-    //במידה והניתוב לא נשמר באופן נכו אפשר לעשות כך:
-    //image.replace('\\','/);
-    // console.log(req.file);
-    const item = await Item.create(req.body)
-    res.json(item)
-}
+  console.log("enter add");
+  
+  console.log(req.file);
+     let {ItemName,url,categoryName,season,categoryId,inUse,countWear,style}=req.body
+     if (!req.file) 
+          return res.status(400).send('No file uploaded.');
+      url = req.file.path; // נתיב התמונה ששמרת
 
+  if(!ItemName||!categoryName){
+      return res.status(400).json({message:"ItemName and categoryName is require"})
+  }
+      //lean(): המרה לקריאה בלבד מזרז את תהליך השאילתה
+  const duplicate=await Item.findOne({ItemName:ItemName}).lean()
+  if(duplicate){
+      console.log(duplicate);
+     return res.status(409).json({message:"Dupliacated ItemName"})}
+    
+       const itemObject={ItemName,url:req.file.path,categoryName,season,categoryId,inUse,countWear,style}
+      const item=await Item.create(itemObject)
+
+     if(item)
+             return res.status(201).json({message:`New item ${item.ItemName } created`})
+          else
+          return res.status(400).json({message:`Invalid Item received`})
+      
+          
+      }
+ 
+ 
 exports.getItemById = async (req, res) => {
-    const { _id } = req.params;
-    console.log(_id);
+  // res.status(500).json({ message: "lllllllllllllllllllllllllllllllllllll" })
+  console.log("dfifififififififififififififif");
+  
+  const { _id } = req.params;
+//const { _id } = req.params._id;
+  console.log(_id);
+
     try {
-        const item = await Item.findOne({ _id });
+        const item = await Item.findById({ _id });
         if (!item)
             return res.status(404).json({ message: "not found item " })
         res.json(item);
@@ -45,10 +73,10 @@ exports.getItemsByCategoryId = async (req, res) => {
 }
 
 exports.deletItem= async (req, res) => {
-    const itemId  = req.params.itemId;
-    console.log(itemId);
+    const _id  = req.params;
+    console.log(_id);
     try {
-        const deletedItem = await Item.findOneAndDelete({ itemId: itemId });
+        const deletedItem = await Item.findOneAndDelete({ _id: _id });
         if (!deletedItem)
             return res.status(404).json({ message: "not found item " })
         
@@ -61,21 +89,22 @@ exports.deletItem= async (req, res) => {
 }
 
 exports.updateItem = async (req, res) => {
-    const { itemId } = req.params;
+    const { _id } = req.params;
     const {inUse } = req.body;
-  
+     console.log(inUse);
+     
     try {
-      const updatedItem = await User.findOneAndUpdate(
-        { itemId: itemId }, // עדכון לפי שדה userId
-        { inUse },
+      const updatedItem = await Item.findOneAndUpdate(
+        { _id: _id }, // עדכון לפי שדה userId
+        { inUse:inUse },
         { new: true }
       );
   
       if (!updatedItem) {
-        return res.status(404).json({ message: 'Item not found' });
+        return res.status(404).json({ message: 'Item not found!' });
       }
   
-      res.json(updatedItem);
+      res.status(201).json(updatedItem);
     } catch (error) {
       console.error('Failed to update item:', error);
       res.status(500).json({ message: 'Failed to update item' });
