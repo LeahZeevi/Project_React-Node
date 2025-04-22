@@ -29,3 +29,4 @@ connectDB()
 mongoose.connect(process.env.CONECTION_URL,{useNewUrlParser:true,useUnifiedTopology:true}).then(
     ()=>app.listen(PORT,()=>console.log(`server runing on port ${PORT}`)))
     .catch((error)=>console.log(error.message));
+console.log("|sdifhoe");
