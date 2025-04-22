@@ -5,8 +5,8 @@ const Item=require("../models/items")
 const {addItem,updateItem,getItemById,deletItem, getItemsByCategoryId} =require("../controllers/items");
 const uploudPic = require("../middlwares/uploudPic");
 
-router.post('/',addItem);
-router.get('/:id',uploudPic.single('image'),getItemById);
+router.post('/',uploudPic.single('image'),addItem);
+router.get('/:id',getItemById);
 router.get('/:categoryId',getItemsByCategoryId);
 router.patch('/:id',updateItem);
 router.delete('/:id',deletItem);

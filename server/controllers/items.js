@@ -1,14 +1,33 @@
+const { status } = require("express/lib/response");
 const Item = require("../models/items")
 
+
 exports.addItem = async (req, res) => {
-    console.log(req.body);
-    // const { path :image}=req.file
-    //במידה והניתוב לא נשמר באופן נכו אפשר לעשות כך:
-    //image.replace('\\','/);
-    // console.log(req.file);
-    const item = await Item.create(req.body)
-    res.json(item)
-}
+    console.log(req.file);
+       const {ItemName,url,categoryName,season,categoryId,inUse,countWear,style}=req.body
+     const { path :image}=req.file.path
+
+    if(!ItemName||!categoryName||!season){
+        return res.status(400).json({message:"item with this name is exist"})
+    }
+        //lean(): המרה לקריאה בלבד מזרז את תהליך השאילתה
+    const duplicate=await User.findOne({ItemName:ItemName}).lean()
+    if(duplicate){
+        console.log(duplicate);
+       return res.status(409).json({message:"Dupliacated ItemName"})}
+      
+         const itemObject={ItemName,url:req.file.path,categoryName,season,categoryId,inUse,countWear,style}
+        const item=await Item.create(itemObject)
+
+       if(item)
+               return res,status(201).json({message:`New item ${item.ItemName } created`})
+            else
+            return res,status(400).json({message:`Invalid Item received`})
+        
+            
+        }
+
+
 
 exports.getItemById = async (req, res) => {
     const { _id } = req.params;

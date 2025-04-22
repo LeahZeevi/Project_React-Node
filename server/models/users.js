@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const ItemsSchema  = require('./items');
 const UserSchema = new mongoose.Schema({
     userName: {
         type: String,
@@ -14,7 +15,11 @@ const UserSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        require: [true, "each user need password "]
+        required: [true, "each user need password "]
+    },
+    myWardrobe:{
+        type:[ItemsSchema]
+        
     }
 })
 module.exports = mongoose.model('users', UserSchema);
