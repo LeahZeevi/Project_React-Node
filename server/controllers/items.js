@@ -1,12 +1,7 @@
 const Item = require("../models/items")
 
 exports.addItem = async (req, res) => {
-    console.log(req.body);
-    // const { path :image}=req.file
-    //במידה והניתוב לא נשמר באופן נכו אפשר לעשות כך:
-    //image.replace('\\','/);
-    // console.log(req.file);
-    const item = await Item.create(req.body)
+   
     res.json(item)
 }
 
