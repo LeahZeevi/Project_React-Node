@@ -12,7 +12,7 @@ router.post('/',verifyJWT, uploudPic.single('image'), addItem);  // שימוש �
 router.get('/:id',verifyJWT, getItemById);
 
 // router.get('/:id',uploudPic.single('image'),getItemById);
-router.get('/:categoryId',verifyJWT, getItemsByCategoryId);
+router.get('/:category/:categoryName',verifyJWT, getItemsByCategoryId);
 router.patch('/:id',verifyJWT, updateItem);
 router.delete('/:id',verifyJWT, deletItem);
 
