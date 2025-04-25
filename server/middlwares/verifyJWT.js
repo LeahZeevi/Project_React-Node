@@ -1,11 +1,12 @@
 const jwt=require('jsonwebtoken')
  
  const verifyJWT=(req,res,next)=>{
-     const authHeader=req.headers.authorization||req.geaders.Authorization
-     if(!authHeader?.startsWith('Bearer')){
-         return res.status(401).json({message:'Unautohorized'})
+         const authHeader = req.headers.authorization || req.headers.Authorization;
+
+         if (!authHeader?.startsWith('Bearer')) {
+            return res.status(401).json({message:`Unauthorized ${authHeader}`})
      }
-     const toketn=authHeader.split(' ')[1]
+     const token=authHeader.split(' ')[1]
  
  jwt.verify(token,process.env.ACCESS_TOKEN_SECRET,(err,decoded)=>{
      if(err)
@@ -16,3 +17,11 @@ const jwt=require('jsonwebtoken')
  }
  
  module.exports = verifyJWT;
+
+
+
+
+      
+
+
+

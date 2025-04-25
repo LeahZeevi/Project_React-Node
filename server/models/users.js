@@ -20,7 +20,6 @@ const UserSchema = new mongoose.Schema({
     myWardrobe: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'items' ,// הפניה למודל Items
-        
     }]
 })
 module.exports = mongoose.model('users', UserSchema);
