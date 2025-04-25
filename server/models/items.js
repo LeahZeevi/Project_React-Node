@@ -6,7 +6,7 @@ ItemName:{
 },
 url:{
     type:String,
-    // require:[true,"item must include picture"]
+    //  require:[true,"item must include picture"]
 },
 categoryName:{
     type:String,
