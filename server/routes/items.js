@@ -1,14 +1,14 @@
-const express=require("express")
-const router=express.Router()
-const Item=require("../models/items")
+// const express=require("express")
+// const router=express.Router()
+// const Item=require("../models/items")
  
-const {addItem,updateItem,getItemById,deletItem, getItemsByCategoryId} =require("../controllers/items");
-const uploudPic = require("../middlwares/uploudPic");
+// const {addItem,updateItem,getItemById,deletItem, getItemsByCategoryId} =require("../controllers/items");
+// const uploudPic = require("../middlwares/uploudPic");
 
-router.post('/',uploudPic.single('image'),addItem);
-router.get('/:id',getItemById);
-router.get('/:categoryId',getItemsByCategoryId);
-router.patch('/:id',updateItem);
-router.delete('/:id',deletItem);
+// router.post('/',uploudPic.single('image'),addItem);
+// router.get('/:id',getItemById);
+// router.get('/:categoryId',getItemsByCategoryId);
+// router.patch('/:id',updateItem);
+// router.delete('/:id',deletItem);
 
-module.exports=router;
+// module.exports=router;
