@@ -6,6 +6,8 @@ import { createBrowserRouter } from "react-router"
 import WardrobeLayout from "../components/WardrobeLayout"
 import AppLayout from "../components/AppLayout"
 import AddItem from "../pages/AddItem"
+import Weather from "../pages/Weather"
+
 import GeneralCategory from "../pages/GeneralCategory"
 
 
@@ -17,6 +19,7 @@ import GeneralCategory from "../pages/GeneralCategory"
              element:<UserHomePage/>
         },
         {path:"addItem",element:<AddItem/>},
+        {path:"weather",element:<Weather city="אלעד" />},
         {path:"myWardrobe",element:<WardrobeLayout/>,children:[
             {index:true,element:<MyWardrobe/>},
             {path:":typeCategory",element:<GeneralCategory/>}
