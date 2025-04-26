@@ -1,8 +1,8 @@
-interface Item{
+export interface Item{
     ItemName:String,
     ItemId:String,
-    src:String,
-    description:String,
+    url:String,
+    // description:String,
     categoryName:String,
     season:String,
     categoryId:Number,
@@ -11,7 +11,6 @@ interface Item{
     style:String
 }
 
-export default Item
 
 
 

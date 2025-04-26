@@ -12,7 +12,7 @@
      city: string;
    }
    
-     const A1: React.FC<WeatherAProps> = ({ city }) => {
+     const Weather: React.FC<WeatherAProps> = ({ city }) => {
          const [weather, setWeather] = useState<any>(null); // טיפוס כללי עבור נתוני מזג האוויר
          const [loading, setLoading] = useState<boolean>(true);
          const [error, setError] = useState<string | null>(null);
@@ -43,6 +43,27 @@
    if (error) {
      return <p>{error}</p>;
    }
+   const getWeatherFeeling = (temp: number) => {
+    switch (true) {
+      case temp <= 10:
+        return 'קר מאוד ❄️';
+      case temp > 10 && temp <= 15:
+        return 'קריר 🧥';
+      case temp > 15 && temp <= 20:
+        return 'נעים 🌤️';
+      case temp > 20 && temp <= 25:
+        return 'נעים־חמים 😎';
+      case temp > 25 && temp <= 30:
+        return 'חמים ☀️';
+      case temp > 30 && temp <= 35:
+        return 'חם מאוד 🥵';
+      case temp > 35:
+        return 'חם קיצוני 🔥';
+      default:
+        return 'לא ידוע';
+    }
+  };
+  
  
    return (
      <div>
@@ -50,8 +71,11 @@
        <p>טמפרטורה: {weather.main.temp}°C</p>
        <p>תיאור: {weather.weather[0].description}</p>
        <p>לחות: {weather.main.humidity}%</p>
+
+       {<p>{getWeatherFeeling(weather.main.temp)}</p>}
+       {}
      </div>
    );
  };
  
- export default A1;
+ export default Weather;
