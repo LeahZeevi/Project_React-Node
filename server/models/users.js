@@ -17,9 +17,9 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: [true, "each user need password "]
     },
-    // myWardrobe: [{
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: 'items' ,// הפניה למודל Items
-    // }]
+    myWardrobe: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'items' ,// הפניה למודל Items
+    }]
 })
 module.exports = mongoose.model('users', UserSchema);
