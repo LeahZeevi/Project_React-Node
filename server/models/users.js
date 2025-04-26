@@ -1,25 +1,25 @@
-const mongoose = require('mongoose');
-const ItemsSchema  = require('./items');
-const UserSchema = new mongoose.Schema({
-    userName: {
-        type: String,
-        required: [true, 'UserName is require']
-    },
-    city: {
-        type: String,
-        required: [true, 'city is require']
-    },
-    email: {
-        type: String,
+// const mongoose = require('mongoose');
+// const ItemsSchema  = require('./items');
+// const UserSchema = new mongoose.Schema({
+//     userName: {
+//         type: String,
+//         required: [true, 'UserName is require']
+//     },
+//     city: {
+//         type: String,
+//         required: [true, 'city is require']
+//     },
+//     email: {
+//         type: String,
 
-    },
-    password: {
-        type: String,
-        required: [true, "each user need password "]
-    },
-    myWardrobe:{
-        type:[ItemsSchema]
+//     },
+//     password: {
+//         type: String,
+//         required: [true, "each user need password "]
+//     },
+//     myWardrobe:{
+//         type:[ItemsSchema]
         
-    }
-})
-module.exports = mongoose.model('users', UserSchema);
+//     }
+// })
+// module.exports = mongoose.model('users', UserSchema);
