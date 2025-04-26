@@ -1,3 +1,4 @@
+
 const express=require("express")
 console.log("enter rout");
 
@@ -21,5 +22,4 @@ router.delete('/:_id',deletItem);
 // // router.get('/:categoryId',verifyJWT, getItemsByCategoryId);
 // // router.patch('/:id',verifyJWT, updateItem);
 // // router.delete('/:id',verifyJWT, deletItem);
-
 
