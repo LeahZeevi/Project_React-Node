@@ -10,16 +10,16 @@ console.log("enter rout");
 
 
 
-router.post('/',uploudPic.single('url'),addItem);
-// router.get('/:_id',getItemById);
-router.get('/category/:categoryId',getItemsByCategoryId);
-router.patch('/:_id',updateItem);
-router.delete('/:_id',deletItem);
-// router.post('/',addItem);
-// router.post('/',verifyJWT, uploudPic.single('url'), addItem);  // שימוש במולטר להעלאת תמונה
-// router.get('/:id',verifyJWT, getItemById);
-// router.get('/:categoryId',verifyJWT, getItemsByCategoryId);
-// router.patch('/:id',verifyJWT, updateItem);
-// router.delete('/:id',verifyJWT, deletItem);
+// router.post('/',uploudPic.single('url'),addItem);
+// // router.get('/:_id',getItemById);
+// router.get('/category/:categoryId',getItemsByCategoryId);
+// router.patch('/:_id',updateItem);
+// router.delete('/:_id',deletItem);
+// // router.post('/',addItem);
+// // router.post('/',verifyJWT, uploudPic.single('url'), addItem);  // שימוש במולטר להעלאת תמונה
+// // router.get('/:id',verifyJWT, getItemById);
+// // router.get('/:categoryId',verifyJWT, getItemsByCategoryId);
+// // router.patch('/:id',verifyJWT, updateItem);
+// // router.delete('/:id',verifyJWT, deletItem);
 
 module.exports=router;
