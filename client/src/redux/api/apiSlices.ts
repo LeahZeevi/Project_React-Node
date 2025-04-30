@@ -1,24 +1,10 @@
-// import { createApi, fetchBaseQuery,  } from "@reduxjs/toolkit/query";
-
-// const apiSlice=createApi({
-//     reducerPath:'users',
-//     baseQuery: fetchBaseQuery({baseUrl:'http://localhost:5000'}),
-//     tagTypes:["Users"],
-//     endpoints: () => ({})
-    
-// })
-// export default apiSlice;
-
-
-
-
-import { createApi, fetchBaseQuery,  } from "@reduxjs/toolkit/query";
+import { createApi, fetchBaseQuery,  } from "@reduxjs/toolkit/query/react";
 
 const apiSlice=createApi({
-    reducerPath:'users',
-    baseQuery: fetchBaseQuery({baseUrl:'http://localhost:5000'}),
+    baseQuery:fetchBaseQuery({baseUrl:'http://localhost:3000'}),
+    reducerPath:'api',
+    tagTypes:["Items","Users"],
     endpoints: () => ({})
-    
 })
 export default apiSlice;
 

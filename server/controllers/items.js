@@ -3,9 +3,9 @@ const Item = require("../models/items")
 // const { saveImage } = require('../middlware/uploudPic');
 const User = require('../models/users');
 
+
 exports.addItem = async (req, res) => {
     console.log("enter add");
-
     console.log(req.file);
     let { ItemName, url, categoryName, season, categoryId, inUse, countWear, style } = req.body
     if (!req.file)
@@ -107,3 +107,6 @@ exports.updateItem = async (req, res) => {
         res.status(500).json({ message: 'Failed to update item' });
     }
 };
+
+
+

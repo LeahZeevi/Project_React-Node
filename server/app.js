@@ -9,15 +9,14 @@ const bodyParser = require('body-parser');
 const app=express();
 app.use(bodyParser.json());
 app.use(express.json());
+
 const weatherRouter = require('./routes/weather');
 const userRouter = require('./routes/users')
 const itemsRouter = require('./routes/items')
-
 // const weatherRouter = require('./server/weather');
 const corsOptions=require("./config/corsOptions")
 const connectDB=require("./config/dbConn")
-
-
+app.use(cors(corsOptions))
 const PORT=process.env.PORT;
 console.log(PORT)
 // app.use("/uploadsPic", express.static("uploadsPic")); // תיקיית התמונות
@@ -28,7 +27,6 @@ app.use('/weather', weatherRouter);
 
 
 // app.use('/weather', weatherRouter); // Use the weather router here
-app.use(cors(corsOptions))
 app.use(express.static("public"))
 // app.use("/api/auth",require("./routes/authRouter"))//לא ברור מה החלק הראשון
 connectDB()
