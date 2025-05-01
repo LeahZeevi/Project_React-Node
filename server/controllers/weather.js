@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken")
     // פונקציה לשלוח בקשה ל-API של OpenWeatherMap ולקבל את מזג האוויר
 exports.getWeather = async (req, res) => {
     const city = req.params.city;
-    const apiKey = '47fa8cac82de9fb95d74187722119d68';
+    const apiKey =process.env.apiKey
     const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=he`;
 
     try {

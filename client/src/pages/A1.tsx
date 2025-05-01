@@ -18,13 +18,13 @@
          const [error, setError] = useState<string | null>(null);
        
  
-   const apiKey = '47fa8cac82de9fb95d74187722119d68';  // הכנס את המפתח שלך כאן
-   const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=he`;
+  //  const apiKey = '47fa8cac82de9fb95d74187722119d68';  // הכנס את המפתח שלך כאן
+  //  const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=he`;
  
    useEffect(() => {
      const fetchWeather = async () => {
        try {
-         const response = await axios.get(url);
+         const response = await axios.get(city);
          setWeather(response.data);
          setLoading(false);
        } catch (err) {

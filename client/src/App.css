@@ -15,6 +15,7 @@
   display: flex; /* החלף מ-display: none ל-flex */
   visibility: hidden; /* ברירת מחדל לא להציג */
   opacity: 0; /* ברירת מחדל opacity ל-0 */
+
 }
 
 /* מצב כאשר המודאל פתוח */

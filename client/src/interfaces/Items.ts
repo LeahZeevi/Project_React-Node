@@ -1,6 +1,5 @@
-export interface Item{
+interface Item{
     ItemName:String,
-    ItemId:String,
     url:String,
     // description:String,
     categoryName:String,
@@ -10,10 +9,11 @@ export interface Item{
     countWear:Number,
     style:String
 }
+export default Item
 
 
 
-
+                                                                      
 
 
 

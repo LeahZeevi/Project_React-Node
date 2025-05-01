@@ -1,16 +1,28 @@
-
 import { RouterProvider } from 'react-router'
 import './App.css'
+import { CookiesProvider } from 'react-cookie'
+import Login from './pages/Login'
+import { Provider } from 'react-redux'
+import store from './redux/store'
+import AppRoute from './routes/AppRoute'
 import router from './routes/AppRoute'
-import { CookiesProvider } from 'react-cookie';
+
+
 
 
 function App() {
+
   return (
     <>
-   <CookiesProvider>
-   <RouterProvider router={router}/>
-  </CookiesProvider>
+      <CookiesProvider>
+        <Provider store={store}>
+          <Login />
+          {/* <RouterProvider router={router}> */}
+          {/* <AppRoute ></AppRoute> */}
+
+          {/* </RouterProvider> */}
+        </Provider>
+      </CookiesProvider>
     </>
   )
 }
@@ -25,26 +37,24 @@ export default App
 // import React from 'react';
 // import { useCookies } from 'react-cookie';
 
-// import NameForm from './NameForm';
+// import NameForm from './pages/NameForm';
 
 // interface CookieValues {
 //   name?: string;
 // }
 
 // function App(): React.ReactElement {
-//   const [cookies, setCookie] = useCookies<'name', CookieValues>(['name']);
+//   const [cookies, setCookie] = useCookies(['name']);
 
-//   function onChange(newName: string): void {
-//     setCookie('name', newName);
-//   }
+//   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+//       setCookie('name', event.target.value, { path: '/' });
+//   };
 
 //   return (
-//     <div>
 //       <NameForm name={cookies.name || ''} onChange={onChange} />
-//       {cookies.name && <h1>Hello {cookies.name}!</h1>}
-//     </div>
 //   );
-// }
+// };
+
 
 // export default App;
 

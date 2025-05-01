@@ -2,14 +2,18 @@ const multer = require('multer');
 
 
 const storage = multer.diskStorage({
-    destination: (req, file, callback) => {
- 
-        callback(null,"./public/uploadsPic")
+    destination: (req, file,callback) => {
+      const categoryId = (req.body.categoryId)
+      const uploadPath = `./public/uploadsPic/${categoryId}`;
+  
+      fs.mkdirSync(uploadPath, { recursive: true });
+      callback(null, uploadPath);
     },
-    filename: (req, file, callback) => {
-        callback(null, `${Date.now()}-${file.originalname}`)
-    }
-})
+    filename: (req,file,callback) => {
+      callback(null, `${Date.now()}-${file.originalname}`);
+    },
+  });
+
 const fileFilter = (req, file, callback) => {
     if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png'
         || file.mimetype === 'image/jpg'|| file.mimetype === 'image/JPG') {

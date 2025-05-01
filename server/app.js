@@ -1,23 +1,23 @@
 require("dotenv").config()
-const express=require('express')
-const axios = require('axios');
 const cors=require('cors')
+const express = require('express');
+const multer = require('multer'); // *** הוסף את השורה הזו ***
+const axios = require('axios');
+const fs = require('fs');
+const path = require('path');
 const router = express.Router();
 
+const corsOptions=require("./config/corsOptions")
+const connectDB=require("./config/dbConn")
  const mongoose=require('mongoose')
 const bodyParser = require('body-parser');
-const app=express();
-app.use(bodyParser.json());
-app.use(express.json());
 const weatherRouter = require('./routes/weather');
 const userRouter = require('./routes/users')
 const itemsRouter = require('./routes/items')
-
-// const weatherRouter = require('./server/weather');
-const corsOptions=require("./config/corsOptions")
-const connectDB=require("./config/dbConn")
-
-
+const app=express();
+app.use(bodyParser.json());
+app.use(express.json());
+app.use(cors(corsOptions))
 const PORT=process.env.PORT;
 console.log(PORT)
 // app.use("/uploadsPic", express.static("uploadsPic")); // תיקיית התמונות
@@ -27,13 +27,48 @@ app.use('/items', itemsRouter)
 app.use('/weather', weatherRouter); 
 
 
-// app.use('/weather', weatherRouter); // Use the weather router here
-app.use(cors(corsOptions))
+app.use('/weather', weatherRouter); // Use the weather router here
 app.use(express.static("public"))
 // app.use("/api/auth",require("./routes/authRouter"))//לא ברור מה החלק הראשון
-connectDB()
+
+
+
+//     const storage = multer.diskStorage({
+//         destination: (req, file, cb) => {
+//             cb(null, 'uploads_node');
+//         },
+//         filename: (req, file, cb) => {
+//             const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+//             cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+//         }
+//     });
+    
+//     const upload = multer({ storage: storage });
+
+
+//     app.post('/upload-and-predict', upload.single('image'), async (req, res) => {
+//         // כאן הקוד שמשתמש ב-await
+//         try {
+//             const pythonApiUrl = 'http://localhost:5000/predict';
+//             const formData = new FormData();
+//             formData.append('image', fs.createReadStream(req.file.path), req.file.originalname);
+    
+//             const response = await axios.post(pythonApiUrl, formData, {
+//                 headers: {
+//                     ...formData.getHeaders(),
+//                 },
+//             });
+    
+//             fs.unlinkSync(req.file.path);
+//             res.json(response.data);
+//         } catch (error) {
+//             console.error('Error communicating with Python API:', error);
+//             res.status(500).send('Error classifying image.');
+//         }
+//     });
+
+    connectDB()
 
 mongoose.connect(process.env.CONECTION_URL,{useNewUrlParser:true,useUnifiedTopology:true}).then(
     ()=>app.listen(PORT,()=>console.log(`server runing on port ${PORT}`)))
     .catch((error)=>console.log(error.message));
-
