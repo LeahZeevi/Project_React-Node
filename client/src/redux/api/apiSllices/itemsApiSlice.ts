@@ -7,7 +7,8 @@ export const itemsApiSlice = apiSlices.injectEndpoints({
             query: (newItem) => ({
                 url: "/items",
                 method: "POST",
-                body: newItem
+                body: newItem,
+                
             }),
             invalidatesTags: ["Items"],
         }),

@@ -4,7 +4,9 @@ const allowedOrigins = [
   'http://localhost:7000', 
   'http://localhost:5000',
   'http://localhost:3000' ,
-  'http://localhost:5174'
+  'http://localhost:5174',
+  'http://localhost:5175'
+
 ];
 const corsOptions = {
   origin: function (origin, callback) {

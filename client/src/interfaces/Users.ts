@@ -1,24 +1,19 @@
+import Item from "./Items";
 
 
 export interface Users{
     userName:String,
-    t:String,
+    city:String,
     email:String,
     password:String,
-  
+    myWardrobe:[Item]
 }
 
-export interface  PartialUser  {
+export interface  LoginedUser  {
     userName: string;
     password: string;
  };
- export interface ResponsUser{
-    _id:string,
-    userName:String,
-    city:string,
-    email:string,
-    password:string,
+ export interface TokenCurrentUser{
     aaccessToken:string
-  
 }
 

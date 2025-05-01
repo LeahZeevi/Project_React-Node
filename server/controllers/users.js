@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken")
 
 
 exports.register = async (req, res) => {
-
+    console.log("enter register");
     const { userName, city, email, password, myWardobe } = req.body
 
     if (!userName || !city || !password) {
@@ -22,12 +22,11 @@ exports.register = async (req, res) => {
     const user = await User.create(userObject)
     if (user){
         const accessToken = jwt.sign(userObject, process.env.ACCESS_TOKEN_SECRET)
-        const userInfo = { _id: user._id, userName: user.userName, city: user.city, email: user.email, password: user.password, myWardobe: user.myWardrobe
-            ,accessToken:accessToken
+        // const userInfo = { _id: user._id, userName: user.userName, city: user.city, email: user.email, password: user.password, myWardobe: user.myWardrobe
+        //     ,accessToken:accessToken
+        console.log(accessToken)
+        return res. status(201).json({accessToken })
         }
-        return res. status(201).json({userInfo })
-
-    }
     else
         return res.status(400).json({ message: `Invalid user received` })
 }
@@ -46,11 +45,9 @@ exports.login = async (req, res) => {
         return res.status(401).json({ message: "Unauthhorized2" })
 
       const accessToken = jwt.sign(foundUser, process.env.ACCESS_TOKEN_SECRET)
-    const userInfo = { _id: foundUser._id, userName: foundUser.userName, city: foundUser.city, email: foundUser.email, password: foundUser.password, myWardobe: foundUser.myWardrobe
-        ,accessToken:accessToken
-    }
- 
-    res.json(userInfo)
+    // const userInfo = { _id: foundUser._id, userName: foundUser.userName, city: foundUser.city, email: foundUser.email, password: foundUser.password, myWardobe: foundUser.myWardrobe
+    //     ,accessToken:accessToken
+    res.json(accessToken)
 
 }
 

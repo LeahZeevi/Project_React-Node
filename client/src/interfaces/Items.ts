@@ -1,6 +1,5 @@
 interface Item{
     ItemName:String,
-    ItemId:String,
     url:String,
     // description:String,
     categoryName:String,
@@ -14,7 +13,7 @@ export default Item
 
 
 
-
+                                                                      
 
 
 

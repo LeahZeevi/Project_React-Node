@@ -1,5 +1,5 @@
 import apiSlice from "../apiSlices";
-import {Users,PartialUser, ResponsUser} from "../../../interfaces/Users";
+import {Users,LoginedUser} from "../../../interfaces/Users";
 
 const usersApiSlice=apiSlice.injectEndpoints({
      endpoints:(builder)=>({
@@ -12,7 +12,7 @@ const usersApiSlice=apiSlice.injectEndpoints({
                 }),
                 invalidatesTags: ["Users"]
             }),
-            login: builder.mutation<ResponsUser,PartialUser>({
+            login: builder.mutation<Users,LoginedUser>({
                 query: (partialUser) => ({
                     url:"/users/login",
                     method:"POST",

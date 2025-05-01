@@ -1,23 +1,28 @@
 import { RouterProvider } from 'react-router'
 import './App.css'
-import router from './routes/AppRoute'
 import { CookiesProvider } from 'react-cookie'
 import Login from './pages/Login'
 import { Provider } from 'react-redux'
 import store from './redux/store'
+import AppRoute from './routes/AppRoute'
+import router from './routes/AppRoute'
 
 
 
 
-function App(){
+function App() {
 
   return (
     <>
-    <CookiesProvider>
-      <Provider store={store}>
-     <Login/>
-     </Provider>
-    </CookiesProvider>
+      <CookiesProvider>
+        <Provider store={store}>
+          <Login />
+          {/* <RouterProvider router={router}> */}
+          {/* <AppRoute ></AppRoute> */}
+
+          {/* </RouterProvider> */}
+        </Provider>
+      </CookiesProvider>
     </>
   )
 }
