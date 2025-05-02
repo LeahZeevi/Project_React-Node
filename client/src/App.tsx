@@ -1,6 +1,6 @@
 import { RouterProvider } from 'react-router'
 import './App.css'
-import { CookiesProvider } from 'react-cookie'
+import { CookiesProvider, useCookies } from 'react-cookie'
 import Login from './pages/Login'
 import { Provider } from 'react-redux'
 import store from './redux/store'
@@ -8,21 +8,16 @@ import AppRoute from './routes/AppRoute'
 import router from './routes/AppRoute'
 
 
-
-
 function App() {
-
+  const [cookies] = useCookies(['token'])
   return (
     <>
-      <CookiesProvider>
-        <Provider store={store}>
-          <Login />
-          {/* <RouterProvider router={router}> */}
-          {/* <AppRoute ></AppRoute> */}
-
-          {/* </RouterProvider> */}
-        </Provider>
-      </CookiesProvider>
+      <Provider store={store}>
+        {cookies.token?
+        <RouterProvider router={router}>
+          </RouterProvider>
+          :<Login/>}
+      </Provider>
     </>
   )
 }
