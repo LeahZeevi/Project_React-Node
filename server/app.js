@@ -2,11 +2,6 @@ require("dotenv").config()
 const cors=require('cors')
 const express = require('express');
 const multer = require('multer'); // *** הוסף את השורה הזו ***
-const axios = require('axios');
-const fs = require('fs');
-const path = require('path');
-const router = express.Router();
-
 const corsOptions=require("./config/corsOptions")
 const connectDB=require("./config/dbConn")
  const mongoose=require('mongoose')
@@ -25,9 +20,6 @@ console.log(PORT)
 app.use('/users', userRouter)
 app.use('/items', itemsRouter)
 app.use('/weather', weatherRouter); 
-
-
-app.use('/weather', weatherRouter); // Use the weather router here
 app.use(express.static("public"))
 // app.use("/api/auth",require("./routes/authRouter"))//לא ברור מה החלק הראשון
 
@@ -72,3 +64,10 @@ app.use(express.static("public"))
 mongoose.connect(process.env.CONECTION_URL,{useNewUrlParser:true,useUnifiedTopology:true}).then(
     ()=>app.listen(PORT,()=>console.log(`server runing on port ${PORT}`)))
     .catch((error)=>console.log(error.message));
+
+
+
+    
+
+
+

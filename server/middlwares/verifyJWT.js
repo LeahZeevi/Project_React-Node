@@ -7,6 +7,7 @@ const jwt=require('jsonwebtoken')
             return res.status(401).json({message:`Unauthorized ${authHeader}`})
      }
      const token=authHeader.split(' ')[1]
+ console.log("backend",token);
  
  jwt.verify(token,process.env.ACCESS_TOKEN_SECRET,(err,decoded)=>{
      if(err)

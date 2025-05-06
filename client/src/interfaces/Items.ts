@@ -1,9 +1,9 @@
 interface Item{
-    ItemName:String,
+    itemName:String,
     url:String,
     // description:String,
     categoryName:String,
-    season:String,
+    session:String,
     categoryId:Number,
     inUse:Boolean,
     countWear:Number,

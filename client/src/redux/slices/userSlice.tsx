@@ -5,13 +5,14 @@ import Item from "../../interfaces/Items";
 
 interface CurrentUser {
     currentUser: Users;
+    
   }
 const initialState:Users={
     userName: "",
     city: "",
     email: "",
     password: "",
-    myWardrobe:[{ItemName: "",url: "",categoryName: "", season: "",categoryId: 0,inUse: false,countWear: 0,style: ""}]
+    myWardrobe:[{itemName: "",url: "",categoryName: "", session: "",categoryId: 0,inUse: false,countWear: 0,style: ""}]
 
 }
 const userSlice=createSlice({
