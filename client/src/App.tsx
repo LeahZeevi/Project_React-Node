@@ -17,10 +17,6 @@ function App() {
       <CookiesProvider>
         <Provider store={store}>
           <Login />
-          {/* <RouterProvider router={router}> */}
-          {/* <AppRoute ></AppRoute> */}
-
-          {/* </RouterProvider> */}
         </Provider>
       </CookiesProvider>
     </>
