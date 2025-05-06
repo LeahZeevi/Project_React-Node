@@ -123,7 +123,7 @@ const Login = () => {
         setOpenLogin(false);
         resetLogin()
     };
-
+      
     return (
         <div className='container'>
             {openRegister &&
