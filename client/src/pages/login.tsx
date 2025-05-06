@@ -76,7 +76,6 @@ const Login = () => {
         setOpenLogin(false);
         resetLogin()
     };
-      console.log(typeof cookies.token.data.accessToken);
       
     return (
         <div className='container'>

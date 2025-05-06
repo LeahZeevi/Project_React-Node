@@ -4,7 +4,6 @@ import { CookiesProvider, useCookies } from 'react-cookie'
 import Login from './pages/Login'
 import { Provider } from 'react-redux'
 import store from './redux/store'
-import AppRoute from './routes/AppRoute'
 import router from './routes/AppRoute'
 
 

@@ -120,15 +120,41 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import ItemSchema from "../schemas/ItemSchema";
 
 const AddItem = () => {
-  const { register, handleSubmit, setValue, formState: { errors },control } = useForm({ mode: "onChange" ,resolver:(zodResolver(ItemSchema))});
+  const { register, handleSubmit, setValue, formState: { errors }, control } = useForm({ mode: "onChange", resolver: (zodResolver(ItemSchema)) });
   const [isAlertOpen, setIsAlertOpen] = useState<boolean>(false);
   const [image, setImage] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
+  // const onSubmit = (data: any) => {
+  //   console.log(data);
+  //   setIsAlertOpen(false);
+  // };
+
+
   const onSubmit = (data: any) => {
-    console.log(data);
-    setIsAlertOpen(false);
+    console.log("enter onsubmit");
+    
+    const formData = new FormData();
+    formData.append("itemName", data.itemName);
+    formData.append("categoryName", data.categoryName);
+    formData.append("session", data.session || " ");
+    formData.append("style", data.style || "");
+    if (data.url && data.url[0]) {
+      formData.append("url", data.url[0]); // הקובץ עצמו
+    }
+
+    // הדפסה לבדיקה
+    for (const pair of formData.entries()) {
+      console.log(pair[0], pair[1]);
+    }
+
+    // כאן אפשר לשלוח לשרת:
+    // fetch("/api/items", { method: "POST", body: formData })
+
+    setIsAlertOpen(true);
   };
+
+
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
@@ -149,33 +175,33 @@ const AddItem = () => {
               variant="outlined"
               color='secondary'
               {...register("itemName")}
-              {...errors.itemName && <p style={{color: "red"}}>{errors.itemName.message}</p>}
+              {...errors.itemName && <p style={{ color: "red" }}>{errors.itemName.message}</p>}
               fullWidth
             />
 
-     
-<Controller
-  name="categoryName"
-  control={control} // מגיע מ-useForm
-  defaultValue=""
-  render={({ field }) => (
-    <FormControl fullWidth>
-      <InputLabel id="Category-select-label">קטגוריה</InputLabel>
-      <Select
-        labelId="Category-select-label"
-        id="Category-select"
-        label="קטגוריה"
-        {...field} 
-      >
-        <MenuItem value="חולצות">חולצות</MenuItem>
-        <MenuItem value="חצאיות/מכנסיים">חצאיות/מכנסיים</MenuItem>
-        <MenuItem value="שמלות">שמלות</MenuItem>
-        <MenuItem value="נעלים">נעלים</MenuItem>
-        <MenuItem value="פיג'מות">פיג'מות</MenuItem>
-      </Select>
-    </FormControl>
-  )}
-/>
+
+            <Controller
+              name="categoryName"
+              control={control} // מגיע מ-useForm
+              defaultValue=""
+              render={({ field }) => (
+                <FormControl fullWidth>
+                  <InputLabel id="Category-select-label">קטגוריה</InputLabel>
+                  <Select
+                    labelId="Category-select-label"
+                    id="Category-select"
+                    label="קטגוריה"
+                    {...field}
+                  >
+                    <MenuItem value="חולצות">חולצות</MenuItem>
+                    <MenuItem value="חצאיות/מכנסיים">חצאיות/מכנסיים</MenuItem>
+                    <MenuItem value="שמלות">שמלות</MenuItem>
+                    <MenuItem value="נעלים">נעלים</MenuItem>
+                    <MenuItem value="פיג'מות">פיג'מות</MenuItem>
+                  </Select>
+                </FormControl>
+              )}
+            />
 
             <Button
               variant="outlined"
@@ -185,7 +211,7 @@ const AddItem = () => {
               להוספת התאמת בגדים - הצג את הקטלוג
             </Button>
 
-            <TextField
+            {/* <TextField
               type="file"
               // inputProps={{ accept: 'image/*' }}
               // {...register("url")}
@@ -193,37 +219,58 @@ const AddItem = () => {
               onChange={handleImageChange}
               variant="outlined"
               fullWidth
+            /> */}
+
+            <Controller
+              name="url"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  type="file"
+                  inputProps={{ accept: "image/*" }}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    const fileList = e.target.files;
+                    if (fileList && fileList.length > 0) {
+                      field.onChange(fileList); // שולח את הקובץ ל-form
+                      handleImageChange(e);    // מציג תצוגה מקדימה
+                    }
+                  }}
+                  fullWidth
+                />
+              )}
             />
 
-            <FormControl component="fieldset">
-              <Typography variant="subtitle1" mb={1}>
-                עונה
-              </Typography>
-              <RadioGroup
-                row
-                name="session"
-                defaultValue="חורף"
-              >
-                <FormControlLabel value="חורף" control={<Radio color="secondary" />} label="חורף" />
-                <FormControlLabel value="מעבר" control={<Radio color="secondary" />} label="מעבר" />
-                <FormControlLabel value="קיץ" control={<Radio color="secondary" />} label="קיץ" />
-              </RadioGroup>
-            </FormControl>
+            <Controller
+              name="season"
+              control={control}
+              defaultValue="חורף"
+              render={({ field }) => (
+                <RadioGroup row {...field}>
+                  <FormControlLabel value="חורף" control={<Radio color="secondary" />} label="חורף" />
+                  <FormControlLabel value="מעבר" control={<Radio color="secondary" />} label="מעבר" />
+                  <FormControlLabel value="קיץ" control={<Radio color="secondary" />} label="קיץ" />
+                </RadioGroup>
+              )}
+            />
 
-            <FormControl fullWidth>
-              <InputLabel>סגנון</InputLabel>
-              <Select
-                label="סגנון"
-                id="style"
-                sx={{ minWidth: '5cm' }}
-              >
-                <MenuItem value={"ביסיק"}>ביסיק</MenuItem>
-                <MenuItem value={"ספורט"}>ספורט</MenuItem>
-                <MenuItem value={"ספורט אלגנט"}>ספורט אלגנט</MenuItem>
-                <MenuItem value={"אלגנט"}>אלגנט</MenuItem>
-                <MenuItem value={"אחר"}>אחר</MenuItem>
-              </Select>
-            </FormControl>
+
+            <Controller
+              name="style"
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <FormControl fullWidth>
+                  <InputLabel>סגנון</InputLabel>
+                  <Select label="סגנון" {...field}>
+                    <MenuItem value="ביסיק">ביסיק</MenuItem>
+                    <MenuItem value="ספורט">ספורט</MenuItem>
+                    <MenuItem value="ספורט אלגנט">ספורט אלגנט</MenuItem>
+                    <MenuItem value="אלגנט">אלגנט</MenuItem>
+                    <MenuItem value="אחר">אחר</MenuItem>
+                  </Select>
+                </FormControl>
+              )}
+            />
 
             {image && (
               <Box>
@@ -239,8 +286,7 @@ const AddItem = () => {
               fullWidth
             >
               הוספה לארון
-            </Button>
-
+            </Button >
             {isAlertOpen && <AddItem_Alert setIsAlertOpen={setIsAlertOpen} isAlertOpen={isAlertOpen} />}
           </Stack>
         </form>
