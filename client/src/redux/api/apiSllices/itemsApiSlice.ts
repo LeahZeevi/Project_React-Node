@@ -22,7 +22,7 @@ export const itemsApiSlice = apiSlices.injectEndpoints({
         }),
         updateItem: builder.mutation<void,Item>({
             query: (updateItem) => ({
-                url: `/${updateItem.ItemId}`,
+                url: `/${updateItem.ItemName}`,
                 method: "PATCH",
                 body: updateItem
             }),
