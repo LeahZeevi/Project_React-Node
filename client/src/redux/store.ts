@@ -3,7 +3,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import apiSlice from "./api/apiSlices";
 import userSlice from "./slices/userSlice";
 import itemsSlice from "./slices/itemsSlice";
-import apiSliceCookies from "./slices/apiSliceCookies";
+import apiSliceCookies from "./api/apiSllices/apiSliceCookies";
 
 const store=configureStore({
 reducer:{

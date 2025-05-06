@@ -11,12 +11,20 @@ function App() {
   const [cookies] = useCookies(['token'])
   return (
     <>
+<<<<<<< HEAD
       <Provider store={store}>
         {cookies.token?
         <RouterProvider router={router}>
           </RouterProvider>
           :<Login/>}
       </Provider>
+=======
+      <CookiesProvider>
+        <Provider store={store}>
+          <Login />
+        </Provider>
+      </CookiesProvider>
+>>>>>>> 95375ad26a4c5d60aac0c92024e8bd78b9e67144
     </>
   )
 }
