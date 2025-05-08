@@ -68,6 +68,24 @@ mongoose.connect(process.env.CONECTION_URL,{useNewUrlParser:true,useUnifiedTopol
 
 
     
-
+    const { execFile } = require("child_process");
+    const path = require("path");
+    const fs = require("fs");
+    
+    const upload = multer({ dest: "public/uploadsPic/" });
+    
+    app.post("/upload", upload.single("image"), (req, res) => {
+      const imagePath = path.resolve(req.file.path);
+    
+      execFile("python3", ["predict.py", imagePath], (err, stdout, stderr) => {
+        fs.unlinkSync(imagePath); // מוחקים את הקובץ הזמני
+    
+        if (err) {
+          return res.status(500).send("Error running prediction");
+        }
+    
+        res.json({ label: stdout.trim() });
+      });
+    });
 
 

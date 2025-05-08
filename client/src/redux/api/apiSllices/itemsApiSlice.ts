@@ -3,16 +3,16 @@ import Item from "../../../interfaces/Items";
 
 export const itemsApiSlice = apiSlices.injectEndpoints({
     endpoints: (builder) => ({
-        getAllItems: builder.mutation<Item[],void>({
-            query: () => ({
-                url: "/items",
+        initialAllItems: builder.mutation<Item[],void>({
+            query: (_id) => ({
+                url: "/items/",
                 method: "GET",
             }),
             invalidatesTags: ["Items"],
         }),
-        addItem: builder.mutation<string,FormData>({
-            query: (newItem) => ({
-                url: "/items",
+        addItem: builder.mutation<string,{ _id:string, newItem: FormData }>({
+            query: ({ _id, newItem }: { _id: string; newItem: FormData }) => ({
+                url: `/items/${_id}`,
                 method: "POST",
                 body: newItem,
                 formData: true,
@@ -48,7 +48,7 @@ export const itemsApiSlice = apiSlices.injectEndpoints({
 })
 export const {
     useAddItemMutation,
-    useGetAllItemsMutation,
+    useInitialAllItemsMutation,
     useGetItemByIdQuery,
     useGetItemsByCategoryIdQuery,
     useUpdateItemMutation,

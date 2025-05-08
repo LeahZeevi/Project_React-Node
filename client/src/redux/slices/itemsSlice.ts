@@ -2,19 +2,14 @@ import { createSelector, createSlice } from "@reduxjs/toolkit"
 import Item from "../../interfaces/Items";
 import { useSelector } from "react-redux";
 import { use } from "react";
-import { useGetAllItemsMutation } from "../api/apiSllices/itemsApiSlice";
+import { useInitialAllItemsMutation } from "../api/apiSllices/itemsApiSlice";
 interface ItemsState {
     itemsList: Item[];
 }
     
-   const fetchItems = async (): Promise<Item[]> => {
-    const [getAllItemsMutation] = useGetAllItemsMutation();
-    const response = await getAllItemsMutation().unwrap();
-    return response || [];
-   };
 
-const initialState:  Promise<Item[]> = {
-    itemsList: fetchItems(),
+const initialState: ItemsState = {
+    itemsList: []
 };
     
     // const items=use

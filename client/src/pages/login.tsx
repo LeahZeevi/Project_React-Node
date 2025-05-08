@@ -93,6 +93,7 @@ const Login = () => {
             if (token) {
                 const currentUser: Users = jwtDecode<Users>(token);
                 setCookies("token", token, { path: "/", maxAge: 3600 * 24 * 7 });
+                alert(currentUser.userName)
                 setOpenRegister(false);
                 setSend(true);
                 resetRegister();
@@ -113,6 +114,7 @@ const Login = () => {
 
             const response = await loginUser(user);
             const currentUser: Users = jwtDecode<Users>(JSON.stringify(response));
+            alert(currentUser.userName)
             dispatch(setCurrentUser(currentUser))
             console.log(currentUser);
             
