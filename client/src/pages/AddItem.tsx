@@ -118,6 +118,7 @@ import { useState } from "react";
 import Item from "../interfaces/Items";
 import { zodResolver } from "@hookform/resolvers/zod";
 import ItemSchema from "../schemas/ItemSchema";
+
 import { useAddItemMutation } from '../redux/api/apiSllices/itemsApiSlice';
 import { useNavigate } from "react-router";
 
@@ -134,6 +135,7 @@ const AddItem = () => {
   const onSubmit =  async(data:any) => {
     console.log("enter onsubmit");
    console.log(data);
+
     
     const formData = new FormData();
     formData.append("itemName", data.itemName);
@@ -163,6 +165,9 @@ const AddItem = () => {
          }
         }; 
 
+
+
+
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       setImage(URL.createObjectURL(event.target.files[0]));
@@ -187,6 +192,7 @@ const AddItem = () => {
             {errors.itemName && <p style={{ color: "red" }}>{errors.itemName.message}</p>}
 
 
+
             <Controller
               name="categoryName"
               control={control} // מגיע מ-useForm
@@ -199,6 +205,7 @@ const AddItem = () => {
                     id="Category-select"
                     label="קטגוריה"
                     {...register("categoryName")}
+
                     {...field}
                   >
                     <MenuItem value="חולצות">חולצות</MenuItem>
@@ -222,6 +229,7 @@ const AddItem = () => {
         
 
              <Controller
+
               control={control}
               render={({ field }) => (
                 <TextField
@@ -237,10 +245,12 @@ const AddItem = () => {
                   fullWidth
                 />
               )}
+
               {...register("url")}
             />
 
             <Controller
+
               control={control}
               defaultValue="חורף"
               render={({ field }) => (
@@ -250,11 +260,15 @@ const AddItem = () => {
                   <FormControlLabel value="קיץ" control={<Radio color="secondary" />} label="קיץ" />
                 </RadioGroup>
               )}
+
               {...register("session")}
+
             />
 
 
             <Controller
+
+
               control={control}
               defaultValue=""
               render={({ field }) => (
@@ -268,9 +282,11 @@ const AddItem = () => {
                     <MenuItem value="אחר">אחר</MenuItem>
                   </Select>
                 </FormControl>
+
             
               )}
               {...register("style")}
+
             />
 
             {image && (
@@ -289,6 +305,7 @@ const AddItem = () => {
               הוספה לארון
             </Button >
             {isAlertOpen && <AddItem_Alert setIsAlertOpen={setIsAlertOpen} isAlertOpen={isAlertOpen} />}
+
           </Stack> 
         </form> 
 

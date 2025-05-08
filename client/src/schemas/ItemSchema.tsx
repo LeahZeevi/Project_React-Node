@@ -9,6 +9,7 @@ const ItemSchema = z.object({
   }),
   categoryName: z.string(),
   session: z.string().optional().nullable(),
+
   style: z.string(),
 });
 
