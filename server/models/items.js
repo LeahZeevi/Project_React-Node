@@ -1,6 +1,6 @@
 const mongoose=require('mongoose');
 const ItemsSchema=new mongoose.Schema({
-ItemName:{
+itemName:{
     type:String,
     required:[true,"name of item is require"]
 },
@@ -10,7 +10,7 @@ url:{
 },
 categoryName:{
     type:String,
-    enum:["חולצות","מכנסיים/חצאיות","שמלות","פיז'מות","נעלים"],
+    enum:["חולצות","חצאיות/מכנסיים","שמלות","פיז'מות","נעלים"],
     require:[true,"Item nust include category"] 
 },
 season:{

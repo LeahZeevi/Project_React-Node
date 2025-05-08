@@ -7,8 +7,6 @@ const MyWardrobe = () => {
   const handleChooseType = (typeItem: string) => {
     // alert(typeItem)
     setTypeCategory(typeItem)
-    alert(typeItem)
-
   }
 
   return (

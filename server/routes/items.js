@@ -5,12 +5,12 @@ console.log("enter rout");
 const router=express.Router()
  const Item=require("../models/items")
 const verifyJWT=require("../middlwares/verifyJWT")
-const {addItem,updateItem,getItemById,deletItem, getItemsByCategoryId} =require("../controllers/items");
+const {addItem,updateItem,getItemById,deletItem, getItemsByCategoryId, getAllItems} =require("../controllers/items");
 const uploudPic = require("../middlwares/uploudPic");
 console.log("enter rout");
 
 
-
+router.get('/',verifyJWT,getAllItems);
 router.post('/',verifyJWT,uploudPic.single('url'),addItem);
 router.get('/:_id',verifyJWT,getItemById);
 router.get('/category/:categoryId',verifyJWT,getItemsByCategoryId);

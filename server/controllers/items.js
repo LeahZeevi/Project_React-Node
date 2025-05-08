@@ -6,31 +6,48 @@ const User = require('../models/users');
 
 exports.addItem = async (req, res) => {
     console.log("enter add");
-    console.log(req.file);
-    let { ItemName, url, categoryName, season, categoryId, inUse, countWear, style } = req.body
+    console.log(req);
+    let { itemName, url, categoryName, season, categoryId, inUse, countWear, style } = req.body
     if (!req.file)
         return res.status(400).send('No file uploaded.');
     url = req.file.path; // נתיב התמונה ששמרת
 
-    if (!ItemName || !categoryName) {
+    if (!itemName || !categoryName) {
         return res.status(400).json({ message: "ItemName and categoryName is require" })
     }
     //lean(): המרה לקריאה בלבד מזרז את תהליך השאילתה
-    const duplicate = await Item.findOne({ ItemName: ItemName }).lean()
+    const duplicate = await Item.findOne({ itemName: itemName }).lean()
     if (duplicate) {
         console.log(duplicate);
         return res.status(409).json({ message: "Dupliacated ItemName" })
     }
 
-    const itemObject = { ItemName, url: req.file.path, categoryName, season, categoryId, inUse, countWear, style }
+    const itemObject = { itemName, url: req.file.path, categoryName, season, categoryId, inUse, countWear, style }
     const item = await Item.create(itemObject)
 
     if (item)
-        return res.status(201).json({ message: `New item ${item.ItemName} created` })
+        return res.status(201).json({ message: `New item ${item.itemName} created` })
     else
         return res.status(400).json({ message: `Invalid Item received` })
 }
 
+exports.getAllItems = async (req, res) => {
+
+
+    try {
+        const items = await Item.getAllItems();
+        if (!items)
+            return res.status(404).json({ message: "not found items " })
+        res.json(items);
+
+    }
+    catch (error) {
+
+        console.log('Failed to get items ', error);
+        res.status(500).json({ message: "Failed to get items  " })
+    }
+
+}
 
 exports.getItemById = async (req, res) => {
 

@@ -114,6 +114,8 @@ const Login = () => {
             const response = await loginUser(user);
             const currentUser: Users = jwtDecode<Users>(JSON.stringify(response));
             dispatch(setCurrentUser(currentUser))
+            console.log(currentUser);
+            
             setCookies("token", response, { path: "/", maxAge: 3600 * 24 * 7 });
         }
         catch (error) {

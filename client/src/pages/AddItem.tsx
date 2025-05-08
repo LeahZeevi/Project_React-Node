@@ -119,20 +119,23 @@ import Item from "../interfaces/Items";
 import { zodResolver } from "@hookform/resolvers/zod";
 import ItemSchema from "../schemas/ItemSchema";
 
+import { useAddItemMutation } from '../redux/api/apiSllices/itemsApiSlice';
+import { useNavigate } from "react-router";
+
+
 const AddItem = () => {
-  const { register, handleSubmit, setValue, formState: { errors }, control } = useForm({ mode: "onChange", resolver: (zodResolver(ItemSchema)) });
+  const { register, handleSubmit, formState: { errors }, control,reset } = useForm({ mode: "onChange", resolver: zodResolver(ItemSchema) });
   const [isAlertOpen, setIsAlertOpen] = useState<boolean>(false);
   const [image, setImage] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-
-  // const onSubmit = (data: any) => {
-  //   console.log(data);
-  //   setIsAlertOpen(false);
-  // };
+  const navigate = useNavigate();
+    const [addItem] = useAddItemMutation();
 
 
-  const onSubmit = (data: any) => {
+  const onSubmit =  async(data:any) => {
     console.log("enter onsubmit");
+   console.log(data);
+
     
     const formData = new FormData();
     formData.append("itemName", data.itemName);
@@ -142,17 +145,26 @@ const AddItem = () => {
     if (data.url && data.url[0]) {
       formData.append("url", data.url[0]); // הקובץ עצמו
     }
+    
+   
+       try {
+         const response = await addItem(formData).unwrap();
+         console.log(response);
+         setImage(null); // איפוס התמונה לאחר ההצלחה
+        reset({
+          itemName: '',
+          categoryName: '',
+          session: 'חורף', // או ערך ברירת מחדל אחר
+          style: '',
+          url: "",
+        }); 
+        // איפוס הטופס לאחר הצלחה
+        navigate("/"); // ניווט לדף הבית או דף אחר
+         } catch (error) {
+         console.error("שגיאה בהוספת פריט:", error);
+         }
+        }; 
 
-    // הדפסה לבדיקה
-    for (const pair of formData.entries()) {
-      console.log(pair[0], pair[1]);
-    }
-
-    // כאן אפשר לשלוח לשרת:
-    // fetch("/api/items", { method: "POST", body: formData })
-
-    setIsAlertOpen(true);
-  };
 
 
 
@@ -175,9 +187,10 @@ const AddItem = () => {
               variant="outlined"
               color='secondary'
               {...register("itemName")}
-              {...errors.itemName && <p style={{ color: "red" }}>{errors.itemName.message}</p>}
               fullWidth
             />
+            {errors.itemName && <p style={{ color: "red" }}>{errors.itemName.message}</p>}
+
 
 
             <Controller
@@ -191,6 +204,8 @@ const AddItem = () => {
                     labelId="Category-select-label"
                     id="Category-select"
                     label="קטגוריה"
+                    {...register("categoryName")}
+
                     {...field}
                   >
                     <MenuItem value="חולצות">חולצות</MenuItem>
@@ -211,18 +226,10 @@ const AddItem = () => {
               להוספת התאמת בגדים - הצג את הקטלוג
             </Button>
 
-            {/* <TextField
-              type="file"
-              // inputProps={{ accept: 'image/*' }}
-              // {...register("url")}
-              // {...errors.url && <p style={{color: "red"}}>{errors.url.message}</p>}
-              onChange={handleImageChange}
-              variant="outlined"
-              fullWidth
-            /> */}
+        
 
-            <Controller
-              name="url"
+             <Controller
+
               control={control}
               render={({ field }) => (
                 <TextField
@@ -238,10 +245,12 @@ const AddItem = () => {
                   fullWidth
                 />
               )}
+
+              {...register("url")}
             />
 
             <Controller
-              name="season"
+
               control={control}
               defaultValue="חורף"
               render={({ field }) => (
@@ -251,11 +260,15 @@ const AddItem = () => {
                   <FormControlLabel value="קיץ" control={<Radio color="secondary" />} label="קיץ" />
                 </RadioGroup>
               )}
+
+              {...register("session")}
+
             />
 
 
             <Controller
-              name="style"
+
+
               control={control}
               defaultValue=""
               render={({ field }) => (
@@ -269,7 +282,11 @@ const AddItem = () => {
                     <MenuItem value="אחר">אחר</MenuItem>
                   </Select>
                 </FormControl>
+
+            
               )}
+              {...register("style")}
+
             />
 
             {image && (
@@ -288,8 +305,10 @@ const AddItem = () => {
               הוספה לארון
             </Button >
             {isAlertOpen && <AddItem_Alert setIsAlertOpen={setIsAlertOpen} isAlertOpen={isAlertOpen} />}
-          </Stack>
-        </form>
+
+          </Stack> 
+        </form> 
+
       </Paper>
     </Box>
   );
