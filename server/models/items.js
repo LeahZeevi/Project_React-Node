@@ -18,9 +18,9 @@ type:String,
 enum:["חורף","קיץ","כללי"],
 default:"כללי"
 },
-categoryId:{
-type:Number
-},
+// categoryId:{
+// type:Number
+// },
 inUse:{
 type:Boolean,
 default:false

@@ -10,8 +10,8 @@ const uploudPic = require("../middlwares/uploudPic");
 console.log("enter rout");
 
 
-router.get('/',verifyJWT,getAllItems);
-router.post('/',verifyJWT,uploudPic.single('url'),addItem);
+// router.get('/',verifyJWT,getAllItems);
+router.post('/:_id',verifyJWT,uploudPic.single('url'),addItem);
 router.get('/:_id',verifyJWT,getItemById);
 router.get('/category/:categoryId',verifyJWT,getItemsByCategoryId);
 router.patch('/:_id',verifyJWT,updateItem);
