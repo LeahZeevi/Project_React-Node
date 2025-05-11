@@ -4,69 +4,52 @@ const Item=require("../models/items")
 // const { saveImage } = require('../middlware/uploudPic');
 
 
-exports.addItem = async (req, res) => {
-   
 
+exports.addItem = async (req, res) => {
+    console.log("enter addItem");
 
     const { _id } = req.params;
-    let { itemName, url, categoryName, season, inUse, countWear, style } = req.body
-    if (!req.file)
+    let { itemName, url, categoryName, session, inUse, countWear, style } = req.body;
+    let imageUrl = null;
+
+    if (req.file) {
+        imageUrl = req.file.path; // נתיב התמונה ש-multer שמר
+    } else {
         return res.status(400).send('No file uploaded.');
-    url = req.file.path; // נתיב התמונה ששמרת
+    }
 
     if (!itemName || !categoryName) {
-        return res.status(400).json({ message: "ItemName and categoryName is require" })
+        return res.status(400).json({ message: "ItemName and categoryName are required" });
     }
-
-    //lean(): המרה לקריאה בלבד מזרז את תהליך השאילתה
-    const duplicate = await User.findOneAndUpdate({ itemName: itemName }).lean()
-    if (duplicate) {
-        console.log(duplicate);
-        return res.status(409).json({ message: "Dupliacated ItemName" })
-    }
-
-
-    // const itemObject = { itemName, url: req.file.path, categoryName, season, categoryId, inUse, countWear, style }
-    // const item = await Item.create(itemObject)
-
-    // if (item)
-    //     return res.status(201).json({ message: `New item ${item.itemName} created` })
-    // else
-    //     return res.status(400).json({ message: `Invalid Item received` })
 
     try {
-        const updatedUser = await User.findOneAndUpdate(
-            { _id: _id },
-            {
-                $push: {
-                    myWardrobe: {
-                        itemName,
-                        url: imageUrl,
-                        categoryName,
-                        season,
-                        inUse,
-                        countWear,
-                        style
-                    }
-                }
-            },
-            { new: true, runValidators: true } // new: true כדי לקבל את המשתמש המעודכן, runValidators להפעלת ולידציות של הסכמה
-        );
-    
-        if (!updatedUser) {
+        const user = await User.findById(_id); // השתמש ב-findById כדי למצוא משתמש
+        if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
-    
-        return res.status(200).json(updatedUser.myWardrobe); // או res.status(200).json(updatedUser);
+
+        // כעת, לאחר שמצאנו את המשתמש, נוסיף את הפריט לארון שלו
+        user.myWardrobe.push({
+            itemName,
+            url: imageUrl,
+            categoryName,
+            session,
+            inUse,
+            countWear,
+            style
+        });
+
+        const updatedUser = await user.save(); // שמור את השינויים במשתמש
+
+        return res.status(200).json(updatedUser.myWardrobe);
+
     } catch (error) {
         console.error("Error adding item to wardrobe:", error);
         return res.status(500).json({ message: "Failed to add item to wardrobe" });
     }
-}
+};
 
-
-
-exports.getItemById = async (req, res) => {
+exports.getItemsByUserId = async (req, res) => {
 
     const { _id } = req.params;
     //const { _id } = req.params._id;
@@ -146,20 +129,20 @@ exports.updateItem = async (req, res) => {
 
 //לקבלת כל הפרטים לכאורה מיותר
 
-// exports.getAllItems = async (req, res) => {
+exports.getAllItems = async (req, res) => {
 
 
-//     try {
-//         const items = await Item.getAllItems();
-//         if (!items)
-//             return res.status(404).json({ message: "not found items " })
-//         res.json(items);
+    try {
+        const items = await Item.getAllItems();
+        if (!items)
+            return res.status(404).json({ message: "not found items " })
+        res.json(items);
 
-//     }
-//     catch (error) {
+    }
+    catch (error) {
 
-//         console.log('Failed to get items ', error);
-//         res.status(500).json({ message: "Failed to get items  " })
-//     }
+        console.log('Failed to get items ', error);
+        res.status(500).json({ message: "Failed to get items  " })
+    }
 
-// }
+}

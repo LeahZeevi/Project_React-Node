@@ -3,6 +3,7 @@ import { use } from "react";
 import { useCookies } from "react-cookie";
 import { Users } from "../../interfaces/Users";
 // import jwtDecode from "jwt-decode";
+{console.log('apiSlice')};
 
 const apiSlice=createApi({
 

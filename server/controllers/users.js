@@ -5,6 +5,8 @@ const jwt = require("jsonwebtoken")
 const iconv = require('iconv-lite');
 const fs = require('fs')
 const csv = require('csv-parser');
+const path = require('path');
+
 
 // exports.register = async (req, res) => {
 //     console.log("enter register");
@@ -99,6 +101,8 @@ exports.getUserByPassword = async (req, res) => {
 }
 
 exports.getAllCities=async(req, res) => {
+    console.log("enter getAllCities");
+    
     const results = [];
     const columnName = "cityName"; // שם העמודה שאתה רוצה לשלוף
        await fs.createReadStream('./cities.csv') // קריאת הנתונים מהקובץ כזרם
@@ -118,3 +122,26 @@ exports.getAllCities=async(req, res) => {
         res.status(500).json({ error: 'אירעה שגיאה בעת קריאת קובץ ה-CSV' });
       });
   };
+//   exports.getMyPIc=(req, res) => {
+// const path = require('path');
+// const fs = require('fs');
+
+exports.getMyPIc = (req, res) => {
+
+exports.getMyPIc = (req, res) => {
+  const { url } = req.params;
+  console.log('שם הקובץ המתקבל:', url);
+
+  const imagesDir = path.join("public", "uploadsPic"); // תיקיית uploadsPic ישירות בתוך public
+  const imagePath = path.join(imagesDir, url);
+  console.log('נתיב מלא לתמונה:', imagePath);
+
+  if (!fs.existsSync(imagePath)) {
+    console.log('התמונה לא נמצאה בנתיב:', imagePath);
+    return res.status(404).send('התמונה לא נמצאה');
+  }
+
+  res.sendFile(imagePath);
+};
+}
+  
