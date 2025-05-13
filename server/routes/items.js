@@ -1,13 +1,13 @@
 
 const express=require("express")
-console.log("enter rout");
+
 
 const router=express.Router()
  const Item=require("../models/items")
 const verifyJWT=require("../middlwares/verifyJWT")
 const {addItem,updateItem,getItemById,deletItem, getItemsByCategoryId, getAllItems} =require("../controllers/items");
 const uploudPic = require("../middlwares/uploudPic");
-console.log("enter rout");
+
 
 
 // router.get('/',verifyJWT,getAllItems);

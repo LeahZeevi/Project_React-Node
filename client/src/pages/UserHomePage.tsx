@@ -48,9 +48,9 @@ const UserHomePage = () => {
     const [cookies] = useCookies(['token']);
     let user = useSelector(selectUser);
     const dispatch = useDispatch();
-
-    //   useEffect(() => {
-    const updateStateCurrentUser = () => {
+    console.log(user);
+    
+    useEffect(() => {
         if (!user || !user.userName) {
             const userToken = cookies.token;
             if (userToken) {
@@ -64,11 +64,14 @@ const UserHomePage = () => {
                 }
             }
         }
+    },[cookies.token])
+    const updateStateCurrentUser = () => {
+
     }
     updateStateCurrentUser();
-        let lytdt = useSelector(selectUser);
-        console.log(lytdt );
-        
+    let lytdt = useSelector(selectUser);
+    console.log(lytdt);
+
 
     //   }, []);
     return (

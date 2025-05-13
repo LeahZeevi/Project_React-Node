@@ -3,7 +3,7 @@ import Item from "./Items";
 
 
 export interface Users{
-    _id:string
+    // _id:string
     userName:String,
     city:String,
     email:String,

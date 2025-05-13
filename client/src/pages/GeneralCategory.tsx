@@ -98,7 +98,7 @@ const GeneralCategory = () => {
                 <CardMedia
                   component="img"
                   height="140"
-                  image={`http://localhost:5000/${item.url.replace(/^public[\\/]/, '')}`}
+                  image={`http://localhost:3000/${item.url.replace(/^public[\\/]/, '')}`}
                   alt={item.itemName as string}
                 />
                 <CardContent>

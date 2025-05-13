@@ -1,47 +1,4 @@
-// import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-// import { Users } from "../../interfaces/Users"
-// import reducer from "./itemsSlice";
-// import Item from "../../interfaces/Items";
 
-
-// interface CurrentUserState {
-//   currentUser: Users;
-// }
-
-// const initialState: CurrentUserState = {
-//   currentUser: {
-//     userName: "",
-//     city: "",
-//     email: "",
-//     password: "",
-//     myWardrobe: [] as Item[], // ⬅️ פשוט רשימה ריקה עם טיפוס
-//     _id: ""
-//   }
-// };
-
-// const userSlice=createSlice({
-//     name:"users",
-//     initialState,
-//     reducers:{
-//         setCurrentUser(state:Users,action:PayloadAction<Users>){
-//              state=action.payload
-//              console.log("state in setCurrentUser",state);
-             
-//         }
-
-
-//     }
-    
-// })
-// export const {setCurrentUser}=userSlice.actions
-
-// export const selectUserWardrobe = (state:CurrentUser) => state.currentUser.myWardrobe
-// export const selectUser = (state:CurrentUser) => state.currentUser
-
-
-// export const select = (state:CurrentUser) => state.currentUser.myWardrobe
-
-// export default userSlice.reducer
 
 import { createSelector, createSlice, current, PayloadAction } from "@reduxjs/toolkit";
 import { Users } from "../../interfaces/Users";
@@ -58,7 +15,7 @@ const initialState: CurrentUserState = {
     email: "",
     password: "",
     myWardrobe: [{} as Item],
-    _id: ""
+    // _id: ""
   }
 };
 

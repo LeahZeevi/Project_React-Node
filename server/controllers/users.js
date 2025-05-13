@@ -82,12 +82,11 @@ exports.login = async (req, res) => {
 }
 
 
-exports.getUserByPassword = async (req, res) => {
+exports.getUserById = async (req, res) => {
     const { _id } = req.params
-
     console.log(_id);
     try {
-        const user = await User.findOne({ _id })
+        const user = await User.findOne({ _id})
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }

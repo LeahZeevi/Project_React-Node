@@ -8,7 +8,7 @@ import { Users } from "../../interfaces/Users";
 const apiSlice=createApi({
 
   baseQuery:fetchBaseQuery({
-      baseUrl:'http://localhost:5000',
+      baseUrl:'http://localhost:3000',
     prepareHeaders: (headers) => {
       const token = getCookie('token');
       console.log('Token from cookie:', token);
