@@ -7,7 +7,7 @@ const cookies = new Cookies();
 const apiSliceCookies = createApi({
   reducerPath: "cookies",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:5000",
+    baseUrl: "http://localhost:3000",
     credentials: "include",
     prepareHeaders: (headers) => {
       const token = cookies.get("token");

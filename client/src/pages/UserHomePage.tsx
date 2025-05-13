@@ -1,34 +1,84 @@
-import {  useEffect } from "react";
-import { Users } from "../interfaces/Users";
-import { jwtDecode } from "jwt-decode";
-import { useCookies } from "react-cookie";
-import { current } from "@reduxjs/toolkit";
+// import { useEffect, useState } from 'react'
+// import { useSelector } from 'react-redux';
+// import { useDispatch } from 'react-redux';
+// import { selectUser, setCurrentUser } from '../redux/slices/userSlice';
+// import { useCookies } from 'react-cookie';
+// import { jwtDecode } from 'jwt-decode';
+// import { Users } from '../interfaces/Users';
+
+// const UserHomePage = () => {
+//     const [cookies] = useCookies(['token'], { doNotParse: true });
+//     const [user, setUser] = useState<Users>()
+//     const dispatch = useDispatch();
+
+//     useEffect(() => {
+//            setUser(useSelector(selectUser))
+
+//         if (user?.userName === "") {
+//             const userToken = cookies.token;
+
+//             // אם הטוקן קיים, שלח אותו ל-Redux
+//             setUser(jwtDecode<Users>(userToken));
+//             dispatch(setCurrentUser(user));
+//             console.log('current user  updated in global:', user); // אופציונלי: לוג לבדיקה
+//         }
+
+
+//         // eslint-disable-next-line react-hooks/exhaustive-deps
+//     }, [])
+
+//     return (
+//         <div>
+//             <h1>{user?.userName}</h1>
+//         </div>
+//     )
+// }
+
+// export default UserHomePage
+
+
+import { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { selectUser, setCurrentUser } from '../redux/slices/userSlice';
+import { useCookies } from 'react-cookie';
+import { jwtDecode } from 'jwt-decode';
+import { Users } from '../interfaces/Users';
 
 const UserHomePage = () => {
-            
-    const [cookies] = useCookies(['token'])
-    const token=cookies.token  
-    const currentUser: Users = jwtDecode<Users>(token);
-    // useEffect(() => {
+    const [cookies] = useCookies(['token']);
+    let user = useSelector(selectUser);
+    const dispatch = useDispatch();
+    console.log(user);
     
-    // },[])
+    useEffect(() => {
+        if (!user || !user.userName) {
+            const userToken = cookies.token;
+            if (userToken) {
+                try {
+                    user = jwtDecode<Users>(JSON.stringify(userToken));
+                    dispatch(setCurrentUser(user));
+                    console.log('User updated:', user);
+                } catch (error) {
+                    console.error('Error decoding token:', error);
+                    // כאן תוכל לטפל בשגיאה (למשל, מחיקת ה-cookie הלא תקין)
+                }
+            }
+        }
+    },[cookies.token])
+    const updateStateCurrentUser = () => {
+
+    }
+    updateStateCurrentUser();
+    let lytdt = useSelector(selectUser);
+    console.log(lytdt);
+
+
+    //   }, []);
     return (
-        <>
-        <h1>{currentUser.userName}</h1>
-        <h1>{currentUser.password}</h1>
-
-
-            <div className="full-background" >
-            <h1>ארון הבגדים שלי</h1> 
-            <div>
-    {currentUser && currentUser.myWardrobe && currentUser.myWardrobe.map(item => (
-        <h5 key={item.itemName.toString()}>{item.itemName}</h5>
-    ))}
-    {!currentUser && <p>המשתמש לא טעון.</p>} {/* הצגת הודעה אם המשתמש לא טעון */}
-    {currentUser && !currentUser.myWardrobe && <p>ארון הבגדים של המשתמש ריק או לא קיים.</p>} {/* הודעה אם myWardrobe לא קיים */}
-</div>
+        <div>
+            <h1>{user?.userName || 'טוען פרטי משתמש...'}</h1>
         </div>
-        </>
-    )
-}
+    );
+};
+
 export default UserHomePage;

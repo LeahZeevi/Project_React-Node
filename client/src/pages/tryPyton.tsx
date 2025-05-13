@@ -13,7 +13,7 @@ const TryPython = () => {
 
     try {
       const res = await axios.post<{ label: string }>(
-        "http://localhost:5000/uploadsPic",
+        "http://localhost:/uploadsPic",
         formData,
         {
           headers: {

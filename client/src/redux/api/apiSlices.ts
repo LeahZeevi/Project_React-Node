@@ -3,11 +3,12 @@ import { use } from "react";
 import { useCookies } from "react-cookie";
 import { Users } from "../../interfaces/Users";
 // import jwtDecode from "jwt-decode";
+{console.log('apiSlice')};
 
 const apiSlice=createApi({
 
   baseQuery:fetchBaseQuery({
-      baseUrl:'http://localhost:5000',
+      baseUrl:'http://localhost:3000',
     prepareHeaders: (headers) => {
       const token = getCookie('token');
       console.log('Token from cookie:', token);
