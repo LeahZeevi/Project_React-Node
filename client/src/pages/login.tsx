@@ -42,7 +42,11 @@ const Login = () => {
     });
 
     useEffect(() => {
+<<<<<<< HEAD
         axios.get('http://localhost:3000/users/excel-column') // כתובת השרת של
+=======
+        axios.get('http://localhost:3000/users/excel-column') // כתובת השרת שלך
+>>>>>>> 3a78f0a5e1f762f32671087cff32ccf7b6629665
             .then((response) => {
                 setCities(response.data);
             })
@@ -93,6 +97,7 @@ const Login = () => {
             if (token) {
                 const currentUser: Users = jwtDecode<Users>(token);
                 setCookies("token", token, { path: "/", maxAge: 3600 * 24 * 7 });
+                dispatch(setCurrentUser(currentUser))
                 alert(currentUser.userName)
                 setOpenRegister(false);
                 setSend(true);
@@ -110,10 +115,15 @@ const Login = () => {
     };
     const onSubmitLogin = async (user: LoginedUser) => {
         try {
-            console.log(typeof user);
+            console.log("enter onsubmitLogin");
 
             const response = await loginUser(user);
+<<<<<<< HEAD
             setCookies("token", response, { path: "/", maxAge: 3600 * 24 * 7 });
+=======
+            console.log(response);
+            
+>>>>>>> 3a78f0a5e1f762f32671087cff32ccf7b6629665
             const currentUser: Users = jwtDecode<Users>(JSON.stringify(response));
             alert(currentUser.userName)
             dispatch(setCurrentUser(currentUser))
@@ -138,7 +148,11 @@ const Login = () => {
                         <form onSubmit={handleSubmitRegister(onSubmitRegister)}>
                             <TextField id="outlined-basic" label="User Name" variant="outlined" color='secondary' {...registerRegister("userName")} />
                             {errorsRegister.userName && <p style={{ color: "red" }}></p>}
+                                
+                                <TextField id="outlined-basic" label="city" variant="outlined" color='secondary' {...registerRegister("city")} />
+                            {errorsRegister.userName && <p style={{ color: "red" }}></p>}
 
+ 
                             {/* <TextField id="outlined-basic" label="City" variant="outlined" color='secondary' {...registerRegister("city")} /> */}
 
                             {/* <Autocomplete
@@ -152,8 +166,8 @@ const Login = () => {
                                 sx={{ width: 300 }}
                                 {...registerRegister("city")} 
 
-                            /> */}
-                            <Controller
+                         
+                       <Controller
                                 name="city"
                                 control={control}
                                 defaultValue=''
@@ -179,7 +193,7 @@ const Login = () => {
                                         onChange={(event, newValue) => field.onChange(newValue)}
                                     />
                                 )}
-                            />
+                            /> */}
 
                             {errorsRegister.city && <p style={{ color: "red" }}>{errorsRegister.city.message}</p>}
                             {errorsRegister.city && <p style={{ color: "red" }}></p>}

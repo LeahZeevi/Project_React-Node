@@ -48,9 +48,15 @@ const UserHomePage = () => {
     const [cookies] = useCookies(['token']);
     let user = useSelector(selectUser);
     const dispatch = useDispatch();
+<<<<<<< HEAD
 
     //   useEffect(() => {
     const updateStateCurrentUser = () => {
+=======
+    console.log(user);
+    
+    useEffect(() => {
+>>>>>>> 3a78f0a5e1f762f32671087cff32ccf7b6629665
         if (!user || !user.userName) {
             const userToken = cookies.token;
             if (userToken) {
@@ -64,8 +70,20 @@ const UserHomePage = () => {
                 }
             }
         }
+<<<<<<< HEAD
     }
     updateStateCurrentUser();
+=======
+    },[cookies.token])
+    const updateStateCurrentUser = () => {
+
+    }
+    updateStateCurrentUser();
+    let lytdt = useSelector(selectUser);
+    console.log(lytdt);
+
+
+>>>>>>> 3a78f0a5e1f762f32671087cff32ccf7b6629665
     //   }, []);
     return (
         <div>

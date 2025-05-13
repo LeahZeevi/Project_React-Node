@@ -17,7 +17,7 @@ const productsData: Record<string, Product[]> = {
     { name: 'חצאית 1', imgSrc: '/images/skirt1.jpg', price: '80 ש"ח' },
     { name: 'חצאית 2', imgSrc: '/images/skirt2.jpg', price: '90 ש"ח' },
   ],
-  נעליים: [
+  נעלים: [
     { name: 'נעל 1', imgSrc: '/images/shoes1.jpg', price: '150 ש"ח' },
     { name: 'נעל 2', imgSrc: '/images/shoes2.jpg', price: '170 ש"ח' },
   ],

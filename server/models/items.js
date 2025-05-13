@@ -10,10 +10,10 @@ url:{
 },
 categoryName:{
     type:String,
-    enum:["חולצות","חצאיות/מכנסיים","שמלות","פיז'מות","נעלים"],
+    enum:["חולצות","חצאיות","שמלות","פיז'מות","נעלים"],
     require:[true,"Item nust include category"] 
 },
-season:{
+session:{
 type:String,
 enum:["חורף","קיץ","כללי"],
 default:"כללי"

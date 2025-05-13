@@ -1,6 +1,8 @@
 require("dotenv").config()
 const cors=require('cors')
 const express = require('express');
+const path = require('path');
+
 const multer = require('multer'); // *** הוסף את השורה הזו ***
 const corsOptions=require("./config/corsOptions")
 const connectDB=require("./config/dbConn")
@@ -21,6 +23,9 @@ app.use('/users', userRouter)
 app.use('/items', itemsRouter)
 app.use('/weather', weatherRouter); 
 app.use(express.static("public"))
+// בשרת Node.js (backend)
+app.use('/uploadsPic', express.static(path.join(__dirname, 'uploadsPic')));
+
 // app.use("/api/auth",require("./routes/authRouter"))//לא ברור מה החלק הראשון
 
 
@@ -69,7 +74,6 @@ mongoose.connect(process.env.CONECTION_URL,{useNewUrlParser:true,useUnifiedTopol
 
     
     const { execFile } = require("child_process");
-    const path = require("path");
     const fs = require("fs");
     
     const upload = multer({ dest: "public/uploadsPic/" });
