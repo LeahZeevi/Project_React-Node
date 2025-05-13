@@ -99,6 +99,8 @@ exports.getUserByPassword = async (req, res) => {
 }
 
 exports.getAllCities=async(req, res) => {
+    console.log("enter");
+    
     const results = [];
     const columnName = "cityName"; // שם העמודה שאתה רוצה לשלוף
        await fs.createReadStream('./cities.csv') // קריאת הנתונים מהקובץ כזרם
