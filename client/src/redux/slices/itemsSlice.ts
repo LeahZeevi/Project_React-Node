@@ -35,13 +35,19 @@ const itemSlice = createSlice({
     }
 
 })
-export const selectItems = (state: ItemsState) => state.itemsList
+// export const selectItems = (state: ItemsState) => state.itemsList
+// state: כל ה-state של ה-store, לכן צריך לגשת ל-state.items
+export const selectItems = (state: { items: ItemsState }) => state.items.itemsList;
+
 export const selectItemsByCategoryName = (categoryName: string) =>
     createSelector(
       [selectItems],
       (items) => items.filter((item) => item.categoryName === categoryName)
-    );
-
+    );  
+export const selectItemsInUse = createSelector(
+  [selectItems],
+  (items) => items.filter(item => item.inUse === true)
+);
 
 export const { addItem, removeItem, updateItem } = itemSlice.actions
 

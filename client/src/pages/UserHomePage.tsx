@@ -65,10 +65,7 @@ const UserHomePage = () => {
             }
         }
     },[cookies.token])
-    const updateStateCurrentUser = () => {
-
-    }
-    updateStateCurrentUser();
+  
     let lytdt = useSelector(selectUser);
     console.log(lytdt);
 
