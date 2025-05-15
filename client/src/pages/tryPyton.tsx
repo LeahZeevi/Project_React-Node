@@ -7,13 +7,16 @@ const TryPython = () => {
 
   const handleUpload = async () => {
     if (!file) return;
-
     const formData = new FormData();
     formData.append("image", file);
 
     try {
       const res = await axios.post<{ label: string }>(
+<<<<<<< HEAD
+        "http://localhost:3000/uploadsPic",
+=======
         "http://localhost:/uploadsPic",
+>>>>>>> 3a78f0a5e1f762f32671087cff32ccf7b6629665
         formData,
         {
           headers: {

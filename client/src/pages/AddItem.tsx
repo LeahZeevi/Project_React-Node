@@ -22,7 +22,7 @@ import ItemSchema from "../schemas/ItemSchema";
 import { useAddItemMutation } from '../redux/api/apiSllices/itemsApiSlice';
 import { useNavigate } from "react-router";
 import { useSelector, useDispatch } from "react-redux"; // ייבוא useDispatch
-import { addItemToWardrobe, selectUser } from "../redux/slices/userSlice";
+import {  selectUser } from "../redux/slices/userSlice";
 
 const AddItem = () => {
   const { register, handleSubmit, formState: { errors }, control, reset } = useForm({ mode: "onChange", resolver: zodResolver(ItemSchema) });
@@ -46,7 +46,7 @@ const AddItem = () => {
         const response = await addItem({ _id: user._id, newItem: formData });
         console.log("response add item", response);
         const addedItem = user.myWardrobe[user.myWardrobe.length - 1];
-        dispatch(addItemToWardrobe(addedItem)); // שליחת הפעולה לעדכון ה-state
+        // dispatch(addItemToWardrobe(addedItem)); // שליחת הפעולה לעדכון ה-state
         setImage(null);
         reset({
           itemName: '',

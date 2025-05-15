@@ -5,7 +5,7 @@ const express=require("express")
 const router=express.Router()
  const Item=require("../models/items")
 const verifyJWT=require("../middlwares/verifyJWT")
-const {addItem,updateItem,getItemById,deletItem, getItemsByCategoryId, getAllItems} =require("../controllers/items");
+const {addItem,updateItem,deletItem, getItemsByCategoryId, getAllItems} =require("../controllers/items");
 const uploudPic = require("../middlwares/uploudPic");
 
 
@@ -13,7 +13,7 @@ const uploudPic = require("../middlwares/uploudPic");
 // router.get('/',verifyJWT,getAllItems);
 
 router.post('/:_id',uploudPic.single('url'),addItem);
-// router.get('/:_id',verifyJWT,getItemById);
+ router.get('/:_id',getAllItems);
 router.get('/category/:categoryId',verifyJWT,getItemsByCategoryId);
 router.patch('/:_id',verifyJWT,updateItem);
 router.delete('/:_id',verifyJWT,deletItem);

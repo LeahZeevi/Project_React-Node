@@ -23,9 +23,13 @@
 // })
 // module.exports = mongoose.model('users', UserSchema);
 
+const { type } = require('express/lib/response');
 const mongoose = require('mongoose');
 
 const wardrobeItemSchema = new mongoose.Schema({
+    _id:{
+        type:String,
+    },
     itemName: { type: String, required: true },
     url: String,
     categoryName: {

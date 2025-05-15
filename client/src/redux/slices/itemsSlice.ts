@@ -1,25 +1,21 @@
 import { createSelector, createSlice } from "@reduxjs/toolkit"
 import Item from "../../interfaces/Items";
-import { useSelector } from "react-redux";
-import { use } from "react";
-import { useInitialAllItemsMutation } from "../api/apiSllices/itemsApiSlice";
+
 interface ItemsState {
-    itemsList: Item[];
+    itemsList:Item[];
 }
-    
 
 const initialState: ItemsState = {
-    itemsList: []
+    itemsList:[]
 };
-    
-    // const items=use
-
-
 
 const itemSlice = createSlice({
     name: "items",
     initialState,
     reducers: {
+        initialItemList:(state,action)=>{
+         state.itemsList=action.payload
+        },
         addItem: (state, action) => {
             state.itemsList.push(action.payload)
         },
@@ -43,12 +39,9 @@ export const selectItemsByCategoryName = (categoryName: string) =>
     createSelector(
       [selectItems],
       (items) => items.filter((item) => item.categoryName === categoryName)
-    );  
-export const selectItemsInUse = createSelector(
-  [selectItems],
-  (items) => items.filter(item => item.inUse === true)
-);
+    );
 
-export const { addItem, removeItem, updateItem } = itemSlice.actions
+
+export const { addItem, removeItem, updateItem,initialItemList } = itemSlice.actions
 
 export default itemSlice.reducer

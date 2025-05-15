@@ -6,7 +6,7 @@ function CitiesDropdown() {
   const [cities, setCities] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/users/excel-column') // כתובת השרת שלך
+    axios.get('http://localhost:3000/users/excel-column') // כתובת השרת שלך
       .then((response) => {
         setCities(response.data);
       })

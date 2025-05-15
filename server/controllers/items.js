@@ -1,6 +1,7 @@
 const { status } = require("express/lib/response");
 const User = require("../models/users")
-const Item=require("../models/items")
+const Item=require("../models/items");
+const { getUserById } = require("./users");
 // const { saveImage } = require('../middlware/uploudPic');
 
 
@@ -49,12 +50,27 @@ exports.addItem = async (req, res) => {
     }
 };
 
+exports.getAllItems = async (req, res) => {
+
+    const { _id } = req.params
+    console.log(_id);
+    try {
+        const user = await User.findOne({ _id})
+        if (!user) {
+            return res.status(404).json({message:"Failed to deliver the clothes. Customer not located"});
+        }
+        res.json(user.myWardrobe);
+
+    } catch (error) {
+        console.error('failed to ger user', error);
+        res.status(500).json({ message: 'failed to get user' })
+    }
+
+}
+
 exports.getItemsByUserId = async (req, res) => {
 
     const { _id } = req.params;
-    //const { _id } = req.params._id;
-    console.log(_id);
-
     try {
         const item = await Item.findById({ _id });
         if (!item)
@@ -67,9 +83,6 @@ exports.getItemsByUserId = async (req, res) => {
         console.log('Failed to get item ', error);
         res.status(500).json({ message: "Failed to get item  " })
     }
-
-
-    
 }
 
 
@@ -127,22 +140,3 @@ exports.updateItem = async (req, res) => {
     }
 };
 
-//לקבלת כל הפרטים לכאורה מיותר
-
-exports.getAllItems = async (req, res) => {
-
-
-    try {
-        const items = await Item.getAllItems();
-        if (!items)
-            return res.status(404).json({ message: "not found items " })
-        res.json(items);
-
-    }
-    catch (error) {
-
-        console.log('Failed to get items ', error);
-        res.status(500).json({ message: "Failed to get items  " })
-    }
-
-}
