@@ -12,11 +12,17 @@ import { RouterProvider } from 'react-router';
 import axios from 'axios';
 import router from '../routes/AppRoute';
 import { useDispatch } from 'react-redux';
-import { setCurrentUser } from '../redux/slices/userSlice';
+import { selectUser, setCurrentUser } from '../redux/slices/userSlice';
 import { Controller } from 'react-hook-form';
 import Item from '../interfaces/Items';
+import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
+import { SerializedError } from '@reduxjs/toolkit';
+import { useSelector } from 'react-redux';
 
-
+interface Data {
+    user: Users | undefined,
+    accessToken: string
+}
 
 const Login = () => {
     const [openRegister, setOpenRegister] = useState<Boolean>(false);
@@ -51,77 +57,46 @@ const Login = () => {
             });
     }, []);
 
-
-
-
-    // const onSubmitRegister = async (newUser: { userName: string; city: string; email: string; password: string; }) => {
-    //     const userWithWardrobe: Users = { ...newUser, myWardrobe: [{} as Item] };
-    //     console.log("1 - User data before registration:", userWithWardrobe, typeof userWithWardrobe);
-        
-    //     try {
-    //         const response = await registerUser(userWithWardrobe) // Unwrap the response to get the actual data
-    //         console.log("2 - Registration response:", response);
-
-    //         const token = (response as any)?.data?.token; // Safely access the token property
-
-    //         if (token) {
-    //             const currentUser: Users = jwtDecode<Users>(token);
-    //             setCookies("token", token, { path: "/", maxAge: 3600 * 24 * 7 });
-    //             setOpenRegister(false);
-    //             setSend(true);
-    //             resetRegister();
-    //         } else {
-    //             console.error("Token not received in registration response.");
-    //             // Optionally display an error message to the user
-    //         }
-    //     } catch (error) {
-    //         console.error("Registration error:", error);
-    //         // Optionally display an error message to the user
-    //         // You might want to set a state here to show an error message to the user
-    //     }
-    // };
     const onSubmitRegister = async (newUser: { userName: string; city: string; email: string; password: string; }) => {
-        const userWithWardrobe: Users = { ...newUser, myWardrobe: [{} as Item] };
+        const userWithWardrobe: Users = { ...newUser, _id: "", myWardrobe: [{} as Item] };
         console.log("1 - User data before registration:", userWithWardrobe, typeof userWithWardrobe);
 
         try {
             const response = await registerUser(userWithWardrobe).unwrap();
-            console.log("2 - Registration response:", response);
-
-            const token = response?.accessToken; // גישה לשדה accessToken ישירות
-
-            if (token) {
-                const currentUser: Users = jwtDecode<Users>(token);
-                setCookies("token", token, { path: "/", maxAge: 3600 * 24 * 7 });
-                dispatch(setCurrentUser(currentUser))
-                alert(currentUser.userName)
-                setOpenRegister(false);
-                setSend(true);
-                resetRegister();
+            console.log("response.user",response.user._id);
+            
+            const currentUser = response.user;
+            if (currentUser) {
+                localStorage.setItem('user', JSON.stringify(currentUser));
             } else {
-                console.error("Token not received in registration response.");
-                // הצג הודעת שגיאה למשתמש
+                console.log('currentUser is undefined, not saving to localStorage.');
             }
-        } catch (error: any) {
+            setCookies("token", response.accessToken, { path: "/", maxAge: 3600 * 24 * 7 });
+            dispatch(setCurrentUser(currentUser))
+            setOpenRegister(false);
+            setSend(true);
+            resetRegister();
+        }
+    
+        catch (error: any) {
             console.error("Registration error:", error);
             console.error("Registration error data:", error?.data);
             console.error("Registration error status:", error?.status);
-            // הצג הודעת שגיאה למשתמש
         }
     };
+
     const onSubmitLogin = async (user: LoginedUser) => {
         try {
-            console.log("enter onsubmitLogin");
-
             const response = await loginUser(user);
-            console.log(response);
-            
-            const currentUser: Users = jwtDecode<Users>(JSON.stringify(response));
-            alert(currentUser.userName)
+            const currentUser = response.data?.user
+            if (currentUser) {
+                localStorage.setItem('user', JSON.stringify(currentUser));
+                console.log('User saved to localStorage:', JSON.stringify(currentUser));
+            } else {
+                console.log('currentUser is undefined, not saving to localStorage.');
+            }
             dispatch(setCurrentUser(currentUser))
-            console.log(currentUser);
-            
-            setCookies("token", response, { path: "/", maxAge: 3600 * 24 * 7 });
+            setCookies("token", response.data?.accessToken, { path: "/", maxAge: 3600 * 24 * 7 });
         }
         catch (error) {
             console.log(error);
@@ -130,7 +105,7 @@ const Login = () => {
         setOpenLogin(false);
         resetLogin()
     };
-      
+
     return (
         <div className='container'>
             {openRegister &&
@@ -142,11 +117,11 @@ const Login = () => {
                         <form onSubmit={handleSubmitRegister(onSubmitRegister)}>
                             <TextField id="outlined-basic" label="User Name" variant="outlined" color='secondary' {...registerRegister("userName")} />
                             {errorsRegister.userName && <p style={{ color: "red" }}></p>}
-                                
-                                <TextField id="outlined-basic" label="city" variant="outlined" color='secondary' {...registerRegister("city")} />
+
+                            <TextField id="outlined-basic" label="city" variant="outlined" color='secondary' {...registerRegister("city")} />
                             {errorsRegister.userName && <p style={{ color: "red" }}></p>}
 
- 
+
                             {/* <TextField id="outlined-basic" label="City" variant="outlined" color='secondary' {...registerRegister("city")} /> */}
 
                             {/* <Autocomplete

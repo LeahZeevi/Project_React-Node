@@ -3,20 +3,17 @@
 import { createSelector, createSlice, current, PayloadAction } from "@reduxjs/toolkit";
 import { Users } from "../../interfaces/Users";
 import Item from "../../interfaces/Items";
+import { RootOptions } from "react-dom/client";
+import { RootState } from "@reduxjs/toolkit/query";
 
-interface CurrentUserState {
-  currentUser: Users;
-}
-
-const initialState: CurrentUserState = {
-  currentUser: {
-    userName: "",
-    city: "",
-    email: "",
-    password: "",
-    myWardrobe: [{} as Item],
-    // _id: ""
-  }
+const initialState: Users = {
+  userName: "",
+  city: "",
+  email: "",
+  password: "",
+  myWardrobe: [{} as Item],
+  _id: "",
+ 
 };
 
 const userSlice = createSlice({
@@ -24,27 +21,10 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     setCurrentUser(state, action: PayloadAction<Users>) {
-      state.currentUser = action.payload;
+      state = action.payload;
     },
-     addItemToWardrobe(state, action: PayloadAction<Item>) {
-      state.currentUser.myWardrobe.push(action.payload); // הוספת פריט חדש לארון הבגדים
-    }
   }
 });
-
-
- 
-
-
-
-
-export const { setCurrentUser,addItemToWardrobe } = userSlice.actions;
-
-export const selectUserWardrobe = (state: CurrentUserState) => state.currentUser.myWardrobe;
-export const selectItemsByCategoryName = (categoryName: string) =>
-    createSelector(
-      [selectUserWardrobe],
-      (items) => items.filter((item) => item.categoryName === categoryName)
-    );
-export const selectUser = (state: { users: CurrentUserState }) => state.users.currentUser;
+export const { setCurrentUser } = userSlice.actions;
+export const selectUser = (state:Users) => state.users;
 export default userSlice.reducer;

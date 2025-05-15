@@ -7,7 +7,6 @@ const TryPython = () => {
 
   const handleUpload = async () => {
     if (!file) return;
-
     const formData = new FormData();
     formData.append("image", file);
 

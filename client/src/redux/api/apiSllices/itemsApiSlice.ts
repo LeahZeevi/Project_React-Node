@@ -4,9 +4,17 @@ import Item from "../../../interfaces/Items";
 export const itemsApiSlice = apiSlices.injectEndpoints({
     
     endpoints: (builder) => ({
-        initialAllItems: builder.mutation<Item[],void>({
+        // initialAllItems: builder.mutation<Item[],void>({
+        //     query: (_id) => ({
+        //         url: "/items/",
+        //         method: "GET",
+        //     }),
+        //     invalidatesTags: ["Items"],
+        // }),
+
+           getAllItems: builder.mutation<Item[],string>({
             query: (_id) => ({
-                url: "/items/",
+                url: `/items/${_id}`,
                 method: "GET",
             }),
             invalidatesTags: ["Items"],
@@ -21,7 +29,7 @@ export const itemsApiSlice = apiSlices.injectEndpoints({
             }),
             invalidatesTags: ["Items"],
         }),
-        getItemById: builder.query<Item,string>({
+        getItemById: builder.query<Item[],string>({
             query: (id) => `/items/${id}`,
             providesTags: ["Items"]
         }),
@@ -51,7 +59,7 @@ export const itemsApiSlice = apiSlices.injectEndpoints({
 })
 export const {
     useAddItemMutation,
-    useInitialAllItemsMutation,
+    useGetAllItemsMutation,
     useGetItemByIdQuery,
     useGetItemsByCategoryIdQuery,
     useUpdateItemMutation,

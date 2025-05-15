@@ -51,11 +51,11 @@ exports.register = async (req, res) => {
     const userObject = { userName, city, email, password: hashPassword, myWardobe }    
     const user = await User.create(userObject)
     if (user){
-        const accessToken = jwt.sign(userObject, process.env.ACCESS_TOKEN_SECRET)
-        // const userInfo = { _id: user._id, userName: user.userName, city: user.city, email: user.email, password: user.password, myWardobe: user.myWardrobe
-        //     ,accessToken:accessToken
-        console.log(accessToken)
-        return res. status(201).json({accessToken })
+      const userToken={_id:userObject._id,userName:userObject.userName,city:userObject.city,
+        email:userObject.email,password:userObject.password
+      }
+        const accessToken = jwt.sign(userToken, process.env.ACCESS_TOKEN_SECRET)
+        return res. status(201).json({accessToken:accessToken,user:user})
         }
     else
         return res.status(400).json({ message: `Invalid user received` })
@@ -73,11 +73,14 @@ exports.login = async (req, res) => {
     const match = await bcrypt.compare(password, foundUser.password)
     if (!match)
         return res.status(401).json({ message: "Unauthhorized2" })
-
-      const accessToken = jwt.sign(foundUser, process.env.ACCESS_TOKEN_SECRET)
+      const userToken={_id:foundUser._id,userName:foundUser.userName,city:foundUser.city,
+        email:foundUser.email,password:foundUser.password
+      }
+      const accessToken = jwt.sign(userToken, process.env.ACCESS_TOKEN_SECRET)
     // const userInfo = { _id: foundUser._id, userName: foundUser.userName, city: foundUser.city, email: foundUser.email, password: foundUser.password, myWardobe: foundUser.myWardrobe
     //     ,accessToken:accessToken
-    res.json(accessToken)
+           return res. status(201).json({accessToken:accessToken,user:foundUser})
+
 
 }
 
