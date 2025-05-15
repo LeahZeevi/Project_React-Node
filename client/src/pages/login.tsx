@@ -48,7 +48,8 @@ const Login = () => {
     });
 
     useEffect(() => {
-        axios.get('http://localhost:3000/users/excel-column') // כתובת השרת שלך
+
+        axios.get('http://localhost:3000/users/excel-column') // כתובת השרת של
             .then((response) => {
                 setCities(response.data);
             })
@@ -97,6 +98,7 @@ const Login = () => {
             }
             dispatch(setCurrentUser(currentUser))
             setCookies("token", response.data?.accessToken, { path: "/", maxAge: 3600 * 24 * 7 });
+            console.log(response);
         }
         catch (error) {
             console.log(error);
