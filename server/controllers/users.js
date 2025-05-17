@@ -103,11 +103,6 @@ exports.getUserById = async (req, res) => {
 }
 
 exports.getAllCities=async(req, res) => {
-<<<<<<< HEAD
-    console.log("enter");
-=======
-    console.log("enter getAllCities");
->>>>>>> 3a78f0a5e1f762f32671087cff32ccf7b6629665
     
     const results = [];
     const columnName = "cityName"; // שם העמודה שאתה רוצה לשלוף

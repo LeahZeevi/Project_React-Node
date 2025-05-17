@@ -15,9 +15,7 @@ import { useDispatch } from 'react-redux';
 import { selectUser, setCurrentUser } from '../redux/slices/userSlice';
 import { Controller } from 'react-hook-form';
 import Item from '../interfaces/Items';
-import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
-import { SerializedError } from '@reduxjs/toolkit';
-import { useSelector } from 'react-redux';
+
 
 interface Data {
     user: Users | undefined,
@@ -51,6 +49,8 @@ const Login = () => {
 
         axios.get('http://localhost:3000/users/excel-column') // כתובת השרת של
             .then((response) => {
+                console.log(response.data);
+                
                 setCities(response.data);
             })
             .catch((error) => {
@@ -120,24 +120,6 @@ const Login = () => {
                             <TextField id="outlined-basic" label="User Name" variant="outlined" color='secondary' {...registerRegister("userName")} />
                             {errorsRegister.userName && <p style={{ color: "red" }}></p>}
 
-                            <TextField id="outlined-basic" label="city" variant="outlined" color='secondary' {...registerRegister("city")} />
-                            {errorsRegister.userName && <p style={{ color: "red" }}></p>}
-
-
-                            {/* <TextField id="outlined-basic" label="City" variant="outlined" color='secondary' {...registerRegister("city")} /> */}
-
-                            {/* <Autocomplete
-                                id="outlined-basic"
-                                options={cities}
-                                autoSave='true'
-                                getOptionLabel={(option) => option}
-                                renderInput={(params) => (
-                                    <TextField {...params} label="בחר או הקלד עיר" variant="outlined" />
-                                )}
-                                sx={{ width: 300 }}
-                                {...registerRegister("city")} 
-
-                         
                        <Controller
                                 name="city"
                                 control={control}
@@ -164,7 +146,7 @@ const Login = () => {
                                         onChange={(event, newValue) => field.onChange(newValue)}
                                     />
                                 )}
-                            /> */}
+                            /> 
 
                             {errorsRegister.city && <p style={{ color: "red" }}>{errorsRegister.city.message}</p>}
                             {errorsRegister.city && <p style={{ color: "red" }}></p>}

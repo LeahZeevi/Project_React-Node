@@ -119,9 +119,8 @@ exports.deletItem = async (req, res) => {
 
 exports.updateItem = async (req, res) => {
     const { _id } = req.params;
-    const { inUse } = req.body;
-    console.log(inUse);
-
+    const { inUse } = req.body.inUse;
+c
     try {
         const updatedItem = await Item.findOneAndUpdate(
             { _id: _id }, // עדכון לפי שדה userId
@@ -129,14 +128,25 @@ exports.updateItem = async (req, res) => {
             { new: true }
         );
 
+    //  try {
+    // const { _id, ...updateData } = req.body; // קבל את ה-ID ואת שאר נתוני העדכון מהגוף הבקשה
+    // השתמש במודל כדי לעדכן את המסמך
+    // const updatedItem = await Item.findOneAndUpdate({ _id: req.params.id }, updateData, {
+    //   new: true, // כדי לקבל את המסמך המעודכן בתגובה
+    //   runValidators: true // כדי להפעיל את ה-Validators של הסכימה
+    // });
+
         if (!updatedItem) {
             return res.status(404).json({ message: 'Item not found!' });
         }
 
-        res.status(201).json(updatedItem);
+        res.status(200).json(updatedItem);
     } catch (error) {
         console.error('Failed to update item:', error);
         res.status(500).json({ message: 'Failed to update item' });
     }
 };
+
+
+
 

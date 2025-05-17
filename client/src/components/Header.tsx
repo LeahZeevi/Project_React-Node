@@ -3,19 +3,44 @@ import { NavLink } from 'react-router'
 import Item from '../interfaces/Items';
 import { useSelector } from 'react-redux';
 import { selectItemsInUse } from '../redux/slices/itemsSlice';
+import { useCookies } from 'react-cookie';
+import { Button } from '@mui/material';
 
 const Header = () => {
 
   const [isSideNavOpen, setIsSideNavOpen] = useState(false);
 const cartItems = useSelector(selectItemsInUse);
+         const [, , removeCookie] = useCookies(['token']);
 
   const toggleSideNav = () => {
     setIsSideNavOpen(prev => !prev);
   };
-
+const HanddleLogOut=()=>{
+   removeCookie('token')
+}
    return (
     <div dir="rtl">
       <nav style={{ display: "flex", position: "fixed", top: 0, right: 0, left: 0, width: "100vw", backgroundColor: "gray", justifyContent: "space-around", zIndex: 100 }}>
+          <div>
+          {/* <NavLink to='/' style={({ isActive }) => ({ color: isActive ? "pink" : "palevioletred" })}>UserHomePage</NavLink> */}
+<Button onClick={HanddleLogOut}
+   variant="text"
+        sx={{
+          background: 'none',
+          boxShadow: 'none',
+          padding: 0,
+          minWidth: 'auto',
+          textTransform: 'none',
+          color:   'palevioletred',
+          '&:hover': {
+            background: 'none',
+            textDecoration: 'underline',
+            
+          },
+        }}
+        
+> Exit ➡️</Button>
+        </div>
         <div>
           <NavLink to='/' style={({ isActive }) => ({ color: isActive ? "pink" : "palevioletred" })}>UserHomePage</NavLink>
         </div>

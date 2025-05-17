@@ -1,38 +1,3 @@
-// import React from "react";
-// import '../css/ShirtHangerLoader.css';
-
-// const ShirtHangerLoader: React.FC = () => {
-//   return (
-//     <div className="hanger-loader">
-//       <svg
-//         viewBox="0 0 100 100"
-//         className="hanger-icon"
-//         xmlns="http://www.w3.org/2000/svg"
-//       >
-//         {/* קולב */}
-//         <path
-//           d="M50 10 C40 10, 40 25, 50 25 C60 25, 60 10, 50 10"
-//           stroke="#333"
-//           strokeWidth="4"
-//           fill="none"
-//         />
-//         <line x1="50" y1="25" x2="20" y2="50" stroke="#333" strokeWidth="4" />
-//         <line x1="50" y1="25" x2="80" y2="50" stroke="#333" strokeWidth="4" />
-
-//         {/* חולצה */}
-//         <path
-//           d="M20 50 L30 40 L40 50 L60 50 L70 40 L80 50 L80 80 L20 80 Z"
-//           fill="#4A90E2"
-//           stroke="#1c3f75"
-//           strokeWidth="2"
-//         />
-//       </svg>
-//     </div>
-//   );
-// };
-
-// export default ShirtHangerLoader;
-
 
 import React from "react";
  import '../css/ShirtHangerLoader.css';

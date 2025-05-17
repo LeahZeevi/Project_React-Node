@@ -22,7 +22,7 @@ import GeneralCategory from "../pages/GeneralCategory"
         {path:"weather",element:<Weather city="אלעד" />},
         {path:"myWardrobe",element:<WardrobeLayout/>,children:[
             {index:true,element:<MyWardrobe/>},
-            {path:":typeCategory", element: <GeneralCategory />}
+            {path:":typeCategory", element: <GeneralCategory/>}
             
         ]},
         {path:"mySets",element:<MySets/>}

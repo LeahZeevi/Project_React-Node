@@ -1,4 +1,5 @@
 interface Item{
+    _id:string,
     itemName:String,
     url:String,
     // description:String,
