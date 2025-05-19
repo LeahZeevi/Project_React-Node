@@ -18,6 +18,8 @@ const UserHomePage = () => {
 
     if (errorUser) {
         return <p>שגיאה בטעינה</p>;
+        console.log(errorUser);
+        
     }
  
 

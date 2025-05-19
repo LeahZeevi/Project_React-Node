@@ -1,27 +1,27 @@
 interface Item{
     _id:string,
-    itemName:String,
-    url:String,
+    itemName:string,
+    url:string,
     // description:String,
-    categoryName:String,
-    session:String,
+    categoryName:string,
+    session:string,
     categoryId:Number,
     inUse:Boolean,
     countWear:Number,
-    style:String,
+    style:string,
 
 }
 
 export interface ItemWithId extends Item{
-    itemName:String,
-    url:String,
+    itemName:string,
+    url:string,
     // description:String,
-    categoryName:String,
-    session:String,
+    categoryName:string,
+    session:string,
     categoryId:Number,
     inUse:Boolean,
     countWear:Number,
-    style:String,
+    style:string,
     _id:string,
 
 }

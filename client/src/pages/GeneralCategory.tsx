@@ -11,6 +11,7 @@ import { useGetMyWardrobe } from "../hooks/useGetMyWardrobe";
 import { useDispatch } from "react-redux";
 import Item from "../interfaces/Items";
 import { useUpdateItemMutation } from "../redux/api/apiSllices/itemsApiSlice";
+import { Users } from "../interfaces/Users";
 
 
 
@@ -21,13 +22,15 @@ interface ItemListProps {
 
 
 const GeneralCategory= () => {
-  const {typeCategory} = useParams();
+  const {typeCategory}= useParams();
    const dispatch= useDispatch()
-       const [updateItemMutation] = useUpdateItemMutation();
-
+       const [updatedItem] = useUpdateItemMutation();
   const {myWardrobe,isLoadingMyWardrobe,errorMyWardrobe}=useGetMyWardrobe()
 console.log("myWardrobe:", myWardrobe);
-  const ItemsCategory=useSelector(selectItemsByCategoryName(typeCategory || 'חולצות'))
+  const ItemsCategory:Item[]=useSelector(selectItemsByCategoryName(typeCategory || 'חולצות'))
+  
+  const userString = localStorage.getItem('user');
+  const user: Users = userString ? JSON.parse(userString) : null
      const onAddToCart=async(item:Item)=>{
     // // item.inUse=true;
     // dispatch(updateItem(item));
@@ -37,8 +40,8 @@ console.log("myWardrobe:", myWardrobe);
     // await updateItemMutation(item);
     // console.log("myWardrobe:", myWardrobe);
     try {
-    const updatedItem = { ...item, inUse: true };
-    const response = await updateItemMutation(updatedItem).unwrap();
+    const updateditem = { ...item, inUse: true };
+    const response = await updatedItem({_id:user._id,updateItem:updateditem}).unwrap();
     console.log('Item updated on server:', response);
     dispatch(updateItem(updatedItem)); // אופציונלי — רק אם לא נשלף מחדש ע"י invalidateTags
   } catch (error) {
@@ -47,16 +50,16 @@ console.log("myWardrobe:", myWardrobe);
 
    }
 
+  console.log(ItemsCategory);
   
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
-      {ItemsCategory?.map((item) => (
-  
+    <div key={typeCategory} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
+      {ItemsCategory?.map((item:Item) => (
         <Card key={item._id} className="rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
           <CardMedia
             component="img"
             height="180"
-            image={`http://localhost:5000/public/uploadsPic/${item.url}`} // עדכן לנתיב האמיתי מהשרת
+            image={`http://localhost:3000/public/uploadsPic/${item.url}`} // עדכן לנתיב האמיתי מהשרת
             alt={item.itemName}
             className="object-cover"
           />

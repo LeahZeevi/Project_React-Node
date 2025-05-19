@@ -53,6 +53,7 @@ const HanddleLogOut=()=>{
         <div>
           <NavLink to='/addItem' style={({ isActive }) => ({ color: isActive ? "pink" : "palevioletred" })}>Add Item</NavLink>
         </div>
+      
         <div>
           <NavLink to='/weather' style={({ isActive }) => ({ color: isActive ? "pink" : "palevioletred" })}>Weather</NavLink>
         </div>

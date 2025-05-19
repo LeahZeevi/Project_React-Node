@@ -2,7 +2,8 @@ require("dotenv").config()
 const cors=require('cors')
 const express = require('express');
 const path = require('path');
-
+const fs = require('fs');
+const { spawn } = require('child_process');
 const multer = require('multer'); // *** הוסף את השורה הזו ***
 const corsOptions=require("./config/corsOptions")
 const connectDB=require("./config/dbConn")
@@ -12,6 +13,14 @@ const weatherRouter = require('./routes/weather');
 const userRouter = require('./routes/users')
 const itemsRouter = require('./routes/items')
 const app=express();
+
+const cachePath = path.join(__dirname, 'predictions_cache.json');
+let predictionCache = {};
+if (fs.existsSync(cachePath)) {
+  predictionCache = JSON.parse(fs.readFileSync(cachePath));
+}
+
+
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(cors(corsOptions))
@@ -73,23 +82,44 @@ mongoose.connect(process.env.CONECTION_URL,{useNewUrlParser:true,useUnifiedTopol
 
 
     
-    const { execFile } = require("child_process");
-    const fs = require("fs");
+  //   const { execFile } = require("child_process");
     
-    const upload = multer({ dest: "public/uploadsPic/" });
     
-    app.post("/upload", upload.single("image"), (req, res) => {
-      const imagePath = path.resolve(req.file.path);
+  //   const upload = multer({ dest: "public/uploadsPic/" });
     
-      execFile("python3", ["predict.py", imagePath], (err, stdout, stderr) => {
-        fs.unlinkSync(imagePath); // מוחקים את הקובץ הזמני
-    
-        if (err) {
-          return res.status(500).send("Error running prediction");
-        }
-    
-        res.json({ label: stdout.trim() });
-      });
-    });
+  //   app.post("/upload", upload.single("image"), (req, res) => {
+  //     const imagePath = path.resolve(req.file.path);
+  //     const key = req.file.originalname;
 
+  //     execFile("python3", ["predict.py", imagePath], (err, stdout, stderr) => {
+  //       fs.unlinkSync(imagePath); // מוחקים את הקובץ הזמני
+    
+  //       if (err) {
+  //         return res.status(500).send("Error running prediction");
+  //       }
+    
+  //       res.json({ label: stdout.trim() });
+  //     });
+  //   });
+
+
+
+  // if (predictionCache[key]) {
+  //   fs.unlinkSync(imagePath);
+  //   return res.json({ label: predictionCache[key] });
+  // }
+
+  // const python = spawn("python", ["predict.py", imagePath]);
+  // let output = "";
+
+  // python.stdout.on("data", (data) => (output += data.toString()));
+  // python.stderr.on("data", (data) => console.error("Python error:", data.toString()));
+
+  // python.on("close", () => {
+  //   const predicted = output.trim();
+  //   predictionCache[key] = predicted;
+  //   fs.writeFileSync(cachePath, JSON.stringify(predictionCache, null, 2));
+  //   fs.unlinkSync(imagePath);
+  //   res.json({ label: predicted });
+  // });
 
