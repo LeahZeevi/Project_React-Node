@@ -3,58 +3,58 @@
 
 import { Card, CardContent, CardMedia, Typography, Button } from "@mui/material";
 import { AddShoppingCart } from "@mui/icons-material";
-import React from 'react'
+import  { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
-import { useParams, useSearchParams } from 'react-router';
-import { selectItems, selectItemsByCategoryName, updateItem } from '../redux/slices/itemsSlice';
-import { useGetMyWardrobe } from "../hooks/useGetMyWardrobe";
-import { useDispatch } from "react-redux";
+import { useParams} from 'react-router';
 import Item from "../interfaces/Items";
-import { useUpdateItemMutation } from "../redux/api/apiSllices/itemsApiSlice";
+import { useGetAllItemsMutation, useUpdateItemMutation } from "../redux/api/apiSllices/itemsApiSlice";
 import { Users } from "../interfaces/Users";
+import { selectUser } from "../redux/slices/userSlice";
 
 
+const GeneralCategory = () => {
 
-interface ItemListProps {
-  items: Item[];
-  onAddToCart: (item: Item) => void;
-}
+  const { typeCategory } = useParams();
+  const [myWardrobe, setMyWardrobe] = useState<Item[]>([]);
+  const [updatedItem] = useUpdateItemMutation();
+  const [getAllItems] = useGetAllItemsMutation()
+  const user: Users = useSelector(selectUser)
 
-
-const GeneralCategory= () => {
-  const {typeCategory}= useParams();
-   const dispatch= useDispatch()
-       const [updatedItem] = useUpdateItemMutation();
-  const {myWardrobe,isLoadingMyWardrobe,errorMyWardrobe}=useGetMyWardrobe()
-console.log("myWardrobe:", myWardrobe);
-  const ItemsCategory:Item[]=useSelector(selectItemsByCategoryName(typeCategory || 'חולצות'))
+  useEffect(() => {
+    const fetchWardrobe = async () => {
+      try {
+        const response = await getAllItems(user._id).unwrap()
+        console.log("getAllItems",response);
+        
+        if (response) {
+          setMyWardrobe(response);
+        }
+      }
+      catch (error) {
+        console.error('שגיאה בקבלת פריטים:', error);
+      }
+    };
+    fetchWardrobe();
+  }, []);
+console.log("myWardRobe",myWardrobe);
+  const ItemsCategory = myWardrobe.filter(item => item.categoryName === typeCategory)
   
-  const userString = localStorage.getItem('user');
-  const user: Users = userString ? JSON.parse(userString) : null
-     const onAddToCart=async(item:Item)=>{
-    // // item.inUse=true;
-    // dispatch(updateItem(item));
 
-    //        console.log('add to cart');
 
-    // await updateItemMutation(item);
-    // console.log("myWardrobe:", myWardrobe);
+  const onAddToCart = async (item: Item) => {
     try {
-    const updateditem = { ...item, inUse: true };
-    const response = await updatedItem({_id:user._id,updateItem:updateditem}).unwrap();
-    console.log('Item updated on server:', response);
-    dispatch(updateItem(updatedItem)); // אופציונלי — רק אם לא נשלף מחדש ע"י invalidateTags
-  } catch (error) {
-    console.error('Failed to update item:', error);
+      const updateditem:Item = { ...item, inUse: true };
+      const response = await updatedItem({ _id:updateditem._id, updateItem: updateditem }).unwrap();
+      console.log('Item updated on server:', response);
+    } catch (error) {
+      console.error('Failed to update item:', error);
+    }
   }
 
-   }
 
-  console.log(ItemsCategory);
-  
   return (
-    <div key={typeCategory} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
-      {ItemsCategory?.map((item:Item) => (
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
+      {ItemsCategory?.map((item: Item) => (
         <Card key={item._id} className="rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
           <CardMedia
             component="img"
@@ -69,7 +69,7 @@ console.log("myWardrobe:", myWardrobe);
             </Typography>
             <Button
               variant="contained"
-               startIcon={<AddShoppingCart />}
+              startIcon={<AddShoppingCart />}
               onClick={() => onAddToCart(item)}
               className="bg-blue-600 hover:bg-blue-700 text-white rounded-full"
               fullWidth

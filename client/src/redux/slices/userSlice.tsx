@@ -1,18 +1,10 @@
-
-
-import { createSelector, createSlice, current, PayloadAction } from "@reduxjs/toolkit";
+import {  createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Users } from "../../interfaces/Users";
-import Item from "../../interfaces/Items";
-
-
-const initialState: Users = {
-  userName: "",
-  city: "",
-  email: "",
-  password: "",
-  myWardrobe: [{} as Item],
-  _id: "",
- 
+interface CurrentUser {
+  currentUsr: Users;
+}
+const initialState: CurrentUser = {
+  currentUsr: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")!) : null
 };
 
 const userSlice = createSlice({
@@ -20,10 +12,15 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     setCurrentUser(state, action: PayloadAction<Users>) {
-      state = action.payload;
+      state.currentUsr = action.payload;
     },
   }
 });
+export const selectUser = (state: { users: CurrentUser }): Users => { return state.users.currentUsr };
+
 export const { setCurrentUser } = userSlice.actions;
-export const selectUser = (state:Users) => state.users;
+
+
+
 export default userSlice.reducer;
+

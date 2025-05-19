@@ -7,12 +7,10 @@ import { RegisterUserSchema, LoginUserSchema } from '../schemas/UserSchema'
 import { LoginedUser, Users } from '../interfaces/Users';
 import { useLoginMutation, useRegisterMutation } from '../redux/api/apiSllices/usersApiSlice';
 import { useCookies } from 'react-cookie';
-import { jwtDecode } from "jwt-decode";
 import { RouterProvider } from 'react-router';
 import axios from 'axios';
 import router from '../routes/AppRoute';
 import { useDispatch } from 'react-redux';
-import { selectUser, setCurrentUser } from '../redux/slices/userSlice';
 import { Controller } from 'react-hook-form';
 import Item from '../interfaces/Items';
 
@@ -32,7 +30,7 @@ const Login = () => {
     const [registerUser] = useRegisterMutation();
     const [loginUser] = useLoginMutation();
     const [cookies, setCookies] = useCookies(['token'])
-    const dispatch = useDispatch()
+ 
 
 
     const { register: registerRegister, handleSubmit: handleSubmitRegister, control, formState: { errors: errorsRegister }, reset: resetRegister } = useForm({
@@ -59,13 +57,12 @@ const Login = () => {
     }, []);
 
     const onSubmitRegister = async (newUser: { userName: string; city: string; email: string; password: string; }) => {
-        const userWithWardrobe: Users = { ...newUser, _id: "", myWardrobe: [{} as Item] };
+        const userWithWardrobe: Users = { ...newUser, _id: ""};
         console.log("1 - User data before registration:", userWithWardrobe, typeof userWithWardrobe);
 
         try {
-            const response = await registerUser(userWithWardrobe).unwrap();
+            const response:{accessToken:string,user:Users} = await registerUser(userWithWardrobe).unwrap();
             console.log("response.user",response.user._id);
-            
             const currentUser = response.user;
             if (currentUser) {
                 localStorage.setItem('user', JSON.stringify(currentUser));
@@ -73,7 +70,6 @@ const Login = () => {
                 console.log('currentUser is undefined, not saving to localStorage.');
             }
             setCookies("token", response.accessToken, { path: "/", maxAge: 3600 * 24 * 7 });
-            dispatch(setCurrentUser(currentUser))
             setOpenRegister(false);
             setSend(true);
             resetRegister();
@@ -88,16 +84,15 @@ const Login = () => {
 
     const onSubmitLogin = async (user: LoginedUser) => {
         try {
-            const response = await loginUser(user);
-            const currentUser = response.data?.user
+            const response:{accessToken:string,user:Users} = await loginUser(user).unwrap();
+            const currentUser = response.user
             if (currentUser) {
                 localStorage.setItem('user', JSON.stringify(currentUser));
                 console.log('User saved to localStorage:', JSON.stringify(currentUser));
             } else {
                 console.log('currentUser is undefined, not saving to localStorage.');
             }
-            dispatch(setCurrentUser(currentUser))
-            setCookies("token", response.data?.accessToken, { path: "/", maxAge: 3600 * 24 * 7 });
+            setCookies("token", response.accessToken, { path: "/", maxAge: 3600 * 24 * 7 });
             console.log(response);
         }
         catch (error) {

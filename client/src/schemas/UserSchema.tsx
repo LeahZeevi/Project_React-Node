@@ -1,6 +1,4 @@
 import { z } from "zod";
-import MyWardrobe from "../pages/MyWardrobe";
-import Item from "../interfaces/Items";
 
 export const RegisterUserSchema = z.object({
     userName: z.string().min(1, { message: "FirstName is required" }),

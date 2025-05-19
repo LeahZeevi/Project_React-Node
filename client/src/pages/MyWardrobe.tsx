@@ -5,7 +5,6 @@ import { Link } from "react-router"
 const MyWardrobe = () => {
   const [typeCategory, setTypeCategory] = useState<string>("")
   const handleChooseType = (typeItem: string) => {
-    // alert(typeItem)
     setTypeCategory(typeItem)
   }
 
@@ -19,7 +18,6 @@ const MyWardrobe = () => {
         <Link to="פיז'מות"><div style={{ height: "40vh", width: "30vw", backgroundColor: "red" }} onClick={() => handleChooseType("פיז'מות")}>פיז'מות</div></Link>
         <Link to="נעלים"> <div style={{ height: "40vh", width: "30vw", backgroundColor: "blue" }} onClick={() => handleChooseType("נעלים")}>נעלים</div></Link>
       </div>
-      {/* {typeCategory!=""&&<GeneralCategory typeCategory={typeCategory}/>} */}
     </div>
   )
 }

@@ -1,8 +1,4 @@
 import { createApi, fetchBaseQuery,  } from "@reduxjs/toolkit/query/react";
-import { use } from "react";
-import { useCookies } from "react-cookie";
-import { Users } from "../../interfaces/Users";
-// import jwtDecode from "jwt-decode";
 {console.log('apiSlice')};
 
 const apiSlice=createApi({
@@ -21,13 +17,9 @@ const apiSlice=createApi({
   
   reducerPath:'api',
   tagTypes:["Items","Users"],
-
-
-
     endpoints: () => ({})
 })
 export default apiSlice;
-
 
 const getCookie=(name: string): string | null=> {
     const cookies = document.cookie.split(';');
