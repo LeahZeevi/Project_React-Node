@@ -23,7 +23,7 @@ const itemSlice = createSlice({
             state.itemsList = state.itemsList.filter((item) => item.itemName !== action.payload.ItemName)
         },
         updateItem: (state, action) => {
-            const index = state.itemsList.findIndex((item) => item.itemName === action.payload.ItemName)
+            const index = state.itemsList.findIndex((item) => item._id === action.payload._id)
             if (index !== -1) {
                 state.itemsList[index] = action.payload
             }
@@ -31,12 +31,20 @@ const itemSlice = createSlice({
     }
 
 })
-export const selectItems = (state: ItemsState) => state.itemsList
+// export const selectItems = (state: ItemsState) => state.itemsList
+// state: כל ה-state של ה-store, לכן צריך לגשת ל-state.items
+export const selectItems = (state: { items: ItemsState }) => state.items.itemsList;
+
 export const selectItemsByCategoryName = (categoryName: string) =>
     createSelector(
-        [selectItems],
-        (items) => items.filter((item) => item.categoryName === categoryName)
-    );
+      [selectItems],
+      (items) => items.filter((item) => item.categoryName === categoryName)
+    );  
+    
+export const selectItemsInUse = createSelector(
+  [selectItems],
+  (items) => items.filter(item => item.inUse === true)
+);
 
 
 export const { addItem, removeItem, updateItem,initialItemList } = itemSlice.actions

@@ -7,6 +7,7 @@ const router=express.Router()
 const verifyJWT=require("../middlwares/verifyJWT")
 const {addItem,updateItem,deletItem, getItemsByCategoryId, getAllItems} =require("../controllers/items");
 const uploudPic = require("../middlwares/uploudPic");
+const { route } = require("./weather");
 
 
 
@@ -15,7 +16,7 @@ const uploudPic = require("../middlwares/uploudPic");
 router.post('/:_id',uploudPic.single('url'),addItem);
  router.get('/:_id',getAllItems);
 router.get('/category/:categoryId',verifyJWT,getItemsByCategoryId);
-router.patch('/:_id',verifyJWT,updateItem);
+router.put('/:_id',verifyJWT,updateItem);
 router.delete('/:_id',verifyJWT,deletItem);
 // router.delete('/:id',verifyJWT, deletItem);
 

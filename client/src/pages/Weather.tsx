@@ -8,6 +8,7 @@
  // Weather.js
  import { useState, useEffect } from 'react';
  import axios from 'axios';
+import ShirtHangerLoader from '../components/ShirtHangerLoader';
  interface WeatherAProps {
      city: string;
    }
@@ -36,13 +37,8 @@
      fetchWeather();
    }, [city]);
  
-   if (loading) {
-     return <p>טוען...</p>;
-   }
- 
-   if (error) {
-     return <p>{error}</p>;
-   }
+
+   
    const getWeatherFeeling = (temp: number) => {
     switch (true) {
       case temp <= 10:
@@ -63,9 +59,17 @@
         return 'לא ידוע';
     }
   };
-  
- 
-   return (
+
+   if (error) {
+     return <p>{error}</p>;
+   }
+if(loading) {
+  return <div  style={{marginLeft: '45VW', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <ShirtHangerLoader />
+      </div>
+      } 
+
+     return (
      <div>
        <h2>מזג האוויר ב-{weather.name}</h2>
        <p>טמפרטורה: {weather.main.temp}°C</p>
@@ -73,9 +77,9 @@
        <p>לחות: {weather.main.humidity}%</p>
 
        {<p>{getWeatherFeeling(weather.main.temp)}</p>}
-       {}
+       
      </div>
    );
  };
- 
- export default Weather;
+
+ export default Weather

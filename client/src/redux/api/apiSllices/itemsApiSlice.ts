@@ -25,8 +25,9 @@ export const itemsApiSlice = apiSlices.injectEndpoints({
                 method: "POST",
                 body: newItem,
                 formData: true,
-                
+ 
             }),
+        
             invalidatesTags: ["Items"],
         }),
         getItemById: builder.query<Item[],string>({
@@ -37,12 +38,10 @@ export const itemsApiSlice = apiSlices.injectEndpoints({
             query: (categoryId) => `items/category/${categoryId}`,
             providesTags: ["Items"]
         }),
-        updateItem: builder.mutation<void,Item>({
-            query: (updateItem) => ({
-
-                url: `/${updateItem.itemName}`,
-
-                method: "PATCH",
+        updateItem: builder.mutation<void,{ _id:string, updateItem: Item }>({
+            query: ({ _id, updateItem }: { _id: string; updateItem: Item }) => ({
+                 url: `/items/${_id}`, // חשוב! 
+                method: "PUT",
                 body: updateItem
             }),
             invalidatesTags: ["Items"]

@@ -10,6 +10,7 @@ const UserHomePage = () => {
    const { myWardrobe, isLoadingMyWardrobe, errorMyWardrobe } = useGetMyWardrobe();
     console.log( myWardrobe);
     
+
     if (isLoadingUser) {
         return <p>טוען...</p>;
     }
@@ -17,6 +18,8 @@ const UserHomePage = () => {
 
     if (errorUser) {
         return <p>שגיאה בטעינה</p>;
+        console.log(errorUser);
+        
     }
  
 

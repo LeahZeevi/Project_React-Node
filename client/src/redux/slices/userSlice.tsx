@@ -3,8 +3,7 @@
 import { createSelector, createSlice, current, PayloadAction } from "@reduxjs/toolkit";
 import { Users } from "../../interfaces/Users";
 import Item from "../../interfaces/Items";
-import { RootOptions } from "react-dom/client";
-import { RootState } from "@reduxjs/toolkit/query";
+
 
 const initialState: Users = {
   userName: "",
