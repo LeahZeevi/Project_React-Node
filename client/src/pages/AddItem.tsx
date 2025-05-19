@@ -16,7 +16,7 @@ import {
 import { Controller, useForm } from "react-hook-form";
 import AddItem_Alert from "./AddItem_Alert";
 import { useState } from "react";
-import Item, { ItemWithId } from "../interfaces/Items"; // ייבוא ה-interface
+import Item from "../interfaces/Items"; // ייבוא ה-interface
 import { zodResolver } from "@hookform/resolvers/zod";
 import ItemSchema from "../schemas/ItemSchema";
 import { Users } from "../interfaces/Users"
@@ -31,25 +31,12 @@ const AddItem = () => {
   const [image, setImage] = useState<string | null>(null);
   const navigate = useNavigate();
   const [addItem] = useAddItemMutation();
-  // const user = useSelector(selectUser)
-
-  const userString = localStorage.getItem('user');
-  const user: Users = userString ? JSON.parse(userString) : null
-  const dispatch = useDispatch(); // שימוש ב-useDispatch
+  const user: Users = useSelector(selectUser)
 
   const onSubmit = async (data: any) => {
 
-    // try {
-    //   const response = await fetch('http://localhost:5000/predict', {
-    //     method: 'POST',
-    //     body: data.url,
-    //   });
-    //   const jsonResponse = await response.json();
-    //   const predictedCategory = jsonResponse.predicted_class;
-
-
-
       const formData = new FormData();
+      formData.append("userId",user._id);
       formData.append("itemName", data.itemName);
       formData.append("categoryName", data.categoryName);
       formData.append("session", data.session || " ");
@@ -60,8 +47,6 @@ const AddItem = () => {
         try {
           const response = await addItem({ _id: user._id, newItem: formData });
           console.log("response add item", response);
-          const addedItem = user.myWardrobe[user.myWardrobe.length - 1];
-          // dispatch(addItemToWardrobe(addedItem)); // שליחת הפעולה לעדכון ה-state
           setImage(null);
           reset({
             itemName: '',

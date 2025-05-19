@@ -1,18 +1,14 @@
 import { RouterProvider } from 'react-router'
 import './App.css'
-import {  useCookies } from 'react-cookie'
+import { useCookies } from 'react-cookie'
 import Login from './pages/Login'
 import { Provider } from 'react-redux'
 import store from './redux/store'
 import router from './routes/AppRoute'
-import { useGetAllItemsMutation } from './redux/api/apiSllices/itemsApiSlice'
-import { useDispatch } from 'react-redux'
-import { initialItemList } from './redux/slices/itemsSlice'
 
 
 
 function App() {
-
   const [cookies] = useCookies(['token']);
 
   return (

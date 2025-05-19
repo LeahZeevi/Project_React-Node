@@ -7,33 +7,6 @@ const fs = require('fs')
 const csv = require('csv-parser');
 const path = require('path');
 
-
-// exports.register = async (req, res) => {
-//     console.log("enter register");
-//     const { userName, city, email, password, myWardobe } = req.body
-
-//     if (!userName || !city || !password) {
-//         return res.status(400).json({ message: "one or more fields is not complete" })
-//     }
-    
-//     //lean(): המרה לקריאה בלבד מזרז את תהליך השאילתה
-//     const duplicate = await User.findOne({ userName: userName }).lean()
-//     if (duplicate) {
-//         return res.status(409).json({ message: "Dupliacated userName" + duplicate })
-//     }//אאולי כדאי להוסיף בדקיה סיסמא אם קיים כזה שם
-//     const hashPassword = await bcrypt.hash(password, 10)
-//     const userObject = { userName, city, email, password: hashPassword, myWardobe }    
-//     const user = await User.create(userObject)
-//     if (user){
-//         const accessToken = jwt.sign(userObject, process.env.ACCESS_TOKEN_SECRET)
-//         // const userInfo = { _id: user._id, userName: user.userName, city: user.city, email: user.email, password: user.password, myWardobe: user.myWardrobe
-//         //     ,accessToken:accessToken
-//         console.log(accessToken)
-//         return res. status(201).json({accessToken })
-//         }
-//     else
-//         return res.status(400).json({ message: `Invalid user received` })
-// }
 exports.register = async (req, res) => {
     console.log("enter register");
     const { userName, city, email, password, myWardobe } = req.body
@@ -77,11 +50,7 @@ exports.login = async (req, res) => {
         email:foundUser.email,password:foundUser.password
       }
       const accessToken = jwt.sign(userToken, process.env.ACCESS_TOKEN_SECRET)
-    // const userInfo = { _id: foundUser._id, userName: foundUser.userName, city: foundUser.city, email: foundUser.email, password: foundUser.password, myWardobe: foundUser.myWardrobe
-    //     ,accessToken:accessToken
            return res. status(201).json({accessToken:accessToken,user:foundUser})
-
-
 }
 
 
@@ -123,9 +92,6 @@ exports.getAllCities=async(req, res) => {
         res.status(500).json({ error: 'אירעה שגיאה בעת קריאת קובץ ה-CSV' });
       });
   };
-//   exports.getMyPIc=(req, res) => {
-// const path = require('path');
-// const fs = require('fs');
 
 exports.getMyPIc = (req, res) => {
 
