@@ -32,6 +32,7 @@ const handleUpdateItem = async ( _id: string) => {
   };
   const HanddleLogOut = () => {
     removeCookie('token')
+    localStorage.clear()
   }
   
     const allItemsInUse = async () => {

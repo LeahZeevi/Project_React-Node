@@ -35,9 +35,8 @@ const AddItem = () => {
 
   const onSubmit = async (data: any) => {
       const formData = new FormData();
-      
-      if (data.url && data.url[0]) {
-        formData.append("image", data.url[0]);
+      if (data.image && data.image[0]) {
+        formData.append("image", data.image[0]);
    const flaskResponse = await fetch("http://localhost:3000/api/predict", {
   method: "POST",
   body: formData
@@ -46,7 +45,7 @@ const result = await flaskResponse.json();
       formData.append("userId",user._id);
       formData.append("categoryName", result.category);
       formData.append("itemName", data.itemName);
-      // formData.append("categoryName", data.categoryName);
+       formData.append("image", data.image[0]);
       formData.append("session", data.session || " ");
       formData.append("style", data.style || "");
         try {
@@ -58,7 +57,7 @@ const result = await flaskResponse.json();
             categoryName: '',
             session: 'חורף',
             style: '',
-            url: "",
+            image: "",
           });
           navigate("/");
         }
@@ -120,7 +119,7 @@ const result = await flaskResponse.json();
                       fullWidth
                     />
                   )}
-                  {...register("url")}
+                  {...register("image")}
                 />
                 <Controller
                   control={control}
