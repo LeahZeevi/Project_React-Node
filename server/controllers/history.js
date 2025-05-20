@@ -2,12 +2,11 @@ const { default: mongoose } = require("mongoose");
 const History = require("../models/history");
 exports.addHistoryItem = async (req, res) => {
     try {
-        let { _id, user_id, itemName, wornEvent } = req.body;
+        let {user_id, itemName, wornEvent } = req.body;
         const history = { user_id, itemName, wornEvent };
         if (!user_id || !wornEvent || !itemName) {
             return res.status(400).json({ message: "Missing user_id or wornEvent" });
         }
-        if (_id) {
             const item = await History.findOne({ _id })
             if (item) {
                 console.log("item", item);
@@ -15,7 +14,6 @@ exports.addHistoryItem = async (req, res) => {
                 await item.save();
                 return res.status(200).json({ message: "add history item updated successfully", updateItem: item });
             }
-        }
         else {
             const newHistoryItem = await History.create(history);
             if (!newHistoryItem) {

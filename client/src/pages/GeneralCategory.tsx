@@ -1,7 +1,4 @@
 
-
-
-
 // import { Card, CardContent, CardMedia, Typography, Button } from "@mui/material";
 // // import { AddShoppingCart } from "@mui/icons-material";
 // import  { useEffect, useState } from 'react'
@@ -11,6 +8,7 @@
 // import { useGetAllItemsMutation, useUpdateItemMutation } from "../redux/api/apiSllices/itemsApiSlice";
 // import { Users } from "../interfaces/Users";
 // import { selectUser } from "../redux/slices/userSlice";
+
 
 
 // const GeneralCategory = () => {
@@ -26,32 +24,37 @@
 //       try {
 //         const response = await getAllItems(user._id).unwrap()
 //         console.log("getAllItems",response);
+
+// //   useEffect(() => {
+// //     const fetchWardrobe = async () => {
+// //       try {
+// //         const response = await getAllItems(user._id).unwrap()
+// //         console.log("getAllItems",response);
+
         
-//         if (response) {
-//           setMyWardrobe(response);
-//         }
-//       }
-//       catch (error) {
-//         console.error('שגיאה בקבלת פריטים:', error);
-//       }
-//     };
-//     fetchWardrobe();
-//   }, []);
-// console.log("myWardRobe",myWardrobe);
-//   const ItemsCategory = myWardrobe.filter(item => item.categoryName === typeCategory)
+// //         if (response) {
+// //           setMyWardrobe(response);
+// //         }
+// //       }
+// //       catch (error) {
+// //         console.error('שגיאה בקבלת פריטים:', error);
+// //       }
+// //     };
+// //     fetchWardrobe();
+// //   }, []);
+// // console.log("myWardRobe",myWardrobe);
+// //   const ItemsCategory = myWardrobe.filter(item => item.categoryName === typeCategory)
   
 
 
-//   const onAddToCart = async (_id: string) => {
-//     try {
-//       const response = await updatedItem({ _id:_id,inUse:true }).unwrap();
-//       console.log('Item updated on server:', response);
-//     } catch (error) {
-//       console.error('Failed to update item:', error);
-//     }
-//   }
-
-
+// //   const onAddToCart = async (_id: string) => {
+// //     try {
+// //       const response = await updatedItem({ _id:_id,inUse:true }).unwrap();
+// //       console.log('Item updated on server:', response);
+// //     } catch (error) {
+// //       console.error('Failed to update item:', error);
+// //     }
+// //   }
 
 //   return (
 //     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
@@ -77,10 +80,16 @@
 //             >
 //               הוסף לסל
 //             </Button>
-//           </CardContent>
+//           {/* </CardContent> */}
 //         </Card>
 //       ))}
 //     </div>
 //   );
 
+
 //  export default GeneralCategory
+
+
+
+
+

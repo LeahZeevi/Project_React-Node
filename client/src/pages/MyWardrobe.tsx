@@ -208,7 +208,7 @@ import { selectUser } from "../redux/slices/userSlice";
 import { Users } from "../interfaces/Users";
 import { useGetAllItemsMutation, useUpdateItemMutation } from "../redux/api/apiSllices/itemsApiSlice";
 import { Button, Card, CardContent, CardMedia, Grid } from "@mui/material";
-import { AddShoppingCart } from "@mui/icons-material";
+// import { AddShoppingCart } from "@mui/icons-material";
 
 const categories = ["חצאיות", "שמלות", "חולצות", "נעלים", "מכנסים"];
 
@@ -326,7 +326,7 @@ const MyWardrobe = () => {
                     position: 'relative',
                   }}
                     className="rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
-                    <CardMedia
+                    {item.itemName}<CardMedia
                       component="img"
                       height="180"
                       image={`http://localhost:3000/${item.image.replace(/^public[\\/]/,'')}`} // עדכן לנתיב האמיתי מהשרת
@@ -342,6 +342,7 @@ const MyWardrobe = () => {
                       <Typography className="font-semibold mb-2 text-center">
                         {item.itemName}
                       </Typography>
+
                      {!item.inUse  &&  <Button
                         variant={item.inUse ? "outlined" : "contained"}
                         startIcon={<AddShoppingCart />}
@@ -351,6 +352,7 @@ const MyWardrobe = () => {
                             ? "bg-gray-100 text-gray-700 border border-blue-600 hover:bg-gray-200"
                             : "bg-blue-600 hover:bg-blue-700 text-white"
                         }
+
                         fullWidth
                       >באלי ללבוש
                       </Button>}
@@ -364,6 +366,5 @@ const MyWardrobe = () => {
     </Tabs>
   );
 };
-
 
 export default MyWardrobe
