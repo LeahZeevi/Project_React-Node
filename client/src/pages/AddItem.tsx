@@ -165,7 +165,7 @@ const result = await flaskResponse.json();
             </form>
           </Paper>
         </Box>
-      );
+      )
     }
 
   export default AddItem;
