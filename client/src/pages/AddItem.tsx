@@ -58,7 +58,6 @@ const AddItem = () => {
         setImage(null);
         reset({
           itemName: '',
-          categoryName: '',
           session: 'חורף',
           style: '',
           image: "",
