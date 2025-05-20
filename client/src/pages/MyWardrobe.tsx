@@ -304,7 +304,7 @@ const MyWardrobe = () => {
                     flexDirection: 'column',
                   }}
                     className="rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
-                    <CardMedia
+                    {item.itemName}<CardMedia
                       component="img"
                       height="180"
                       image={`http://localhost:3000/public/uploadsPic/${item.url}`}
