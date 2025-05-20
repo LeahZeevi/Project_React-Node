@@ -81,7 +81,7 @@ exports.deletItem = async (req, res) => {
     }
 }
 exports.updateItem = async (req, res) => {
-    const _id = req.params;
+    const { _id ,inUse} = req.params;
     const item=req.body;
     console.log("_id",_id);
     console.log("item",item);
@@ -89,7 +89,7 @@ exports.updateItem = async (req, res) => {
     try {
         const updateItem = await Item.findByIdAndUpdate(
              _id ,
-            {inUse:item.inUse},
+            {inUse:inUse},
             {new:true}
         );
         if (!updateItem)

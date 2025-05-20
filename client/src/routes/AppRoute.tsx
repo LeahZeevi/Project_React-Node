@@ -7,7 +7,7 @@ import WardrobeLayout from "../components/WardrobeLayout"
 import AppLayout from "../components/AppLayout"
 import AddItem from "../pages/AddItem"
 import Weather from "../pages/Weather"
-import GeneralCategory from "../pages/GeneralCategory"
+// import GeneralCategory from "../pages/GeneralCategory"
 
 
  const router=createBrowserRouter([{
@@ -21,7 +21,7 @@ import GeneralCategory from "../pages/GeneralCategory"
         {path:"weather",element:<Weather city="אלעד" />},
         {path:"myWardrobe",element:<WardrobeLayout/>,children:[
             {index:true,element:<MyWardrobe/>},
-            {path:":typeCategory", element: <GeneralCategory/>}
+            // {path:":typeCategory", element: <GeneralCategory/>}
         ]},
         {path:"mySets",element:<MySets/>}
        ]

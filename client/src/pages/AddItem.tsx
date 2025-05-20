@@ -34,7 +34,6 @@ const AddItem = () => {
   const user: Users = useSelector(selectUser)
 
   const onSubmit = async (data: any) => {
-
       const formData = new FormData();
       formData.append("userId",user._id);
       formData.append("itemName", data.itemName);
@@ -42,8 +41,8 @@ const AddItem = () => {
       formData.append("session", data.session || " ");
       formData.append("style", data.style || "");
       if (data.url && data.url[0]) {
-        formData.append("url", data.url[0]);
-
+        formData.append("url", data.url[0].name);
+       console.log("data.url:",data.url[0].name);
         try {
           const response = await addItem({ _id: user._id, newItem: formData });
           console.log("response add item", response);
@@ -60,9 +59,8 @@ const AddItem = () => {
         catch (error) {
           console.error("שגיאה בהוספת פריט:", error);
         }
-      };
+      }
     }
-  
   
       const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0]) {

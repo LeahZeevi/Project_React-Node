@@ -13,6 +13,6 @@ const { route } = require("./weather");
 router.post('/:_id',uploudPic.single('url'),addItem);
  router.get('/:_id',verifyJWT,getItemById);
 router.get('/AllIems/:_id',verifyJWT,getAllItemsById);
-router.patch('/:_id',verifyJWT,updateItem);
+router.patch('/:_id/:inUse',verifyJWT,updateItem);
 router.delete('/:_id',verifyJWT,deletItem);
 module.exports=router;

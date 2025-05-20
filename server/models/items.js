@@ -10,11 +10,11 @@ const ItemsSchema = new mongoose.Schema({
     },
     url: {
         type: String,
-        //  require:[true,"item must include picture"]
+          require:[true,"item must include picture"]
     },
     categoryName: {
         type: String,
-        enum: ["חולצות", "חצאיות", "שמלות", "פיז'מות", "נעלים"],
+        enum: ["חולצות", "חצאיות", "שמלות","מכנסים", "נעלים"],
         require: [true, "Item nust include category"]
     },
     session: {
