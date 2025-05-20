@@ -36,13 +36,22 @@ const AddItem = () => {
   const onSubmit = async (data: any) => {
 
       const formData = new FormData();
+      
+      if (data.url && data.url[0]) {
+        formData.append("image", data.url[0]);
+   const flaskResponse = await fetch("http://localhost:3000/api/predict", {
+  method: "POST",
+  body: formData
+});
+const result = await flaskResponse.json();
       formData.append("userId",user._id);
+      formData.append("categoryName", result.category);
       formData.append("itemName", data.itemName);
-      formData.append("categoryName", data.categoryName);
+      // formData.append("categoryName", data.categoryName);
       formData.append("session", data.session || " ");
       formData.append("style", data.style || "");
-      if (data.url && data.url[0]) {
-        formData.append("url", data.url[0]);
+
+
 
         try {
           const response = await addItem({ _id: user._id, newItem: formData });
