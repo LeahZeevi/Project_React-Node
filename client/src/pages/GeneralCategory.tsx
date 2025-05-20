@@ -1,20 +1,4 @@
 
-<<<<<<< HEAD
-=======
-
-
-// <<<<<<< HEAD
-// // import { Card, CardContent, CardMedia, Typography, Button } from "@mui/material";
-// // import { AddShoppingCart } from "@mui/icons-material";
-// // import  { useEffect, useState } from 'react'
-// // import { useSelector } from 'react-redux';
-// // import { useParams} from 'react-router';
-// // import Item from "../interfaces/Items";
-// // import { useGetAllItemsMutation, useUpdateItemMutation } from "../redux/api/apiSllices/itemsApiSlice";
-// // import { Users } from "../interfaces/Users";
-// // import { selectUser } from "../redux/slices/userSlice";
-// =======
->>>>>>> c3cc775dd142175f05fe16598e4cf8b852b6597a
 // import { Card, CardContent, CardMedia, Typography, Button } from "@mui/material";
 // // import { AddShoppingCart } from "@mui/icons-material";
 // import  { useEffect, useState } from 'react'
@@ -24,36 +8,29 @@
 // import { useGetAllItemsMutation, useUpdateItemMutation } from "../redux/api/apiSllices/itemsApiSlice";
 // import { Users } from "../interfaces/Users";
 // import { selectUser } from "../redux/slices/userSlice";
-<<<<<<< HEAD
 
 
 
-// // const GeneralCategory = () => {
+// const GeneralCategory = () => {
 
-// //   const { typeCategory } = useParams();
-// //   const [myWardrobe, setMyWardrobe] = useState<Item[]>([]);
-// //   const [updatedItem] = useUpdateItemMutation();
-// //   const [getAllItems] = useGetAllItemsMutation()
-// //   const user: Users = useSelector(selectUser)
+//   const { typeCategory } = useParams();
+//   const [myWardrobe, setMyWardrobe] = useState<Item[]>([]);
+//   const [updatedItem] = useUpdateItemMutation();
+//   const [getAllItems] = useGetAllItemsMutation()
+//   const user: Users = useSelector(selectUser)
 
-=======
-// >>>>>>> 8d3957836de94dff990d346e89b2bb62be886d95
+//   useEffect(() => {
+//     const fetchWardrobe = async () => {
+//       try {
+//         const response = await getAllItems(user._id).unwrap()
+//         console.log("getAllItems",response);
 
-
-// // const GeneralCategory = () => {
-
-// //   const { typeCategory } = useParams();
-// //   const [myWardrobe, setMyWardrobe] = useState<Item[]>([]);
-// //   const [updatedItem] = useUpdateItemMutation();
-// //   const [getAllItems] = useGetAllItemsMutation()
-// //   const user: Users = useSelector(selectUser)
-
->>>>>>> c3cc775dd142175f05fe16598e4cf8b852b6597a
 // //   useEffect(() => {
 // //     const fetchWardrobe = async () => {
 // //       try {
 // //         const response = await getAllItems(user._id).unwrap()
 // //         console.log("getAllItems",response);
+
         
 // //         if (response) {
 // //           setMyWardrobe(response);
@@ -78,11 +55,6 @@
 // //       console.error('Failed to update item:', error);
 // //     }
 // //   }
-<<<<<<< HEAD
-
-=======
->>>>>>> c3cc775dd142175f05fe16598e4cf8b852b6597a
-
 
 //   return (
 //     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
@@ -91,7 +63,7 @@
 //           <CardMedia
 //             component="img"
 //             height="180"
-//             image={`http://localhost:3000/public/uploadsPic/${item.url}`} // עדכן לנתיב האמיתי מהשרת
+//             image={`http://localhost:3000/public/uploadsPic/${item.image}`} // עדכן לנתיב האמיתי מהשרת
 //             alt={item.itemName}
 //             className="object-cover"
 //           />
@@ -113,8 +85,11 @@
 //       ))}
 //     </div>
 //   );
-// };
-// >>>>>>> 8d3957836de94dff990d346e89b2bb62be886d95
 
 
-// // export default GeneralCategory
+//  export default GeneralCategory
+
+
+
+
+

@@ -35,6 +35,7 @@ const Header = () => {
   };
   const HanddleLogOut = () => {
     removeCookie('token')
+    localStorage.clear()
   }
 
   const allItemsInUse = async () => {
@@ -144,30 +145,34 @@ const Header = () => {
             ))}
           </ul>
         )} */}
-          {cartItems?.length === 0 ? (
-            <p>הסל ריק</p>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              {cartItems?.map(item => (
-                <div key={item._id} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <img
-                    src={item.url} // ודאי שזו התכונה הנכונה אצלך
-                    // alt={item.itemName}
-                    style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '8px' }}
-                  />
-                  <h4>{item.itemName}</h4>
-                  <button
-                    onClick={() => handleUpdateItem(item._id)}
-                    style={{
-                      backgroundColor: 'transparent',
-                      border: 'none',
-                      color: 'red',
-                      fontSize: '10px',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    ❌
-                  </button>
+        {cartItems?.length === 0 ? (
+  <p>הסל ריק</p>
+) : (
+  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+    {cartItems?.map(item => (
+      <div key={item._id} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <img
+          src={`http://localhost:3000/${item.image.replace(/^public[\\/]/,'')}`}  // ודאי שזו התכונה הנכונה אצלך
+          // alt={item.itemName}
+          style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '8px' }}
+        />
+        <button
+         onClick={() => handleUpdateItem(item._id)}
+          style={{
+            backgroundColor: 'transparent',
+            border: 'none',
+            color: 'red',
+            fontSize: '10px',
+            cursor: 'pointer',
+          }}
+        >
+          ❌
+        </button>
+      </div>
+    ))}
+  </div>
+)}
+
 
                 </div>
               ))}

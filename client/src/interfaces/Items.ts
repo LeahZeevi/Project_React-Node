@@ -2,7 +2,7 @@ interface Item{
     _id:string,
     userId:string,
     itemName:string,
-    url:string,
+    image:string,
     categoryName:string,
     session:string,
     categoryId:Number,
@@ -14,7 +14,7 @@ interface Item{
 
 // export interface ItemWithId extends Item{
 //     itemName:string,
-//     url:string,
+//     image:string,
 //     categoryName:string,
 //     session:string,
 //     categoryId:Number,
