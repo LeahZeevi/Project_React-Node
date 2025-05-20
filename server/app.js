@@ -12,6 +12,9 @@ const bodyParser = require('body-parser');
 const weatherRouter = require('./routes/weather');
 const userRouter = require('./routes/users')
 const itemsRouter = require('./routes/items')
+const historyRouter = require('./routes/history')
+const wearning=require('./routes/wearnings')
+const predictRoute = require('./routes/predictRoute');
 const app=express();
 
 const cachePath = path.join(__dirname, 'predictions_cache.json');
@@ -28,9 +31,12 @@ const PORT=process.env.PORT;
 console.log(PORT)
 // app.use("/uploadsPic", express.static("uploadsPic")); // תיקיית התמונות
 // app.use('/weather', weather);
+app.use("/api", predictRoute);
 app.use('/users', userRouter)
 app.use('/items', itemsRouter)
 app.use('/weather', weatherRouter); 
+app.use('/history', historyRouter)
+app.use('/wearnings', wearning)
 app.use(express.static("public"))
 // בשרת Node.js (backend)
 app.use('/uploadsPic', express.static(path.join(__dirname, 'uploadsPic')));

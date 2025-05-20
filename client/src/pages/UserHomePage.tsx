@@ -1,32 +1,16 @@
 
-
-import { useGetMyWardrobe } from "../hooks/useGetMyWardrobe";
-import { useGetUser } from "../hooks/useGetUser";
+import { useSelector } from "react-redux";
+import { selectUser } from "../redux/slices/userSlice";
+import { Users } from "../interfaces/Users";
 
 
 const UserHomePage = () => {
-
-     const { user, isLoadingUser, errorUser } = useGetUser();
-   const { myWardrobe, isLoadingMyWardrobe, errorMyWardrobe } = useGetMyWardrobe();
-    console.log( myWardrobe);
-    
-
-    if (isLoadingUser) {
-        return <p>טוען...</p>;
-    }
-
-
-    if (errorUser) {
-        return <p>שגיאה בטעינה</p>;
-        console.log(errorUser);
-        
-    }
- 
-
+const currentUser:Users=useSelector(selectUser);
+console.log(currentUser);
 
     return (
         <div>
-            {user && <h1>{user.userName}</h1>}
+             <h1>{currentUser?.userName}</h1>
         </div>
     );
 };

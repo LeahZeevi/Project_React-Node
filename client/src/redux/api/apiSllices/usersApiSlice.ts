@@ -3,8 +3,7 @@ import { Users, LoginedUser } from "../../../interfaces/Users";
 
 const usersApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-
-        register: builder.mutation<string, Users>({
+        register: builder.mutation<{accessToken:string,user:Users}, Users>({
             query: (newItem) => ({
                 url: "/users",
                 method: "POST",
@@ -12,7 +11,7 @@ const usersApiSlice = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ["Users"]
         }),
-        login: builder.mutation<Users, LoginedUser>({
+        login: builder.mutation<{accessToken:string,user:Users}, LoginedUser>({
             query: (partialUser) => ({
                 url: "/users/login",
                 method: "POST",
