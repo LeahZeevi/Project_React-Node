@@ -7,7 +7,6 @@ const ItemSchema = z.object({
   .refine((files) => files && files.length > 0, {
     message: "יש להעלות תמונה",
   }),
-  categoryName: z.string(),
   session: z.string().optional().nullable(),
 
   style: z.string(),
