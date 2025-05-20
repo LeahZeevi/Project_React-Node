@@ -1,4 +1,20 @@
 
+<<<<<<< HEAD
+=======
+
+
+// <<<<<<< HEAD
+// // import { Card, CardContent, CardMedia, Typography, Button } from "@mui/material";
+// // import { AddShoppingCart } from "@mui/icons-material";
+// // import  { useEffect, useState } from 'react'
+// // import { useSelector } from 'react-redux';
+// // import { useParams} from 'react-router';
+// // import Item from "../interfaces/Items";
+// // import { useGetAllItemsMutation, useUpdateItemMutation } from "../redux/api/apiSllices/itemsApiSlice";
+// // import { Users } from "../interfaces/Users";
+// // import { selectUser } from "../redux/slices/userSlice";
+// =======
+>>>>>>> c3cc775dd142175f05fe16598e4cf8b852b6597a
 // import { Card, CardContent, CardMedia, Typography, Button } from "@mui/material";
 // // import { AddShoppingCart } from "@mui/icons-material";
 // import  { useEffect, useState } from 'react'
@@ -8,6 +24,7 @@
 // import { useGetAllItemsMutation, useUpdateItemMutation } from "../redux/api/apiSllices/itemsApiSlice";
 // import { Users } from "../interfaces/Users";
 // import { selectUser } from "../redux/slices/userSlice";
+<<<<<<< HEAD
 
 
 
@@ -19,6 +36,19 @@
 // //   const [getAllItems] = useGetAllItemsMutation()
 // //   const user: Users = useSelector(selectUser)
 
+=======
+// >>>>>>> 8d3957836de94dff990d346e89b2bb62be886d95
+
+
+// // const GeneralCategory = () => {
+
+// //   const { typeCategory } = useParams();
+// //   const [myWardrobe, setMyWardrobe] = useState<Item[]>([]);
+// //   const [updatedItem] = useUpdateItemMutation();
+// //   const [getAllItems] = useGetAllItemsMutation()
+// //   const user: Users = useSelector(selectUser)
+
+>>>>>>> c3cc775dd142175f05fe16598e4cf8b852b6597a
 // //   useEffect(() => {
 // //     const fetchWardrobe = async () => {
 // //       try {
@@ -48,7 +78,10 @@
 // //       console.error('Failed to update item:', error);
 // //     }
 // //   }
+<<<<<<< HEAD
 
+=======
+>>>>>>> c3cc775dd142175f05fe16598e4cf8b852b6597a
 
 
 //   return (
@@ -75,7 +108,7 @@
 //             >
 //               הוסף לסל
 //             </Button>
-//           </CardContent>
+//           {/* </CardContent> */}
 //         </Card>
 //       ))}
 //     </div>
