@@ -329,7 +329,7 @@ const MyWardrobe = () => {
                     <CardMedia
                       component="img"
                       height="180"
-                      image={`http://localhost:3000/public/uploadsPic/${item.image}`}
+                      image={`http://localhost:3000/${item.image.replace(/^public[\\/]/,'')}`} // עדכן לנתיב האמיתי מהשרת
                       
                       alt={item.itemName}
                       className="object-cover"

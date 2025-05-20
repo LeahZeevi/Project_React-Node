@@ -34,137 +34,125 @@ const AddItem = () => {
   const user: Users = useSelector(selectUser)
 
   const onSubmit = async (data: any) => {
-      const formData = new FormData();
-      if (data.image && data.image[0]) {
-        formData.append("image", data.image[0]);
-   const flaskResponse = await fetch("http://localhost:3000/api/predict", {
-  method: "POST",
-  body: formData
-});
-const result = await flaskResponse.json();
-      formData.append("userId",user._id);
-      formData.append("categoryName", result.category);
+    const formData = new FormData();
+    if (data.image && data.image[0]) {
+      formData.append("image", data.image[0]);
+      const flaskResponse = await fetch("http://localhost:3000/api/predict", {
+        method: "POST",
+        body: formData
+      });
+       
+      const result = await flaskResponse.json();
+      console.log("זיהוי המודל:",result);
+      formData.append("userId", user._id);
+      formData.append("categoryName", result.predictedCategory);
       formData.append("itemName", data.itemName);
-       formData.append("image", data.image[0]);
+      // formData.append("image", data.image[0]);
       formData.append("session", data.session || " ");
       formData.append("style", data.style || "");
-        try {
-          const response = await addItem({ _id: user._id, newItem: formData });
-          console.log("response add item", response);
-          setImage(null);
-          reset({
-            itemName: '',
-            categoryName: '',
-            session: 'חורף',
-            style: '',
-            image: "",
-          });
-          navigate("/");
-        }
-        catch (error) {
-          console.error("שגיאה בהוספת פריט:", error);
-        }
+      console.log("data.image[0]:",data.image[0]);
+
+      try {
+        const response = await addItem({ _id: user._id, newItem: formData });
+        console.log("response add item", response);
+        setImage(null);
+        reset({
+          itemName: '',
+          categoryName: '',
+          session: 'חורף',
+          style: '',
+          image: "",
+        });
+        navigate("/");
+      }
+      catch (error) {
+        console.error("שגיאה בהוספת פריט:", error);
       }
     }
-  
-      const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (event.target.files && event.target.files[0]) {
-          setImage(URL.createObjectURL(event.target.files[0]));
-        }
-      };
+  }
 
-      return (
-        <Box display="flex" justifyContent="center" mt={4}>
-          <Paper elevation={3} sx={{ padding: 4, width: '100%', maxWidth: 600 }}>
-            <Typography variant="h5" color="secondary" textAlign="center" mb={3}>
-              הוספת בגד לארון
-            </Typography>
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <Stack spacing={3}>
-                <TextField label="שם הפריט" variant="outlined" color='secondary' {...register("itemName")} fullWidth />
-                {errors.itemName && <p style={{ color: "red" }}>{errors.itemName.message}</p>}
-                <Controller
-                  name="categoryName"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <FormControl fullWidth>
-                      <InputLabel id="Category-select-label">קטגוריה</InputLabel>
-                      <Select labelId="Category-select-label" id="Category-select" label="קטגוריה" {...register("categoryName")} {...field}>
-                        <MenuItem value="חולצות">חולצות</MenuItem>
-                        <MenuItem value="חצאיות">חצאיות</MenuItem>
-                        <MenuItem value="שמלות">שמלות</MenuItem>
-                        <MenuItem value="נעלים">נעלים</MenuItem>
-                        <MenuItem value="פיג'מות">פיג'מות</MenuItem>
-                      </Select>
-                    </FormControl>
-                  )}
-                />
-                <Button variant="outlined" color="secondary" onClick={() => setIsAlertOpen(true)}>
-                  להוספת התאמת בגדים - הצג את הקטלוג
-                </Button>
-                <Controller
-                  control={control}
-                  render={({ field }) => (
-                    <TextField
-                      type="file"
-                      inputProps={{ accept: "image/*" }}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                        const fileList = e.target.files;
-                        if (fileList && fileList.length > 0) {
-                          field.onChange(fileList);
-                          handleImageChange(e);
-                        }
-                      }}
-                      fullWidth
-                    />
-                  )}
-                  {...register("image")}
-                />
-                <Controller
-                  control={control}
-                  defaultValue="חורף"
-                  render={({ field }) => (
-                    <RadioGroup row {...field}>
-                      <FormControlLabel value="חורף" control={<Radio color="secondary" />} label="חורף" />
-                      <FormControlLabel value="כללי" control={<Radio color="secondary" />} label="כללי" />
-                      <FormControlLabel value="קיץ" control={<Radio color="secondary" />} label="קיץ" />
-                    </RadioGroup>
-                  )}
-                  {...register("session")}
-                />
-                <Controller
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <FormControl fullWidth>
-                      <InputLabel>סגנון</InputLabel>
-                      <Select label="סגנון" {...field}>
-                        <MenuItem value="ביסיק">ביסיק</MenuItem>
-                        <MenuItem value="ספורט">ספורט</MenuItem>
-                        <MenuItem value="ספורט אלגנט">ספורט אלגנט</MenuItem>
-                        <MenuItem value="אלגנט">אלגנט</MenuItem>
-                        <MenuItem value="אחר">אחר</MenuItem>
-                      </Select>
-                    </FormControl>
-                  )}
-                  {...register("style")}
-                />
-                {image && (
-                  <Box>
-                    <Typography variant="subtitle1">תמונה שהועלתה:</Typography>
-                    <img src={image} alt="uploaded" style={{ maxWidth: '100%', maxHeight: '300px', borderRadius: 8 }} />
-                  </Box>
-                )}
-                <Button variant="contained" color="secondary" type="submit" fullWidth>
-                  הוספה לארון
-                </Button >
-                {isAlertOpen && <AddItem_Alert setIsAlertOpen={setIsAlertOpen} isAlertOpen={isAlertOpen} />}
-              </Stack>
-            </form>
-          </Paper>
-        </Box>
-      );
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      setImage(URL.createObjectURL(event.target.files[0]));
+      console.log("תמונה שהועלתה:", event.target.files[0]);
     }
+  };
 
-  export default AddItem;
+  return (
+    <Box display="flex" justifyContent="center" mt={4}>
+      <Paper elevation={3} sx={{ padding: 4, width: '100%', maxWidth: 600 }}>
+        <Typography variant="h5" color="secondary" textAlign="center" mb={3}>
+          הוספת בגד לארון
+        </Typography>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Stack spacing={3}>
+            <TextField label="שם הפריט" variant="outlined" color='secondary' {...register("itemName")} fullWidth />
+            {errors.itemName && <p style={{ color: "red" }}>{errors.itemName.message}</p>}
+            <Button variant="outlined" color="secondary" onClick={() => setIsAlertOpen(true)}>
+              להוספת התאמת בגדים - הצג את הקטלוג
+            </Button>
+            <Controller
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  type="file"
+                  inputProps={{ accept: "image/*" }}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    const fileList = e.target.files;
+                    if (fileList && fileList.length > 0) {
+                      field.onChange(fileList);
+                      handleImageChange(e);
+                    }
+                  }}
+                  fullWidth
+                />
+              )}
+              {...register("image")}
+            />
+            <Controller
+              control={control}
+              defaultValue="חורף"
+              render={({ field }) => (
+                <RadioGroup row {...field}>
+                  <FormControlLabel value="חורף" control={<Radio color="secondary" />} label="חורף" />
+                  <FormControlLabel value="כללי" control={<Radio color="secondary" />} label="כללי" />
+                  <FormControlLabel value="קיץ" control={<Radio color="secondary" />} label="קיץ" />
+                </RadioGroup>
+              )}
+              {...register("session")}
+            />
+            <Controller
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <FormControl fullWidth>
+                  <InputLabel>סגנון</InputLabel>
+                  <Select label="סגנון" {...field}>
+                    <MenuItem value="ביסיק">ביסיק</MenuItem>
+                    <MenuItem value="ספורט">ספורט</MenuItem>
+                    <MenuItem value="ספורט אלגנט">ספורט אלגנט</MenuItem>
+                    <MenuItem value="אלגנט">אלגנט</MenuItem>
+                    <MenuItem value="אחר">אחר</MenuItem>
+                  </Select>
+                </FormControl>
+              )}
+              {...register("style")}
+            />
+            {image && (
+              <Box>
+                <Typography variant="subtitle1">תמונה שהועלתה:</Typography>
+                <img src={image} alt="uploaded" style={{ maxWidth: '100%', maxHeight: '300px', borderRadius: 8 }} />
+              </Box>
+            )}
+            <Button variant="contained" color="secondary" type="submit" fullWidth>
+              הוספה לארון
+            </Button >
+            {isAlertOpen && <AddItem_Alert setIsAlertOpen={setIsAlertOpen} isAlertOpen={isAlertOpen} />}
+          </Stack>
+        </form>
+      </Paper>
+    </Box>
+  );
+}
+
+export default AddItem;

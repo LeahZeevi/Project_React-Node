@@ -131,7 +131,7 @@ console.log(cartItems);
     {cartItems?.map(item => (
       <div key={item._id} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
         <img
-          src={item.itemName} // ודאי שזו התכונה הנכונה אצלך
+          src={`http://localhost:3000/${item.image.replace(/^public[\\/]/,'')}`}  // ודאי שזו התכונה הנכונה אצלך
           // alt={item.itemName}
           style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '8px' }}
         />
