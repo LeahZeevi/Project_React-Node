@@ -41,14 +41,20 @@ const AddItem = () => {
    const flaskResponse = await fetch("http://localhost:3000/api/predict", {
   method: "POST",
   body: formData
+  
 });
+  console.log("flaskResponse jdon",flaskResponse.json);
+    console.log("flaskResponse DATA",flaskResponse.formData);
+
+
 const result = await flaskResponse.json();
       formData.append("userId",user._id);
-      formData.append("categoryName", result.category);
+      formData.append("categoryName", result.predictedCategory);
       formData.append("itemName", data.itemName);
       // formData.append("categoryName", data.categoryName);
       formData.append("session", data.session || " ");
       formData.append("style", data.style || "");
+
         try {
           const response = await addItem({ _id: user._id, newItem: formData });
           console.log("response add item", response);
