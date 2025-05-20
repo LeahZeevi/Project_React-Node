@@ -49,15 +49,6 @@ const result = await flaskResponse.json();
       // formData.append("categoryName", data.categoryName);
       formData.append("session", data.session || " ");
       formData.append("style", data.style || "");
-<<<<<<< HEAD
-      if (data.url && data.url[0]) {
-        formData.append("url", data.url[0].name);
-       console.log("data.url:",data.url[0].name);
-=======
-
-
-
->>>>>>> 8d3957836de94dff990d346e89b2bb62be886d95
         try {
           const response = await addItem({ _id: user._id, newItem: formData });
           console.log("response add item", response);
