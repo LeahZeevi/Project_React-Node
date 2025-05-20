@@ -34,6 +34,7 @@ const AddItem = () => {
   const user: Users = useSelector(selectUser)
 
   const onSubmit = async (data: any) => {
+
     const formData = new FormData();
     if (data.image && data.image[0]) {
       formData.append("image", data.image[0]);
@@ -50,6 +51,7 @@ const AddItem = () => {
       // formData.append("image", data.image[0]);
       formData.append("session", data.session || " ");
       formData.append("style", data.style || "");
+
       console.log("data.image[0]:",data.image[0]);
 
       try {
@@ -67,6 +69,24 @@ const AddItem = () => {
       }
       catch (error) {
         console.error("שגיאה בהוספת פריט:", error);
+
+
+        try {
+          const response = await addItem({ _id: user._id, newItem: formData });
+          console.log("response add item", response);
+          setImage(null);
+          reset({
+            itemName: '',
+            categoryName: '',
+            session: 'חורף',
+            style: '',
+            url: "",
+          });
+          navigate("/");
+        }
+        catch (error) {
+          console.error("שגיאה בהוספת פריט:", error);
+ 
       }
     }
   }
@@ -75,6 +95,7 @@ const AddItem = () => {
     if (event.target.files && event.target.files[0]) {
       setImage(URL.createObjectURL(event.target.files[0]));
       console.log("תמונה שהועלתה:", event.target.files[0]);
+
     }
   };
 
