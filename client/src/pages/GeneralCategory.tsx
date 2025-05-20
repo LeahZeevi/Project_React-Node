@@ -2,7 +2,7 @@
 
 
 import { Card, CardContent, CardMedia, Typography, Button } from "@mui/material";
-import { AddShoppingCart } from "@mui/icons-material";
+// import { AddShoppingCart } from "@mui/icons-material";
 import  { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 import { useParams} from 'react-router';
@@ -69,7 +69,7 @@ console.log("myWardRobe",myWardrobe);
             </Typography>
             <Button
               variant="contained"
-              startIcon={<AddShoppingCart />}
+              // startIcon={<AddShoppingCart />}
               onClick={() => onAddToCart(item)}
               className="bg-blue-600 hover:bg-blue-700 text-white rounded-full"
               fullWidth

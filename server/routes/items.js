@@ -10,7 +10,7 @@ const uploudPic = require("../middlwares/uploudPic");
 const { route } = require("./weather");
 
 
-router.post('/:_id',uploudPic.single('url'),addItem);
+router.post('/:_id',uploudPic.single('image'),addItem);
  router.get('/:_id',verifyJWT,getItemById);
 router.get('/AllIems/:_id',verifyJWT,getAllItemsById);
 router.patch('/:_id',verifyJWT,updateItem);

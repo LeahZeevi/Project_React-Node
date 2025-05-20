@@ -8,7 +8,7 @@ const ItemsSchema = new mongoose.Schema({
         type: String,
         required: [true, "name of item is require"]
     },
-    url: {
+    image: {
         type: String,
         //  require:[true,"item must include picture"]
     },
