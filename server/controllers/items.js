@@ -2,16 +2,18 @@ const { status } = require("express/lib/response");
 const Item = require("../models/items");
 // const { saveImage } = require('../middlware/uploudPic');
 const mongoose = require('mongoose');
+const axios=require("axios");
+const fs = require("fs");
+const FormData = require('form-data');
 
 
 exports.addItem = async (req, res) => {
-    console.log("enter addItem");
-    const { _id } = req.params;
-    let {userId, itemName, url, categoryName, session, inUse, countWear, style } = req.body;
+     const { _id } = req.params;
+    let { userId, itemName, categoryName,image, session, inUse, countWear, style } = req.body;
     let imageUrl = null;
 
     if (req.file) {
-        imageUrl = req.file.path; // נתיב התמונה ש-multer שמר
+        imageUrl = req.file.path;
     } else {
         return res.status(400).send('No file uploaded.');
     }
@@ -19,14 +21,14 @@ exports.addItem = async (req, res) => {
         return res.status(400).json({ message: "ItemName and categoryName are required" });
     }
     try {
-        const item={userId,itemName,url,categoryName,session,inUse,countWear,style}
+        const item={userId,itemName,image,categoryName,session,inUse,countWear,style}
       const newItem=await Item.create(item)
       if(newItem)
         return res.status(201).json(newItem)
 
     } catch (error) {
         console.error("Error adding item :", error);
-        return res.status(500).json({ message: "Failed to add item " });
+return res.status(500).json({ message: "Failed to add item", error: error.message });
     }
 };
 
@@ -102,6 +104,32 @@ exports.updateItem = async (req, res) => {
         res.status(500).json({ message: "Failed to deleete item  " })
     }
 }
+
+
+exports.predictCategory = async (req, res) => {
+  try {
+console.log("req.file:", req.file);
+if (!req.file) {
+  return res.status(400).json({ error: 'No image file uploaded' });
+}
+
+    const form = new FormData();
+form.append("image", fs.createReadStream(req.file.path), req.file.originalname);
+
+    const response = await axios.post("http://127.0.0.1:5000/predict", form, {
+      headers: form.getHeaders()
+    });
+
+    // מחזיר ל-Frontend את הקטגוריה שחוזה המודל
+    res.json({ predictedCategory: response.data.predicted_class });
+  } catch (error) {
+    console.error("שגיאה בניבוי קטגוריה:", error.message);
+    res.status(500).json({ error: "שגיאה בשירות החיזוי" });
+  } finally {
+    fs.unlinkSync(req.file.path); // מוחק את הקובץ הזמני
+  }
+};
+
 
 
 //לא נראה לי שצריך
