@@ -31,7 +31,7 @@ exports.register = async (req, res) => {
         return res. status(201).json({accessToken:accessToken,user:user})
         }
     else
-        return res.status(400).json({ message: `Invalid user received` })
+        return res.status(400).json({ message: "Invalid user received" })
 }
 
 exports.login = async (req, res) => {
@@ -93,14 +93,14 @@ exports.getAllCities=async(req, res) => {
       });
   };
 
-exports.getMyPIc = (req, res) => {
+
 
 exports.getMyPIc = (req, res) => {
-  const { url } = req.params;
-  console.log('שם הקובץ המתקבל:', url);
+  const { image } = req.params;
+  console.log('שם הקובץ המתקבל:', image);
 
   const imagesDir = path.join("public", "uploadsPic"); // תיקיית uploadsPic ישירות בתוך public
-  const imagePath = path.join(imagesDir, url);
+  const imagePath = path.join(imagesDir, image);
   console.log('נתיב מלא לתמונה:', imagePath);
 
   if (!fs.existsSync(imagePath)) {
@@ -110,5 +110,5 @@ exports.getMyPIc = (req, res) => {
 
   res.sendFile(imagePath);
 };
-}
+
   
