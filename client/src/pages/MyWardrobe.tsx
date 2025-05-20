@@ -208,7 +208,7 @@ import { selectUser } from "../redux/slices/userSlice";
 import { Users } from "../interfaces/Users";
 import { useGetAllItemsMutation, useUpdateItemMutation } from "../redux/api/apiSllices/itemsApiSlice";
 import { Button, Card, CardContent, CardMedia, Grid } from "@mui/material";
-import { AddShoppingCart } from "@mui/icons-material";
+// import { AddShoppingCart } from "@mui/icons-material";
 
 const categories = ["חצאיות", "שמלות", "חולצות", "נעלים", "מכנסים"];
 
@@ -318,7 +318,7 @@ const MyWardrobe = () => {
                       </Typography>
                       <Button
                         variant="contained"
-                        startIcon={<AddShoppingCart />}
+                        // startIcon={<AddShoppingCart />}
                         onClick={() => onAddToCart(item._id)}
                         className="bg-blue-600 hover:bg-blue-700 text-white rounded-full"
                         fullWidth
@@ -335,6 +335,5 @@ const MyWardrobe = () => {
     </Tabs>
   );
 };
-
 
 export default MyWardrobe
