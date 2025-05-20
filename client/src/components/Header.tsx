@@ -3,7 +3,7 @@ import { NavLink } from 'react-router'
 import { useCookies } from 'react-cookie';
 import { Button } from '@mui/material';
 import Item from '../interfaces/Items';
-import { useGetAllItemsMutation } from '../redux/api/apiSllices/itemsApiSlice';
+import { useGetAllItemsMutation, useUpdateItemMutation } from '../redux/api/apiSllices/itemsApiSlice';
 import { Users } from '../interfaces/Users';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../redux/slices/userSlice';
@@ -13,20 +13,34 @@ const Header = () => {
   const [isSideNavOpen, setIsSideNavOpen] = useState(false);
   const [, , removeCookie] = useCookies(['token']);
   const [getAllItems] = useGetAllItemsMutation();
+    const [updateItem] = useUpdateItemMutation();
+
   const user: Users = useSelector(selectUser);
+const handleUpdateItem = async ( _id: string) => {
+  try {
+    await updateItem({ _id:_id,inUse:false }).unwrap();
+    allItemsInUse();
+    // setCartItems(prev => prev?.filter(i => i._id !== _id));
+  } catch (error) {
+    console.error("שגיאה בעדכון הפריט:", error);
+  }
+};
 
+  const closeBasket = () => {
+    setIsSideNavOpen(false);
 
-  const toggleSideNav = () => {
-    setIsSideNavOpen(prev => !prev);
   };
   const HanddleLogOut = () => {
     removeCookie('token')
   }
-  useEffect(() => {
-    const fetchWardrobe = async () => {
+  
+    const allItemsInUse = async () => {
       try {
+        setIsSideNavOpen(true);
         const response:Item[] = await getAllItems(user._id).unwrap()
+                  console.log("response",response);
         if(response){
+          
         const filterItems=response.filter(item=>item.inUse==true);
         setCartItems(filterItems);
         }
@@ -35,8 +49,8 @@ const Header = () => {
         console.error('שגיאה בקבלת פריטים:', error);
       }
     };
-    fetchWardrobe();
-  }, []);
+  
+console.log(cartItems);
 
   return (
     <div dir="rtl">
@@ -77,7 +91,7 @@ const Header = () => {
         <div>
           <NavLink to='/weather' style={({ isActive }) => ({ color: isActive ? "pink" : "palevioletred" })}>Weather</NavLink>
         </div>
-        <div style={{ cursor: 'pointer' }} onClick={toggleSideNav}>🗑️</div>
+        <div style={{ cursor: 'pointer' }} onClick={allItemsInUse}>🗑️</div>
       </nav>
 
       {/* Side Nav */}
@@ -98,22 +112,50 @@ const Header = () => {
       >
 
 
-        <button onClick={toggleSideNav} style={{ marginBottom: '10px' }}>סגור</button>
-        <h3>סל כביסה</h3>
+        <button onClick={closeBasket} style={{ marginBottom: '10px' }}>סגור</button>
+        {/* <h3>סל כביסה</h3>
         {cartItems?.length === 0 ? (
           <p>הסל ריק</p>
         ) : (
           <ul>
             {cartItems?.map((item, idx) => (
-              <li key={idx}>{item.url}</li>
+              <li key={idx}>{item.itemName}</li>
             ))}
           </ul>
-        )}
+        )} */}
+        {cartItems?.length === 0 ? (
+  <p>הסל ריק</p>
+) : (
+  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+    {cartItems?.map(item => (
+      <div key={item._id} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <img
+          src={item.itemName} // ודאי שזו התכונה הנכונה אצלך
+          // alt={item.itemName}
+          style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '8px' }}
+        />
+        <button
+         onClick={() => handleUpdateItem(item._id)}
+          style={{
+            backgroundColor: 'transparent',
+            border: 'none',
+            color: 'red',
+            fontSize: '10px',
+            cursor: 'pointer',
+          }}
+        >
+          ❌
+        </button>
+      </div>
+    ))}
+  </div>
+)}
+
       </div>
 
       {isSideNavOpen && (
         <div
-          onClick={toggleSideNav}
+          onClick={closeBasket}
           style={{
             position: 'fixed',
             top: 0,
