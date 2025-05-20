@@ -24,11 +24,10 @@ export const itemsApiSlice = apiSlices.injectEndpoints({
             query: (id) => `/items/${id}`,
             providesTags: ["Items"]
         }),
-        updateItem: builder.mutation<void, { _id: string, updateItem: Item }>({
-            query: ({ _id, updateItem }: { _id: string; updateItem: Item }) => ({
-                url: `/items/${_id}`,
-                method: "PATCH",
-                body: updateItem
+        updateItem: builder.mutation<Item, { _id: string, inUse: boolean }>({
+            query: ({ _id, inUse }: { _id: string; inUse: boolean }) => ({
+                url: `/items/${_id}/${inUse}`,
+                method: "PATCH"
             }),
             invalidatesTags: ["Items"]
         }),
