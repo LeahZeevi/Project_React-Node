@@ -76,10 +76,9 @@ const AddItem = () => {
           setImage(null);
           reset({
             itemName: '',
-            categoryName: '',
             session: 'חורף',
             style: '',
-            url: "",
+            image: "",
           });
           navigate("/");
         }
@@ -174,5 +173,5 @@ const AddItem = () => {
     </Box>
   );
 }
-
-export default AddItem;
+}
+export default AddItem

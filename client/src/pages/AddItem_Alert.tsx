@@ -10,7 +10,7 @@
 // // const productsData: Record<string, Product[]> = {
 // //   חולצות: [
 // //     { name: 'חולצה 1', imgSrc: '🧥', price: '100 ש"ח' },
-// //     { name: 'חולצה 2', imgSrc: '/images/tshirt2.jpg', price: '120 ש"ח' },
+// //     { name: 'חולzzzצה 2', imgSrc: '/images/tshirt2.jpg', price: '120 ש"ח' },
 // //     { name: 'חולצה 3', imgSrc: '/images/tshirt3.jpg', price: '110 ש"ח' },
 // //   ],
 // //   חצאיות: [
