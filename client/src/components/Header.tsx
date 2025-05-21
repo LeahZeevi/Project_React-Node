@@ -116,7 +116,6 @@ const Header = () => {
         <div style={{ cursor: 'pointer' }} onClick={allItemsInUse}>🗑️</div>
       </nav>
 
-      {/* Side Nav */}
       <div
         style={{
           position: 'fixed',
@@ -174,6 +173,7 @@ const Header = () => {
         )}
 
 
+
         <button style={{ marginBottom: '10px' }} onClick={addToHistory}>סגירת לוק</button>
       </div>
 
@@ -196,5 +196,6 @@ const Header = () => {
     </div>
   )
 }
+
 
 export default Header

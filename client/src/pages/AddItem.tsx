@@ -141,6 +141,7 @@ const AddItem = () => {
                   )}
                   {...register("session")}
                 />
+
                 <Controller
                   control={control}
                   defaultValue=""
@@ -176,4 +177,54 @@ const AddItem = () => {
     )
   }
 
+// <!--               )}
+//               {...register("image")}
+//             />
+//             <Controller
+//               control={control}
+//               defaultValue="חורף"
+//               render={({ field }) => (
+//                 <RadioGroup row {...field}>
+//                   <FormControlLabel value="חורף" control={<Radio color="secondary" />} label="חורף" />
+//                   <FormControlLabel value="כללי" control={<Radio color="secondary" />} label="כללי" />
+//                   <FormControlLabel value="קיץ" control={<Radio color="secondary" />} label="קיץ" />
+//                 </RadioGroup>
+//               )}
+//               {...register("session")}
+//             />
+//             <Controller
+//               control={control}
+//               defaultValue=""
+//               render={({ field }) => (
+//                 <FormControl fullWidth>
+//                   <InputLabel>סגנון</InputLabel>
+//                   <Select label="סגנון" {...field}>
+//                     <MenuItem value="ביסיק">ביסיק</MenuItem>
+//                     <MenuItem value="ספורט">ספורט</MenuItem>
+//                     <MenuItem value="ספורט אלגנט">ספורט אלגנט</MenuItem>
+//                     <MenuItem value="אלגנט">אלגנט</MenuItem>
+//                     <MenuItem value="אחר">אחר</MenuItem>
+//                   </Select>
+//                 </FormControl>
+//               )}
+//               {...register("style")}
+//             />
+//             {image && (
+//               <Box>
+//                 <Typography variant="subtitle1">תמונה שהועלתה:</Typography>
+//                 <img src={image} alt="uploaded" style={{ maxWidth: '100%', maxHeight: '300px', borderRadius: 8 }} />
+//               </Box>
+//             )}
+//             <Button variant="contained" color="secondary" type="submit" fullWidth>
+//               הוספה לארון
+//             </Button >
+//             {isAlertOpen && <AddItem_Alert setIsAlertOpen={setIsAlertOpen} isAlertOpen={isAlertOpen} />}
+//           </Stack>
+//         </form>
+//       </Paper>
+//     </Box>
+//   );
+// }
+// }
+// >>>>>>> main -->
 export default AddItem
