@@ -1,10 +1,10 @@
 import { RouterProvider } from 'react-router'
 import './App.css'
 import { useCookies } from 'react-cookie'
-import Login from './pages/Login'
 import { Provider } from 'react-redux'
 import store from './redux/store'
 import router from './routes/AppRoute'
+import Register from './pages/Register'
 
 
 
@@ -17,7 +17,7 @@ function App() {
         {cookies.token ?
           <RouterProvider router={router}>
           </RouterProvider>
-          : <Login />}
+          : <Register/>}
       </Provider>
     </>
   )
