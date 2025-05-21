@@ -172,25 +172,30 @@ const Header = () => {
           </div>
         )}
 
+
+
+        <button style={{ marginBottom: '10px' }} onClick={addToHistory}>סגירת לוק</button>
       </div>
-      <button style={{ marginBottom: '10px' }} onClick={addToHistory}>סגירת לוק</button>
-    {isSideNavOpen && (
-      <div
-        onClick={closeBasket}
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: 'rgba(0,0,0,0.3)',
-          zIndex: 150,
-        }}
-      />
-    )}
-  
-  </div>)
- }
- 
+
+
+
+
+      {isSideNavOpen && (
+        <div
+          onClick={closeBasket}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0,0,0,0.3)',
+            zIndex: 150,
+          }}
+        />)}
+    </div>
+  )
+}
+
 
 export default Header

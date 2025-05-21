@@ -3,31 +3,108 @@ import { Box, Typography, Button, TextField } from '@mui/material';
 import '../css/login.css'; // ייבוא קובץ ה-CSS
 import { useState } from "react";
 import { useForm } from 'react-hook-form';
+import { RegisterUserSchema, LoginUserSchema } from '../schemas/UserSchema'
+import { LoginedUser, Users } from '../interfaces/Users';
+import { useLoginMutation, useRegisterMutation } from '../redux/api/apiSllices/usersApiSlice';
+import { useCookies } from 'react-cookie';
+import { RouterProvider } from 'react-router';
+import axios from 'axios';
+ import router from '../routes/AppRoute';
+import { useDispatch } from 'react-redux';
+import { Controller } from 'react-hook-form';
+import Item from '../interfaces/Items';
+import { setCurrentUser } from '../redux/slices/userSlice';
+
+
+interface Data {
+    user: Users | undefined,
+    accessToken: string
+}
 
 const Login = () => {
+    const [openRegister, setOpenRegister] = useState<Boolean>(false);
+    const [openLogin, setOpenLogin] = useState<Boolean>(false)
+    const [send, setSend] = useState<Boolean>(false);
+    const [cities, setCities] = useState<Array<string>>([]);
+    const dispatch=useDispatch();
 
-    const [isAlertOpen, setIsAlertOpen] = useState(false);
-    const { register, handleSubmit, setValue, formState: { errors } } = useForm({ mode: "onChange" });
-    const [login, setIsLogin] = useState(false);
-    const [newAccount, setNewAccount] = useState(false);
+    const [registerUser] = useRegisterMutation();
+    const [loginUser] = useLoginMutation();
+    const [cookies, setCookies] = useCookies(['token'])
+ 
 
-    const handleCreatAlert = (action: string) => {
-        action === 'login' ? setIsLogin(true) : setNewAccount(true)
-        setIsAlertOpen(true)
-        console.log(isAlertOpen);
 
-    }
-    const handlerCloseAlert = () => {
-        setIsAlertOpen(false);
-        setIsLogin(false);
-        setNewAccount(false);
-    }
-    const handleRegister = () => {
+    const { register: registerRegister, handleSubmit: handleSubmitRegister, control, formState: { errors: errorsRegister }, reset: resetRegister } = useForm({
+        mode: "onBlur",
+        resolver: zodResolver(RegisterUserSchema)
+    });
 
-    }
-    const handlogin = () => {
+    const { register: registeLogin, handleSubmit: handleSubmitLogin, formState: { errors: errorsLogin }, reset: resetLogin } = useForm({
+        mode: "onBlur",
+        resolver: zodResolver(LoginUserSchema)
+    });
 
-    }
+    useEffect(() => {
+
+        axios.get('http://localhost:3000/users/excel-column') // כתובת השרת של
+            .then((response) => {
+                console.log(response.data);
+                
+                setCities(response.data);
+            })
+            .catch((error) => {
+                console.error('שגיאה בקבלת ערי ישראל:', error);
+            });
+    }, []);
+
+    const onSubmitRegister = async (newUser: { userName: string; city: string; email: string; password: string; }) => {
+        const userWithWardrobe: Users = { ...newUser, _id: ""};
+        console.log("1 - User data before registration:", userWithWardrobe, typeof userWithWardrobe);
+
+        try {
+            const response:{accessToken:string,user:Users} = await registerUser(userWithWardrobe).unwrap();
+            console.log("response.user",response.user._id);
+            const currentUser = response.user;
+            if (currentUser) {
+                localStorage.setItem('user', JSON.stringify(currentUser));
+                dispatch(setCurrentUser(currentUser));
+            } else {
+                console.log('currentUser is undefined, not saving to localStorage.');
+            }
+            setCookies("token", response.accessToken, { path: "/", maxAge: 3600 * 24 * 7 });
+            setOpenRegister(false);
+            setSend(true);
+            resetRegister();
+        }
+    
+        catch (error: any) {
+            console.error("Registration error:", error);
+            console.error("Registration error data:", error?.data);
+            console.error("Registration error status:", error?.status);
+        }
+    };
+
+    const onSubmitLogin = async (user: LoginedUser) => {
+        try {
+            const response:{accessToken:string,user:Users} = await loginUser(user).unwrap();
+            const currentUser = response.user
+            if (currentUser) {
+                localStorage.setItem('user', JSON.stringify(currentUser));
+                 dispatch(setCurrentUser(currentUser));
+                console.log('User saved to localStorage:', JSON.stringify(currentUser));
+            } else {
+                console.log('currentUser is undefined, not saving to localStorage.');
+            }
+            setCookies("token", response.accessToken, { path: "/", maxAge: 3600 * 24 * 7 });
+            console.log(response);
+        }
+        catch (error) {
+            console.log(error);
+        }
+        setSend(true)
+        setOpenLogin(false);
+        resetLogin()
+    };
 
     return (
         <div>
