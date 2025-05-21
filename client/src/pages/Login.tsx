@@ -1,7 +1,7 @@
 
 import { Box, Typography, Button, TextField } from '@mui/material';
 import '../css/login.css'; // ייבוא קובץ ה-CSS
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from 'react-hook-form';
 import { RegisterUserSchema, LoginUserSchema } from '../schemas/UserSchema'
 import { LoginedUser, Users } from '../interfaces/Users';
@@ -14,6 +14,7 @@ import { useDispatch } from 'react-redux';
 import { Controller } from 'react-hook-form';
 import Item from '../interfaces/Items';
 import { setCurrentUser } from '../redux/slices/userSlice';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 
 interface Data {
@@ -26,7 +27,20 @@ const Login = () => {
     const [openLogin, setOpenLogin] = useState<Boolean>(false)
     const [send, setSend] = useState<Boolean>(false);
     const [cities, setCities] = useState<Array<string>>([]);
+    const [isAlertOpen, setIsAlertOpen] = useState<boolean>(false);
+    const [login, setLogin] = useState<boolean>(true); // true for login, false for register
     const dispatch=useDispatch();
+
+    // Handler to open alert/modal
+    const handleCreatAlert = (type: 'login' | 'newAccount') => {
+        setIsAlertOpen(true);
+        setLogin(type === 'login');
+    };
+
+    // Handler to close alert/modal
+    const handlerCloseAlert = () => {
+        setIsAlertOpen(false);
+    };
 
     const [registerUser] = useRegisterMutation();
     const [loginUser] = useLoginMutation();
@@ -125,29 +139,29 @@ const Login = () => {
                                 <div>
                                     {login ?
                                         <form>
-                                            <TextField id="outlined-basic" label="User Name" variant="outlined" color='secondary' {...register("userName")} />
-                                            {errors.name && <p style={{ color: "red" }}></p>}
+                                            <TextField id="outlined-basic" label="User Name" variant="outlined" color='secondary' {...registeLogin("userName")} />
+                                            {/* {errorsLogin.userName && <p style={{ color: "red" }}>{errorsLogin.userName.message}</p>} */}
 
-                                            <TextField id="outlined-basic" label="Password" variant="outlined" color='secondary' type='password'  {...register("password")} />
-                                            {errors.email && <p style={{ color: "red" }}></p>}
-                                            <Button variant="contained" color={"secondary"} onClick={() => setValue("name", "userName")} >
+                                            <TextField id="outlined-basic" label="Password" variant="outlined" color='secondary' type='password'  {...registeLogin("password")} />
+                                            {/* {errorsLogin.password && <p style={{ color: "red" }}>{errorsLogin.password.message}</p>} */}
+                                            <Button variant="contained" color={"secondary"} type="submit">
                                                 Send
                                             </Button>
                                         </form>
                                         : <form>
-                                            <TextField id="outlined-basic" label="User Name" variant="outlined" color='secondary' {...register("userName")} />
-                                            {errors.name && <p style={{ color: "red" }}></p>}
+                                            <TextField id="outlined-basic" label="User Name" variant="outlined" color='secondary' {...registerRegister("userName")} />
+                                            {/* {errorsRegister.userName && <p style={{ color: "red" }}>{errorsRegister.userName.message}</p>} */}
 
-                                            <TextField id="outlined-basic" label="City" variant="outlined" color='secondary' {...register("city")} />
-                                            {errors.name && <p style={{ color: "red" }}></p>}
+                                            <TextField id="outlined-basic" label="City" variant="outlined" color='secondary' {...registerRegister("city")} />
+                                            {/* {errorsRegister.city && <p style={{ color: "red" }}>{errorsRegister.city.message}</p>} */}
 
-                                            <TextField id="outlined-basic" label="Email" variant="outlined" color='secondary' type='email' {...register("email")} />
-                                            {errors.email && <p style={{ color: "red" }}></p>}
+                                            <TextField id="outlined-basic" label="Email" variant="outlined" color='secondary' type='email' {...registerRegister("email")} />
+                                            {/* {errorsRegister.email && <p style={{ color: "red" }}>{errorsRegister.email.message}</p>} */}
 
-                                            <TextField id="outlined-basic" label="Password" variant="outlined" color='secondary' type='password' {...register("email")} />
-                                            {errors.email && <p style={{ color: "red" }}></p>}
+                                            <TextField id="outlined-basic" label="Password" variant="outlined" color='secondary' type='password' {...registerRegister("password")} />
+                                            {/* {errorsRegister.password && <p style={{ color: "red" }}>{errorsRegister.password.message}</p>} */}
                                             
-                                            <Button variant="contained" color={"secondary"} onClick={() => setValue("name", "userName")} >
+                                            <Button variant="contained" color={"secondary"} type="submit">
                                                 Send
                                             </Button>
                                         </form>}
