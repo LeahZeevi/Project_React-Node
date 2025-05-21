@@ -1,7 +1,7 @@
-import { Button, TextField, Autocomplete } from '@mui/material'
-import '../css/login.css'
-import { useState, useEffect } from 'react'
-import { zodResolver } from '@hookform/resolvers/zod';
+
+import { Box, Typography, Button, TextField } from '@mui/material';
+import '../css/login.css'; // ייבוא קובץ ה-CSS
+import { useState } from "react";
 import { useForm } from 'react-hook-form';
 import { RegisterUserSchema, LoginUserSchema } from '../schemas/UserSchema'
 import { LoginedUser, Users } from '../interfaces/Users';
@@ -107,88 +107,68 @@ const Login = () => {
     };
 
     return (
-        <div className='container'>
-            {openRegister &&
-                <div className={`modal ${openRegister ? 'open' : ''}`}>
-                    <div className="modal-content">
-                        <span className="close" onClick={() => setOpenRegister(false)}>
-                            ×
-                        </span>
-                        <form onSubmit={handleSubmitRegister(onSubmitRegister)}>
-                            <TextField id="outlined-basic" label="User Name" variant="outlined" color='secondary' {...registerRegister("userName")} />
-                            {errorsRegister.userName && <p style={{ color: "red" }}></p>}
+        <div>
 
-                       <Controller
-                                name="city"
-                                control={control}
-                                defaultValue=''
-                                // rules={{ required: "שדה זה הוא חובה" }}
-                                render={({ field }) => (
-                                    <Autocomplete
-                                        id="outlined-basic"
-                                        options={cities}
-                                        autoSave="true"
-                                        getOptionLabel={(option) => option}
-                                        renderInput={(params) => (
-                                            <TextField
-                                                {...params}
-                                                label="בחר או הקלד עיר"
-                                                variant="outlined"
-                                                error={!!errorsRegister.city}
-                                                helperText={errorsRegister.city?.message}
-                                                {...field} // Spread the field props to the TextField
-                                            />
-                                        )}
-                                        sx={{ width: 300 }}
-                                        value={field.value || null} // Ensure value is always a value (null if undefined initially)
-                                        onChange={(event, newValue) => field.onChange(newValue)}
-                                    />
-                                )}
-                            /> 
+            <Box className="container">
+                <div className="App">
 
-                            {errorsRegister.city && <p style={{ color: "red" }}>{errorsRegister.city.message}</p>}
-                            {errorsRegister.city && <p style={{ color: "red" }}></p>}
+                    {isAlertOpen && (
+                        <div
+                            className={`modalL ${isAlertOpen ? 'open' : ''}`}
 
-                            <TextField id="outlined-basic" label="Email" variant="outlined" color='secondary' {...registerRegister("email")} />
-                            {errorsRegister.email && <p style={{ color: "red" }}></p>}
+                        >
+                            <div className="modal-content">
+                                <span className="close" onClick={handlerCloseAlert}>
+                                    ×
+                                </span>
 
-                            <TextField id="outlined-basic" label="Password" variant="outlined" color='secondary' {...registerRegister("password")} />
-                            {errorsRegister.password && <p style={{ color: "red" }}></p>}
+                                <div>
+                                    {login ?
+                                        <form>
+                                            <TextField id="outlined-basic" label="User Name" variant="outlined" color='secondary' {...register("userName")} />
+                                            {errors.name && <p style={{ color: "red" }}></p>}
 
-                            {<Button variant="contained" color={"secondary"} type='submit' >
-                                Send
-                            </Button>}
-                        </form>
+                                            <TextField id="outlined-basic" label="Password" variant="outlined" color='secondary' type='password'  {...register("password")} />
+                                            {errors.email && <p style={{ color: "red" }}></p>}
+                                            <Button variant="contained" color={"secondary"} onClick={() => setValue("name", "userName")} >
+                                                Send
+                                            </Button>
+                                        </form>
+                                        : <form>
+                                            <TextField id="outlined-basic" label="User Name" variant="outlined" color='secondary' {...register("userName")} />
+                                            {errors.name && <p style={{ color: "red" }}></p>}
 
-                    </div>
+                                            <TextField id="outlined-basic" label="City" variant="outlined" color='secondary' {...register("city")} />
+                                            {errors.name && <p style={{ color: "red" }}></p>}
+
+                                            <TextField id="outlined-basic" label="Email" variant="outlined" color='secondary' type='email' {...register("email")} />
+                                            {errors.email && <p style={{ color: "red" }}></p>}
+
+                                            <TextField id="outlined-basic" label="Password" variant="outlined" color='secondary' type='password' {...register("email")} />
+                                            {errors.email && <p style={{ color: "red" }}></p>}
+                                            
+                                            <Button variant="contained" color={"secondary"} onClick={() => setValue("name", "userName")} >
+                                                Send
+                                            </Button>
+                                        </form>}
+                                </div>
+                            </div>
+
+                        </div>
+                    )}
                 </div>
-            }
-
-            {openLogin &&
-                <div className={`modal ${openLogin ? 'open' : ''}`}>
-                    <div className="modal-content">
-                        <span className="close" onClick={() => setOpenLogin(false)}>
-                            ×
-                        </span>
-
-                        <form onSubmit={handleSubmitLogin(onSubmitLogin)}>
-                            <TextField id="outlined-basic" label="User Name" variant="outlined" color='secondary' {...registeLogin("userName")} />
-                            {errorsLogin.userName && <p style={{ color: "red" }}></p>}
-
-                            <TextField id="outlined-basic" label="Password" variant="outlined" color='secondary' {...registeLogin("password")} />
-                            {errorsLogin.password && <p style={{ color: "red" }}></p>}
-                            <Button variant="contained" color={"secondary"} type='submit' >
-                                Send
-                            </Button>
-
-                        </form>
-                    </div>
-                </div>
-            }
-            {send && <RouterProvider router={router} />}
-
-            <Button variant="contained" onClick={() => setOpenRegister(true)}>הרשמה</Button>
-            <Button variant="contained" onClick={() => setOpenLogin(true)}>התחברות</Button>
+                {!isAlertOpen &&
+                    <><Button className="top-section" onClick={() => handleCreatAlert('login')}>
+                        <Typography variant="h5" className="top-text">
+                            התחברות
+                        </Typography>
+                    </Button><Button className="middle-section" onClick={() => handleCreatAlert('newAccount')}>
+                            <Typography variant="subtitle1" className="middle-text">
+                                הרשמה
+                            </Typography>
+                        </Button></>
+                }
+            </Box>
         </div>
     )
 }
