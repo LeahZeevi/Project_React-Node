@@ -9,10 +9,11 @@ import { useLoginMutation, useRegisterMutation } from '../redux/api/apiSllices/u
 import { useCookies } from 'react-cookie';
 import { RouterProvider } from 'react-router';
 import axios from 'axios';
-import router from '../routes/AppRoute';
+ import router from '../routes/AppRoute';
 import { useDispatch } from 'react-redux';
 import { Controller } from 'react-hook-form';
 import Item from '../interfaces/Items';
+import { setCurrentUser } from '../redux/slices/userSlice';
 
 
 interface Data {
@@ -25,7 +26,7 @@ const Login = () => {
     const [openLogin, setOpenLogin] = useState<Boolean>(false)
     const [send, setSend] = useState<Boolean>(false);
     const [cities, setCities] = useState<Array<string>>([]);
-
+    const dispatch=useDispatch();
 
     const [registerUser] = useRegisterMutation();
     const [loginUser] = useLoginMutation();
@@ -66,6 +67,7 @@ const Login = () => {
             const currentUser = response.user;
             if (currentUser) {
                 localStorage.setItem('user', JSON.stringify(currentUser));
+                dispatch(setCurrentUser(currentUser));
             } else {
                 console.log('currentUser is undefined, not saving to localStorage.');
             }
@@ -88,6 +90,7 @@ const Login = () => {
             const currentUser = response.user
             if (currentUser) {
                 localStorage.setItem('user', JSON.stringify(currentUser));
+                 dispatch(setCurrentUser(currentUser));
                 console.log('User saved to localStorage:', JSON.stringify(currentUser));
             } else {
                 console.log('currentUser is undefined, not saving to localStorage.');
