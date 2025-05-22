@@ -22,7 +22,7 @@ import AlertExampel from "../pages/AlertExampel"
         {path:"addItem",element:<AddItem/>},
         {path:"weather",element:<Weather city="אלעד" />},
         {path:"myWardrobe",element:<WardrobeLayout/>,children:[
-            {index:true,element:<AlertExampel/>},
+            {index:true,element:<MyWardrobe/>},
             // {path:":typeCategory", element: <GeneralCategory/>}
         ]},
         {path:"mySets",element:<MySets/>}
