@@ -7,6 +7,8 @@ import WardrobeLayout from "../components/WardrobeLayout"
 import AppLayout from "../components/AppLayout"
 import AddItem from "../pages/AddItem"
 import Weather from "../pages/Weather"
+import AlertExampel from "../pages/AlertExampel"
+
 // import GeneralCategory from "../pages/GeneralCategory"
 
 
@@ -20,7 +22,7 @@ import Weather from "../pages/Weather"
         {path:"addItem",element:<AddItem/>},
         {path:"weather",element:<Weather city="אלעד" />},
         {path:"myWardrobe",element:<WardrobeLayout/>,children:[
-            {index:true,element:<MyWardrobe/>},
+            {index:true,element:<AlertExampel/>},
             // {path:":typeCategory", element: <GeneralCategory/>}
         ]},
         {path:"mySets",element:<MySets/>}

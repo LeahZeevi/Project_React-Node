@@ -8,6 +8,7 @@ import Register from './pages/Register'
 
 
 
+
 function App() {
   const [cookies] = useCookies(['token']);
 
@@ -19,6 +20,7 @@ function App() {
           </RouterProvider>
           : <Register/>}
       </Provider>
+
     </>
   )
 }

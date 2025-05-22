@@ -7,14 +7,17 @@ exports.addHistoryItem = async (req, res) => {
         if (!user_id || !wornEvent || !itemName) {
             return res.status(400).json({ message: "Missing user_id or wornEvent" });
         }
-            const item = await History.findOne({ _id })
+            const item = await History.findOne({ user_id:user_id,itemName:itemName })
             if (item) {
-                console.log("item", item);
-                item.wornEvent.push(new mongoose.Types.ObjectId(wornEvent));
+                console.log("item", item.wornEvent);
+                item.wornEvent.push(wornEvent);
                 await item.save();
                 return res.status(200).json({ message: "add history item updated successfully", updateItem: item });
             }
+        
         else {
+            console.log("not found item");
+            
             const newHistoryItem = await History.create(history);
             if (!newHistoryItem) {
                 return res.status(400).json({ message: "Invalid history item received" })
@@ -41,7 +44,7 @@ exports.getEventWearByItemName = async (req, res) => {
         }
         for (let doc of histories) {
             for (let event of doc.wornEvent) {
-                console.log(event.items); // כבר כאן יש לך את הפריטים
+                console.log(event.items); 
             }
         }
         // return res.json(history)
