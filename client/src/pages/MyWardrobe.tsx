@@ -219,6 +219,7 @@ const MyWardrobe = () => {
   const user: Users = useSelector(selectUser);
   const [getAllItems] = useGetAllItemsMutation();
   const [updatedItem] = useUpdateItemMutation();
+  const [open, setOpen] = useState(false);
 
 
   const onAddToCart = async (id: string) => {
@@ -241,11 +242,14 @@ const MyWardrobe = () => {
         )
       );
     }
+
     } catch (error) {
       console.error("שגיאה בעדכון הפריט:", error);
     }
   };
-
+const ShowHistory=async()=>{
+  const 
+}
 
 
   useEffect(() => {
