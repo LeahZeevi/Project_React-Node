@@ -1,9 +1,9 @@
 const express = require("express")
-const { addHistoryItem, getEventWearByItemName } = require("../controllers/history")
+const { addHistoryItem, getEventWearByItemId } = require("../controllers/history")
 const router = express.Router()
 
 
 router.post('/',addHistoryItem);
-router.get('/:itemName', getEventWearByItemName);
+router.get('/:item_id', getEventWearByItemId);
 module.exports = router
 

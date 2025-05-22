@@ -247,10 +247,6 @@ const MyWardrobe = () => {
       console.error("שגיאה בעדכון הפריט:", error);
     }
   };
-const ShowHistory=async()=>{
-  const 
-}
-
 
   useEffect(() => {
     const fetchWardrobe = async () => {

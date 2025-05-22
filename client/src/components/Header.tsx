@@ -65,8 +65,7 @@ const Header = () => {
           await Promise.all(
             cartItems.map(item =>
               addHistory({
-                user_id: user._id,
-                itemName: item.itemName,
+                item_id: item._id,
                 wornEvent: [newEventWearning.newWearn._id]
               }).unwrap()
             )
@@ -78,7 +77,6 @@ const Header = () => {
       }
     }
   }
-  console.log(cartItems);
 
   return (
     <div dir="rtl">
