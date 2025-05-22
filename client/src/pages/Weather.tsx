@@ -71,12 +71,12 @@ if(loading) {
 
      return (
      <div>
-       <h2>מזג האוויר ב-{weather.name}</h2>
+       <h4>מזג האוויר ב-{weather.name}</h4>
        <p>טמפרטורה: {weather.main.temp}°C</p>
-       <p>תיאור: {weather.weather[0].description}</p>
-       <p>לחות: {weather.main.humidity}%</p>
+       {/* <p>תיאור: {weather.weather[0].description}</p> */}
+       {/* <p>לחות: {weather.main.humidity}%</p> */}
 
-       {<p>{getWeatherFeeling(weather.main.temp)}</p>}
+       {/* {<p>{getWeatherFeeling(weather.main.temp)}</p>} */}
        
      </div>
    );

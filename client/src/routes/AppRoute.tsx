@@ -7,6 +7,7 @@ import WardrobeLayout from "../components/WardrobeLayout"
 import AppLayout from "../components/AppLayout"
 import AddItem from "../pages/AddItem"
 import Weather from "../pages/Weather"
+import DigitalWardrobeApp from "../pages/DigitalWardrobeApp"
 // import GeneralCategory from "../pages/GeneralCategory"
 
 
@@ -23,7 +24,7 @@ import Weather from "../pages/Weather"
             {index:true,element:<MyWardrobe/>},
             // {path:":typeCategory", element: <GeneralCategory/>}
         ]},
-        {path:"mySets",element:<MySets/>}
+        {path:"mySets",element:<DigitalWardrobeApp/>}
        ]
  }])
  export default router

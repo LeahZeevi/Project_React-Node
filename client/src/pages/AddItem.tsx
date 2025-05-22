@@ -69,22 +69,7 @@ const AddItem = () => {
         console.error("שגיאה בהוספת פריט:", error);
       
 
-        try {
-          const response = await addItem({ _id: user._id, newItem: formData });
-          console.log("response add item", response);
-          setImage(null);
-          reset({
-            itemName: '',
-            session: 'חורף',
-            style: '',
-            image: "",
-          });
-          navigate("/");
-        }
-        catch (error) {
-          console.error("שגיאה בהוספת פריט:", error);
-
-        }
+    
       }
     }
   }

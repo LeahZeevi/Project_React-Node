@@ -262,6 +262,7 @@ const MyWardrobe = () => {
     };
     fetchWardrobe();
   }, []);
+  
   console.log(myWardrobe);
   return (
     <Tabs
