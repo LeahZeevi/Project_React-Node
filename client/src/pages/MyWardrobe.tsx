@@ -27,6 +27,7 @@ const MyWardrobe = () => {
             console.log('Item updated on server:', response);
         } catch (error) {
             console.error('Failed to update item:', error);
+
         }
         const updatedItems = myWardrobe.map(item =>
             item._id === itemId ? { ...item, inUse: !item.inUse } : item
@@ -95,5 +96,6 @@ const MyWardrobe = () => {
         </div>
     );
 };
+
 
 export default MyWardrobe

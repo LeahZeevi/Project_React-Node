@@ -1,7 +1,7 @@
-import { Button, TextField, Autocomplete } from '@mui/material'
-import '../css/login.css'
-import { useState, useEffect } from 'react'
-import { zodResolver } from '@hookform/resolvers/zod';
+
+import { Box, Typography, Button, TextField } from '@mui/material';
+import '../css/login.css'; // ייבוא קובץ ה-CSS
+import { useEffect, useState } from "react";
 import { useForm } from 'react-hook-form';
 import { RegisterUserSchema, UserSchema } from '../schemas/UserSchema'
 import { LoginedUser, Users } from '../interfaces/Users';
@@ -14,6 +14,7 @@ import { useDispatch } from 'react-redux';
 import { Controller } from 'react-hook-form';
 import Item from '../interfaces/Items';
 import { setCurrentUser } from '../redux/slices/userSlice';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 interface Data {
     user: Users | undefined,
@@ -21,16 +22,16 @@ interface Data {
 }
 
 const Register = () => {
-    const [openRegister, setOpenRegister] = useState<Boolean>(false);
+      const [openRegister, setOpenRegister] = useState<Boolean>(false);
     const [open, setOpenLogin] = useState<Boolean>(false)
     const [send, setSend] = useState<Boolean>(false);
     const [cities, setCities] = useState<Array<string>>([]);
     const dispatch=useDispatch();
+    const [registerUser]=useRegisterMutation();
+    const [loginUser]=useLoginMutation();
+    const[cookies,setCookies]=useCookies(['token'])
 
-    const [registerUser] = useRegisterMutation();
-    const [loginUser] = useLoginMutation();
-    const [cookies, setCookies] = useCookies(['token'])
- 
+
 
     const { register: registerRegister, handleSubmit: handleSubmitRegister, control, formState: { errors: errorsRegister }, reset: resetRegister } = useForm({
         mode: "onBlur",
@@ -103,63 +104,10 @@ const Register = () => {
         resetLogin()
     };
 
+
     return (
-        <div className='container'>
-            {openRegister &&
-                <div className={`modal ${openRegister ? 'open' : ''}`}>
-                    <div className="modal-content">
-                        <span className="close" onClick={() => setOpenRegister(false)}>
-                            ×
-                        </span>
-                        <form onSubmit={handleSubmitRegister(onSubmitRegister)}>
-                            <TextField id="outlined-basic" label="User Name" variant="outlined" color='secondary' {...registerRegister("userName")} />
-                            {errorsRegister.userName && <p style={{ color: "red" }}></p>}
+        <div>
 
-                       <Controller
-                                name="city"
-                                control={control}
-                                defaultValue=''
-                                // rules={{ required: "שדה זה הוא חובה" }}
-                                render={({ field }) => (
-                                    <Autocomplete
-                                        id="outlined-basic"
-                                        options={cities}
-                                        autoSave="true"
-                                        getOptionLabel={(option) => option}
-                                        renderInput={(params) => (
-                                            <TextField
-                                                {...params}
-                                                label="בחר או הקלד עיר"
-                                                variant="outlined"
-                                                error={!!errorsRegister.city}
-                                                helperText={errorsRegister.city?.message}
-                                                {...field} // Spread the field props to the TextField
-                                            />
-                                        )}
-                                        sx={{ width: 300 }}
-                                        value={field.value || null} // Ensure value is always a value (null if undefined initially)
-                                        onChange={(event, newValue) => field.onChange(newValue)}
-                                    />
-                                )}
-                            /> 
-
-                            {errorsRegister.city && <p style={{ color: "red" }}>{errorsRegister.city.message}</p>}
-                            {errorsRegister.city && <p style={{ color: "red" }}></p>}
-
-                            <TextField id="outlined-basic" label="Email" variant="outlined" color='secondary' {...registerRegister("email")} />
-                            {errorsRegister.email && <p style={{ color: "red" }}></p>}
-
-                            <TextField id="outlined-basic" label="Password" variant="outlined" color='secondary' {...registerRegister("password")} />
-                            {errorsRegister.password && <p style={{ color: "red" }}></p>}
-
-                            {<Button variant="contained" color={"secondary"} type='submit' >
-                                Send
-                            </Button>}
-                        </form>
-
-                    </div>
-                </div>
-            }
 
             {open &&
                 <div className={`modal ${open ? 'open' : ''}`}>
@@ -186,9 +134,12 @@ const Register = () => {
 
             <Button variant="contained" onClick={() => setOpenRegister(true)}>הרשמה</Button>
             <Button variant="contained" onClick={() => setOpenLogin(true)}>התחברות</Button>
+
         </div>
     )
 }
+
+
 
 export default Register
 

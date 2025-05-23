@@ -20,7 +20,7 @@ function App() {
           </RouterProvider>
           : <Register/>}
       </Provider>
-   
+
     </>
   )
 }
