@@ -7,6 +7,8 @@ import WardrobeLayout from "../components/WardrobeLayout"
 import AppLayout from "../components/AppLayout"
 import AddItem from "../pages/AddItem"
 import Weather from "../pages/Weather"
+import AlertExampel from "../pages/AlertExampel"
+
 // import GeneralCategory from "../pages/GeneralCategory"
 
 

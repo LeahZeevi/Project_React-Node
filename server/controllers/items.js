@@ -9,11 +9,14 @@ const FormData = require('form-data');
 
 exports.addItem = async (req, res) => {
      const { _id } = req.params;
+    
+     
     let { userId, itemName, categoryName,image, session, inUse, countWear, style } = req.body;
     let imageUrl = null;
 
     if (req.file) {
-        imageUrl = req.file.path;
+        imageUrl = req.file.path.replace(/\\/g, '/');
+          console.log("בקשה",imageUrl,"req.file",image);
     } else {
         return res.status(400).send('No file uploaded.');
     }
@@ -21,7 +24,8 @@ exports.addItem = async (req, res) => {
         return res.status(400).json({ message: "ItemName and categoryName are required" });
     }
     try {
-        const item={userId,itemName,image,categoryName,session,inUse,countWear,style}
+        const item={userId,itemName,image:imageUrl,categoryName,session,inUse,countWear,style}
+       
       const newItem=await Item.create(item)
       if(newItem)
         return res.status(201).json(newItem)

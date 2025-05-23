@@ -215,20 +215,39 @@ const categories = ["חצאיות", "שמלות", "חולצות", "נעלים", 
 const MyWardrobe = () => {
   const [tabValue, setTabValue] = useState<number>(0);
   const [myWardrobe, setMyWardrobe] = useState<Item[]>([]);
+  const [inCart, setInCart] = useState(false);
   const user: Users = useSelector(selectUser);
   const [getAllItems] = useGetAllItemsMutation();
   const [updatedItem] = useUpdateItemMutation();
+  const [open, setOpen] = useState(false);
+
 
   const onAddToCart = async (id: string) => {
     try {
-      const response:Item= await updatedItem({ _id: id,inUse:true }).unwrap();
+      const response: Item = await updatedItem({ _id: id, inUse: true }).unwrap();
       console.log('Item updated on server:', response);
     } catch (error) {
       console.error('Failed to update item:', error);
     }
   };
- 
-   
+
+  const onToggleCart = async (id: string, inUse: boolean) => {
+    try {
+      if(!inUse)
+     { await updatedItem({ _id: id, inUse: !inUse }).unwrap();
+
+      setMyWardrobe(prev =>
+        prev.map(item =>
+          item._id === id ? { ...item, inUse: !inUse } : item
+        )
+      );
+    }
+
+    } catch (error) {
+      console.error("שגיאה בעדכון הפריט:", error);
+    }
+  };
+
   useEffect(() => {
     const fetchWardrobe = async () => {
       try {
@@ -243,7 +262,7 @@ const MyWardrobe = () => {
     };
     fetchWardrobe();
   }, []);
- console.log(myWardrobe);
+  console.log(myWardrobe);
   return (
     <Tabs
       variant="outlined"
@@ -297,34 +316,46 @@ const MyWardrobe = () => {
             {myWardrobe
               .filter(item => item.categoryName === category)
               .map((item: Item) => (
-                <Grid item xs={12} sm={6} md={3} key={item._id}>
+                <Grid item xs={12} sm={6} md={2} key={item._id}>
                   <Card sx={{
                     height: '100%',
                     display: 'flex',
                     flexDirection: 'column',
+                    opacity: item.inUse ? 0.5 : 1,
+                    transition: 'opacity 0.3s',
+                    position: 'relative',
                   }}
                     className="rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
-                    <CardMedia
+                    {item.itemName}<CardMedia
                       component="img"
                       height="180"
-                      image={`http://localhost:3000/public/uploadsPic/${item.url}`}
+                      image={`http://localhost:3000/${item.image.replace(/^public[\\/]/,'')}`} // עדכן לנתיב האמיתי מהשרת
+                      
                       alt={item.itemName}
                       className="object-cover"
-                      
+                      sx={{
+                        filter: item.inUse ? 'grayscale(70%) brightness(80%)' : 'none',
+                        transition: 'filter 0.3s ease',
+                      }}
                     />
                     <CardContent className="flex flex-col justify-between h-full">
                       <Typography className="font-semibold mb-2 text-center">
                         {item.itemName}
                       </Typography>
-                      <Button
-                        variant="contained"
+
+                     {!item.inUse  &&  <Button
+                        variant={item.inUse ? "outlined" : "contained"}
                         startIcon={<AddShoppingCart />}
-                        onClick={() => onAddToCart(item._id)}
-                        className="bg-blue-600 hover:bg-blue-700 text-white rounded-full"
+                        onClick={() => onToggleCart(item._id, !!item.inUse)}
+                        className={
+                          item.inUse
+                            ? "bg-gray-100 text-gray-700 border border-blue-600 hover:bg-gray-200"
+                            : "bg-blue-600 hover:bg-blue-700 text-white"
+                        }
+
                         fullWidth
-                      >
-                        הוסף לסל
-                      </Button>
+                      >באלי ללבוש
+                      </Button>}
                     </CardContent>
                   </Card>
                 </Grid>
@@ -335,6 +366,5 @@ const MyWardrobe = () => {
     </Tabs>
   );
 };
-
 
 export default MyWardrobe

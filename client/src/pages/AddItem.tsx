@@ -34,47 +34,71 @@ const AddItem = () => {
   const user: Users = useSelector(selectUser)
 
   const onSubmit = async (data: any) => {
-      const formData = new FormData();
-      
-      if (data.url && data.url[0]) {
-        formData.append("image", data.url[0]);
-   const flaskResponse = await fetch("http://localhost:3000/api/predict", {
-  method: "POST",
-  body: formData
-});
-const result = await flaskResponse.json();
-      formData.append("userId",user._id);
-      formData.append("categoryName", result.category);
+    const formData = new FormData();
+    if (data.image && data.image[0]) {
+      formData.append("image", data.image[0]);
+      const flaskResponse = await fetch("http://localhost:3000/api/predict", {
+        method: "POST",
+        body: formData
+      });
+
+      const result = await flaskResponse.json();
+      console.log("זיהוי המודל:", result);
+      formData.append("userId", user._id);
+      formData.append("categoryName", result.predictedCategory);
       formData.append("itemName", data.itemName);
-      // formData.append("categoryName", data.categoryName);
+      // formData.append("image", data.image[0]);
       formData.append("session", data.session || " ");
       formData.append("style", data.style || "");
+
+      console.log("data.image[0]:", data.image[0]);
+
+      try {
+        const response = await addItem({ _id: user._id, newItem: formData });
+        console.log("response add item", response);
+        setImage(null);
+        reset({
+          itemName: '',
+          session: 'חורף',
+          style: '',
+          image: "",
+        });
+        navigate("/");
+      }
+      catch (error) {
+        console.error("שגיאה בהוספת פריט:", error);
+      
+
         try {
           const response = await addItem({ _id: user._id, newItem: formData });
           console.log("response add item", response);
           setImage(null);
           reset({
             itemName: '',
-            categoryName: '',
             session: 'חורף',
             style: '',
-            url: "",
+            image: "",
           });
           navigate("/");
         }
         catch (error) {
           console.error("שגיאה בהוספת פריט:", error);
+
         }
       }
     }
-  
-      const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (event.target.files && event.target.files[0]) {
-          setImage(URL.createObjectURL(event.target.files[0]));
-        }
-      };
+  }
 
-      return (
+    const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (event.target.files && event.target.files[0]) {
+        setImage(URL.createObjectURL(event.target.files[0]));
+        console.log("תמונה שהועלתה:", event.target.files[0]);
+
+      }
+    };
+
+    return (
+      <div>
         <Box display="flex" justifyContent="center" mt={4}>
           <Paper elevation={3} sx={{ padding: 4, width: '100%', maxWidth: 600 }}>
             <Typography variant="h5" color="secondary" textAlign="center" mb={3}>
@@ -84,23 +108,6 @@ const result = await flaskResponse.json();
               <Stack spacing={3}>
                 <TextField label="שם הפריט" variant="outlined" color='secondary' {...register("itemName")} fullWidth />
                 {errors.itemName && <p style={{ color: "red" }}>{errors.itemName.message}</p>}
-                <Controller
-                  name="categoryName"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <FormControl fullWidth>
-                      <InputLabel id="Category-select-label">קטגוריה</InputLabel>
-                      <Select labelId="Category-select-label" id="Category-select" label="קטגוריה" {...register("categoryName")} {...field}>
-                        <MenuItem value="חולצות">חולצות</MenuItem>
-                        <MenuItem value="חצאיות">חצאיות</MenuItem>
-                        <MenuItem value="שמלות">שמלות</MenuItem>
-                        <MenuItem value="נעלים">נעלים</MenuItem>
-                        <MenuItem value="פיג'מות">פיג'מות</MenuItem>
-                      </Select>
-                    </FormControl>
-                  )}
-                />
                 <Button variant="outlined" color="secondary" onClick={() => setIsAlertOpen(true)}>
                   להוספת התאמת בגדים - הצג את הקטלוג
                 </Button>
@@ -120,7 +127,7 @@ const result = await flaskResponse.json();
                       fullWidth
                     />
                   )}
-                  {...register("url")}
+                  {...register("image")}
                 />
                 <Controller
                   control={control}
@@ -165,7 +172,9 @@ const result = await flaskResponse.json();
             </form>
           </Paper>
         </Box>
-      );
-    }
+      </div>
+    )
+  }
 
-  export default AddItem;
+export default AddItem
+

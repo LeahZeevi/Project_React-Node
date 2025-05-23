@@ -14,7 +14,9 @@ const ItemsSchema = new mongoose.Schema({
     },
     categoryName: {
         type: String,
-        enum: ["חולצות", "חצאיות", "שמלות","מכנסים", "נעלים"],
+
+        enum: ["חולצות", "חצאיות", "שמלות", "מכנסים", "נעלים"],
+
         require: [true, "Item nust include category"]
     },
     session: {

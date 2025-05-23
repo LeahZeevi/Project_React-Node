@@ -7,24 +7,27 @@ import { useGetAllItemsMutation, useUpdateItemMutation } from '../redux/api/apiS
 import { Users } from '../interfaces/Users';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../redux/slices/userSlice';
+import EventWearning from '../interfaces/EventWearning';
+import { useAddHistoryItemMutation } from '../redux/api/apiSllices/historyApiSlice';
+import { useAddEventWearningMutation } from '../redux/api/apiSllices/wearningApiSlice';
 
 const Header = () => {
   const [cartItems, setCartItems] = useState<Item[]>();
   const [isSideNavOpen, setIsSideNavOpen] = useState(false);
   const [, , removeCookie] = useCookies(['token']);
   const [getAllItems] = useGetAllItemsMutation();
-    const [updateItem] = useUpdateItemMutation();
-
+  const [updateItem] = useUpdateItemMutation();
+  const [addHistory] = useAddHistoryItemMutation();
+  const [addEventWearning] = useAddEventWearningMutation()
   const user: Users = useSelector(selectUser);
-const handleUpdateItem = async ( _id: string) => {
-  try {
-    await updateItem({ _id:_id,inUse:false }).unwrap();
-    allItemsInUse();
-    // setCartItems(prev => prev?.filter(i => i._id !== _id));
-  } catch (error) {
-    console.error("שגיאה בעדכון הפריט:", error);
-  }
-};
+  const handleUpdateItem = async (_id: string) => {
+    try {
+      await updateItem({ _id: _id, inUse: false }).unwrap();
+      allItemsInUse();
+    } catch (error) {
+      console.error("שגיאה בעדכון הפריט:", error);
+    }
+  };
 
   const closeBasket = () => {
     setIsSideNavOpen(false);
@@ -32,25 +35,48 @@ const handleUpdateItem = async ( _id: string) => {
   };
   const HanddleLogOut = () => {
     removeCookie('token')
+    localStorage.clear()
   }
-  
-    const allItemsInUse = async () => {
-      try {
-        setIsSideNavOpen(true);
-        const response:Item[] = await getAllItems(user._id).unwrap()
-                  console.log("response",response);
-        if(response){
-          
-        const filterItems=response.filter(item=>item.inUse==true);
+
+  const allItemsInUse = async () => {
+    try {
+      setIsSideNavOpen(true);
+      const response: Item[] = await getAllItems(user._id).unwrap()
+      console.log("response", response);
+      if (response) {
+
+        const filterItems = response.filter(item => item.inUse == true);
         setCartItems(filterItems);
+      }
+    }
+    catch (error) {
+      console.error('שגיאה בקבלת פריטים:', error);
+    }
+  };
+  const addToHistory = async () => {
+    if (cartItems) {
+      const items_id: string[] = cartItems.map(item => item._id)
+      const wearning: EventWearning = { _id: "", user_id: user._id, items: items_id }
+      //אם קיים כבר לא מוסיף את הלוק הזה
+      try {
+        const newEventWearning: { message: string, newWearn: EventWearning } = await addEventWearning(wearning).unwrap();
+        console.log("newEventWearning", newEventWearning.newWearn._id);
+        if (newEventWearning) {
+          await Promise.all(
+            cartItems.map(item =>
+              addHistory({
+                item_id: item._id,
+                wornEvent: [newEventWearning.newWearn._id]
+              }).unwrap()
+            )
+          );
         }
       }
       catch (error) {
-        console.error('שגיאה בקבלת פריטים:', error);
+        console.log("eroror", error);
       }
-    };
-  
-console.log(cartItems);
+    }
+  }
 
   return (
     <div dir="rtl">
@@ -94,7 +120,6 @@ console.log(cartItems);
         <div style={{ cursor: 'pointer' }} onClick={allItemsInUse}>🗑️</div>
       </nav>
 
-      {/* Side Nav */}
       <div
         style={{
           position: 'fixed',
@@ -124,34 +149,40 @@ console.log(cartItems);
           </ul>
         )} */}
         {cartItems?.length === 0 ? (
-  <p>הסל ריק</p>
-) : (
-  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-    {cartItems?.map(item => (
-      <div key={item._id} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-        <img
-          src={item.itemName} // ודאי שזו התכונה הנכונה אצלך
-          // alt={item.itemName}
-          style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '8px' }}
-        />
-        <button
-         onClick={() => handleUpdateItem(item._id)}
-          style={{
-            backgroundColor: 'transparent',
-            border: 'none',
-            color: 'red',
-            fontSize: '10px',
-            cursor: 'pointer',
-          }}
-        >
-          ❌
-        </button>
-      </div>
-    ))}
-  </div>
-)}
+          <p>הסל ריק</p>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            {cartItems?.map(item => (
+              <div key={item._id} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <img
+                  src={`http://localhost:3000/${item.image.replace(/^public[\\/]/, '')}`}  // ודאי שזו התכונה הנכונה אצלך
+                  // alt={item.itemName}
+                  style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '8px' }}
+                />
+                <button
+                  onClick={() => handleUpdateItem(item._id)}
+                  style={{
+                    backgroundColor: 'transparent',
+                    border: 'none',
+                    color: 'red',
+                    fontSize: '10px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  ❌
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
 
+
+
+        <button style={{ marginBottom: '10px' }} onClick={addToHistory}>סגירת לוק</button>
       </div>
+
+
+
 
       {isSideNavOpen && (
         <div
@@ -165,10 +196,10 @@ console.log(cartItems);
             backgroundColor: 'rgba(0,0,0,0.3)',
             zIndex: 150,
           }}
-        />
-      )}
+        />)}
     </div>
-  );
-};
+  )
+}
+
 
 export default Header
