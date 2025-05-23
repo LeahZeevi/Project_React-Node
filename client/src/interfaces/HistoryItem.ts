@@ -1,6 +1,6 @@
 interface HistoryItem {
-    user_id: string,
-    itemName: string,
+    
+    item_id: string,
     wornEvent: string[]
 }
 export default HistoryItem

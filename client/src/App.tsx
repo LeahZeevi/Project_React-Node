@@ -5,7 +5,7 @@ import { Provider } from 'react-redux'
 import store from './redux/store'
 import router from './routes/AppRoute'
 import Register from './pages/Register'
-import DigitalWardrobeApp from './pages/DigitalWardrobeApp'
+import './css/try.css'
 
 
 
@@ -14,15 +14,13 @@ function App() {
 
   return (
     <>
-      {/* <Provider store={store}>
+      <Provider store={store}>
         {cookies.token ?
           <RouterProvider router={router}>
           </RouterProvider>
           : <Register/>}
-      </Provider> */}
-         <Provider store={store}>
-      <DigitalWardrobeApp></DigitalWardrobeApp>
-    </Provider>
+      </Provider>
+   
     </>
   )
 }
