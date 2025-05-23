@@ -14,7 +14,7 @@ import {
   Paper
 } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
-import AddItem_Alert from "./AddItem_Alert";
+import AddItem_Alert from "./oldPages/AddItem_Alert";
 import { useState } from "react";
 import Item from "../interfaces/Items"; // ייבוא ה-interface
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -69,22 +69,7 @@ const AddItem = () => {
         console.error("שגיאה בהוספת פריט:", error);
       
 
-        try {
-          const response = await addItem({ _id: user._id, newItem: formData });
-          console.log("response add item", response);
-          setImage(null);
-          reset({
-            itemName: '',
-            session: 'חורף',
-            style: '',
-            image: "",
-          });
-          navigate("/");
-        }
-        catch (error) {
-          console.error("שגיאה בהוספת פריט:", error);
-
-        }
+    
       }
     }
   }
@@ -167,7 +152,6 @@ const AddItem = () => {
                 <Button variant="contained" color="secondary" type="submit" fullWidth>
                   הוספה לארון
                 </Button >
-                {isAlertOpen && <AddItem_Alert setIsAlertOpen={setIsAlertOpen} isAlertOpen={isAlertOpen} />}
               </Stack>
             </form>
           </Paper>

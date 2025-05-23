@@ -4,7 +4,7 @@ import apiSlice from "../apiSlices";
 
 const wearningApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        addEventWearning: builder.mutation<{message:string,newWearn:EventWearning} ,EventWearning>({
+        addEventWearning: builder.mutation<{newWearn:EventWearning} ,EventWearning>({
             query: (newEventWearning) => ({
                 url: "/wearnings",
                 method: "POST",

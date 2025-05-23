@@ -5,7 +5,7 @@ import { Provider } from 'react-redux'
 import store from './redux/store'
 import router from './routes/AppRoute'
 import Register from './pages/Register'
-
+import './css/try.css'
 
 
 

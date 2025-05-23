@@ -1,6 +1,6 @@
 interface EventWearning{
+       _id:string
     user_id:string
     items:string[]
-    _id:string
 }
 export default EventWearning;

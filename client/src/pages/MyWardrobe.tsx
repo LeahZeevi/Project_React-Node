@@ -1,370 +1,101 @@
-// import { useState } from "react"
-// import GeneralCategory from "./GeneralCategory"
-// import { Link } from "react-router"
-// import Tabs from '@mui/joy/Tabs';
-// import TabList from '@mui/joy/TabList';
-// import Tab, { tabClasses } from '@mui/joy/Tab';
-// import TabPanel from '@mui/joy/TabPanel';
-// import Typography from '@mui/joy/Typography';
-// const MyWardrobe = () => {
-//   const [typeCategory, setTypeCategory] = useState<string>("")
-
-// const categories = ["Shirts", "Skirts", "Pants", "Dresses", "Shoes"];
-
-//   return (
-//     <div>
-//       {/* <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", textAlign: "center" }}>
-//         <Link to="חולצות"  > <div style={{ height: "40vh", width: "49vw", backgroundColor: "pink" }} onClick={() => handleChooseType("חולצות")}>חולצות</div></Link>
-//         <Link to="חצאיות"> <div style={{ height: "40vh", width: "49vw", backgroundColor: "green" }} onClick={() => handleChooseType("חצאיות")}>חצאיות</div></Link>
-//         <Link to="שמלות"> <div style={{ height: "40vh", width: "30vw", backgroundColor: "violet" }} onClick={() => handleChooseType("שמלות")}>שמלות</div></Link>
-//         <Link to="פיז'מות"><div style={{ height: "40vh", width: "30vw", backgroundColor: "red" }} onClick={() => handleChooseType("פיז'מות")}>פיז'מות</div></Link>
-//         <Link to="נעלים"> <div style={{ height: "40vh", width: "30vw", backgroundColor: "blue" }} onClick={() => handleChooseType("נעלים")}>נעלים</div></Link>
-//       </div> */}
-
-
-
-
-//    <Tabs
-//   variant="outlined"
-//   aria-label="Pricing plan"
-//   defaultValue={0}
-//   sx={{
-//     width: 1200,
-//     overflow: 'hidden',  // לאפשר גלילה רק בפנל
-//     height: 600,
-//     margin: 1,
-//     boxShadow: 'none', // מסיר צל
-//     border: 'none', // מסיר גבול
-//  [`& .${tabClasses.root}`]: {
-//     '&:focus-visible, &:focus': {
-//       outline: 'none !important',
-//       boxShadow: 'none !important',
-//     },
-//   },
-//   }}
-// >
-//     <TabList
-//     disableUnderline
-//     tabFlex={1}
-//     sx={{
-//       borderBottom: 'none', // מסיר את הגבול התחתון
-//       boxShadow: 'none',
-//       [`& .${tabClasses.root}`]: {
-//         fontSize: 'sm',
-//         fontWeight: 'lg',
-//         [`&[aria-selected="true"]`]: {
-//           color: 'primary.500',
-//           bgcolor: 'background.surface',
-//         },
-//         [`&.${tabClasses.focusVisible}`]: {
-//           outlineOffset: '-4px',
-//         },
-//       },
-//     }}
-//   >
-//         <Tab disableIndicator variant="soft" sx={{ flexGrow: 1 }}>
-//           Shirts
-//         </Tab>
-//         <Tab disableIndicator variant="soft" sx={{ flexGrow: 1 }}>
-//           Skirts
-//         </Tab>
-//         <Tab disableIndicator variant="soft" sx={{ flexGrow: 1 }}>
-//           Pants
-//         </Tab>
-//            <Tab disableIndicator variant="soft" sx={{ flexGrow: 1 }}>
-//           Dresses
-//         </Tab>
-//            <Tab disableIndicator variant="soft" sx={{ flexGrow: 1 }}>
-//           Shoes
-//         </Tab>
-//       </TabList>
-//   <TabPanel value={0} sx={{ overflowY: 'auto', maxHeight: 540 }}>
-//         <Typography level="inherit">
-//           Get started with the industry-standard React UI library, MIT-licensed.
-//         </Typography>
-//         <Typography
-//           textColor="success.400"
-//           sx={{ fontSize: 'xl3', fontWeight: 'xl', mt: 1 }}
-//         >
-//           $0{' '}
-//           <Typography
-//             textColor="text.secondary"
-//             sx={{ fontSize: 'sm', fontWeight: 'md' }}
-//           >
-//             － Free forever
-//           </Typography>
-//         </Typography>
-//       </TabPanel>
-//   <TabPanel value={1} sx={{ overflowY: 'auto', maxHeight: 540 }}>
-//         <Typography level="inherit">
-//           Best for professional developers building enterprise or data-rich
-//           applications.
-//         </Typography>
-//         <Typography
-//           textColor="primary.400"
-//           sx={{ fontSize: 'xl3', fontWeight: 'xl', mt: 1 }}
-//         >
-//           $15{' '}
-//           <Typography
-//             textColor="text.secondary"
-//             sx={{ fontSize: 'sm', fontWeight: 'md' }}
-//           >
-//             / dev / month
-//           </Typography>
-//         </Typography>
-//       </TabPanel>
-//   <TabPanel value={2} sx={{ overflowY: 'auto', maxHeight: 540 }}>
-//         <Typography level="inherit">
-//           The most advanced features for data-rich applications, as well as the
-//           highest priority for support.
-//         </Typography>
-//         <Typography
-//           textColor="primary.400"
-//           sx={{ fontSize: 'xl3', fontWeight: 'xl', mt: 1 }}
-//         >
-//           <Typography
-//             sx={[
-//               {
-//                 fontSize: 'xl',
-//                 borderRadius: 'sm',
-//                 px: 0.5,
-//                 mr: 0.5,
-//               },
-//               (theme: { variants: { soft: { danger: any; }; }; }) => ({
-//                 ...theme.variants.soft.danger,
-//                 color: 'danger.400',
-//                 verticalAlign: 'text-top',
-//                 textDecoration: 'line-through',
-//               }),
-//             ]}
-//           >
-//             $49
-//           </Typography>
-//           $37*{' '}
-//           <Typography
-//             textColor="text.secondary"
-//             sx={{ fontSize: 'sm', fontWeight: 'md' }}
-//           >
-//             / dev / month
-//           </Typography>
-//         </Typography>
-//       </TabPanel>
-//   <TabPanel value={3} sx={{ overflowY: 'auto', maxHeight: 540 }}>
-//         <Typography level="inherit">
-//           Best for professional developers building enterprise or data-rich
-//           applications.
-//         </Typography>
-//         <Typography
-//           textColor="primary.400"
-//           sx={{ fontSize: 'xl3', fontWeight: 'xl', mt: 1 }}
-//         >
-//           $15{' '}
-//           <Typography
-//             textColor="text.secondary"
-//             sx={{ fontSize: 'sm', fontWeight: 'md' }}
-//           >
-//             / dev / month
-//           </Typography>
-//         </Typography>
-//       </TabPanel>
-//   <TabPanel value={4} sx={{ overflowY: 'auto', maxHeight: 540 }}>
-//         <Typography level="inherit">
-//           Best for professional developers building enterprise or data-rich
-//           applications.
-//         </Typography>
-//         <Typography
-//           textColor="primary.400"
-//           sx={{ fontSize: 'xl3', fontWeight: 'xl', mt: 1 }}
-//         >
-//           $15{' '}
-//           <Typography
-//             textColor="text.secondary"
-//             sx={{ fontSize: 'sm', fontWeight: 'md' }}
-//           >
-//             / dev / month
-//           </Typography>
-//         </Typography>
-//       </TabPanel>
-
-//     </Tabs>
-
-// </div>
-//  );
-// }
-
-// export default MyWardrobe
-
-
-
-import React, { useEffect, useState } from "react";
-import Tabs from '@mui/joy/Tabs';
-import TabList from '@mui/joy/TabList';
-import Tab, { tabClasses } from '@mui/joy/Tab';
-import TabPanel from '@mui/joy/TabPanel';
-import Typography from '@mui/joy/Typography';
-import Item from "../interfaces/Items";
-import { useSelector } from "react-redux";
-import { selectUser } from "../redux/slices/userSlice";
-import { Users } from "../interfaces/Users";
-import { useGetAllItemsMutation, useUpdateItemMutation } from "../redux/api/apiSllices/itemsApiSlice";
-import { Button, Card, CardContent, CardMedia, Grid } from "@mui/material";
-import { AddShoppingCart } from "@mui/icons-material";
-
-const categories = ["חצאיות", "שמלות", "חולצות", "נעלים", "מכנסים"];
-
+import React, { useEffect, useState } from 'react'
+import '../css/try.css'
+import Item from '../interfaces/Items';
+import { useGetAllItemsMutation, useUpdateItemMutation } from '../redux/api/apiSllices/itemsApiSlice';
+import { Users } from '../interfaces/Users';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../redux/slices/userSlice';
+import CurrentWorn from '../components/CurrentWorn';
 const MyWardrobe = () => {
-  const [tabValue, setTabValue] = useState<number>(0);
-  const [myWardrobe, setMyWardrobe] = useState<Item[]>([]);
-  const [inCart, setInCart] = useState(false);
-  const user: Users = useSelector(selectUser);
-  const [getAllItems] = useGetAllItemsMutation();
-  const [updatedItem] = useUpdateItemMutation();
-  const [open, setOpen] = useState(false);
+    {console.log("Mywardrobe1")};
+    const categories = ['כל הקטגוריות', 'חולצות', 'חצאיות', 'מכנסים', 'שמלות', 'נעלים'];
+    const [selectedCategory, setSelectedCategory] = useState('all');
+    const [myWardrobe, setMyWardrobe] = useState<Item[]>([]);
+    const [getAllItems] = useGetAllItemsMutation();
+    const [updatedItem] = useUpdateItemMutation();
+    const user: Users = useSelector(selectUser);
+
+    const filteredItems =
+        selectedCategory === 'all' || selectedCategory === 'כל הקטגוריות'
+            ? myWardrobe
+            : myWardrobe.filter(item => item.categoryName === selectedCategory);
 
 
-  const onAddToCart = async (id: string) => {
-    try {
-      const response: Item = await updatedItem({ _id: id, inUse: true }).unwrap();
-      console.log('Item updated on server:', response);
-    } catch (error) {
-      console.error('Failed to update item:', error);
-    }
-  };
+    const handleWearItem = async (itemId: any) => {
+        try {
+            const response: Item = await updatedItem({ _id: user._id, inUse: true }).unwrap();
+            console.log('Item updated on server:', response);
+        } catch (error) {
+            console.error('Failed to update item:', error);
 
-  const onToggleCart = async (id: string, inUse: boolean) => {
-    try {
-      if(!inUse)
-     { await updatedItem({ _id: id, inUse: !inUse }).unwrap();
-
-      setMyWardrobe(prev =>
-        prev.map(item =>
-          item._id === id ? { ...item, inUse: !inUse } : item
-        )
-      );
-    }
-
-    } catch (error) {
-      console.error("שגיאה בעדכון הפריט:", error);
-    }
-  };
-
-  useEffect(() => {
-    const fetchWardrobe = async () => {
-      try {
-        const response: Item[] = await getAllItems(user._id).unwrap();
-        console.log("getAllItems", response);
-        if (response) {
-          setMyWardrobe(response);
         }
-      } catch (error) {
-        console.error('שגיאה בקבלת פריטים:', error);
-      }
+        const updatedItems = myWardrobe.map(item =>
+            item._id === itemId ? { ...item, inUse: !item.inUse } : item
+        );
+        setMyWardrobe(updatedItems);
+
+        const foundItem = myWardrobe.find(item => item._id === itemId);
     };
-    fetchWardrobe();
-  }, []);
-  console.log(myWardrobe);
-  return (
-    <Tabs
-      variant="outlined"
-      aria-label="My wardrobe tabs"
-      value={tabValue}
-      onChange={(event: React.SyntheticEvent<Element, Event> | null, newValue: number | string | null) => {
-        if (newValue !== null) {
-          setTabValue(newValue as number);
-        }
-      }}
-      sx={{
-        width: 1300,
-        borderRadius: 'lg',
-        boxShadow: 'sm',
-        overflow: 'auto',
-        height: 600,
-        marginLeft: 15,
-      }}
-    >
-      <TabList
-        disableUnderline
-        tabFlex={1}
-        sx={{
-          [`& .${tabClasses.root}`]: {
-            fontSize: 'sm',
-            fontWeight: 'lg',
-            [`&[aria-selected="true"]`]: {
-              color: 'primary.500',
-              bgcolor: 'background.surface',
-            },
-            [`&.${tabClasses.focusVisible}`]: {
-              outlineOffset: '-4px',
-            },
-          },
-        }}
-      >
-        {categories.map((category, index) => (
-          <Tab key={category} disableIndicator variant="soft" sx={{ flexGrow: 1 }} value={index}>
-            {category}
-          </Tab>
-        ))}
-      </TabList>
 
-      {categories.map((category, index) => (
-        <TabPanel key={category} value={index} sx={{ overflowY: 'auto', maxHeight: 540 }}>
-          <Typography>קטגוריה: {category}</Typography>
-          <Typography sx={{ mt: 2 }}>
-            כאן יוצגו הפריטים של קטגוריית ה-{category}.
-          </Typography>
-          <Grid container spacing={2} sx={{ mt: 2 }}>
-            {myWardrobe
-              .filter(item => item.categoryName === category)
-              .map((item: Item) => (
-                <Grid item xs={12} sm={6} md={2} key={item._id}>
-                  <Card sx={{
-                    height: '100%',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    opacity: item.inUse ? 0.5 : 1,
-                    transition: 'opacity 0.3s',
-                    position: 'relative',
-                  }}
-                    className="rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
-                    {item.itemName}<CardMedia
-                      component="img"
-                      height="180"
-                      image={`http://localhost:3000/${item.image.replace(/^public[\\/]/,'')}`} // עדכן לנתיב האמיתי מהשרת
-                      
-                      alt={item.itemName}
-                      className="object-cover"
-                      sx={{
-                        filter: item.inUse ? 'grayscale(70%) brightness(80%)' : 'none',
-                        transition: 'filter 0.3s ease',
-                      }}
-                    />
-                    <CardContent className="flex flex-col justify-between h-full">
-                      <Typography className="font-semibold mb-2 text-center">
-                        {item.itemName}
-                      </Typography>
 
-                     {!item.inUse  &&  <Button
-                        variant={item.inUse ? "outlined" : "contained"}
-                        startIcon={<AddShoppingCart />}
-                        onClick={() => onToggleCart(item._id, !!item.inUse)}
-                        className={
-                          item.inUse
-                            ? "bg-gray-100 text-gray-700 border border-blue-600 hover:bg-gray-200"
-                            : "bg-blue-600 hover:bg-blue-700 text-white"
-                        }
+    useEffect(() => {
+        const fetchWardrobe = async () => {
+            try {
+                const response: Item[] = await getAllItems(user._id).unwrap();
+                console.log("getAllItems", response);
+                if (response) {
+                    setMyWardrobe(response);
+                }
+            } catch (error) {
+                console.error('שגיאה בקבלת פריטים:', error);
+            }
+        };
+        fetchWardrobe();
+    }, []);
+    return (
+        
+        <div className='page-content'>
 
-                        fullWidth
-                      >באלי ללבוש
-                      </Button>}
-                    </CardContent>
-                  </Card>
-                </Grid>
-              ))}
-          </Grid>
-        </TabPanel>
-      ))}
-    </Tabs>
-  );
+            <CurrentWorn />
+            <div className="category-tabs">
+                {categories.map(category => (
+                    <button
+                        key={category}
+                        className={`tab ${(selectedCategory === category || (selectedCategory === 'all' && category === 'כל הקטגוריות')) ? 'active' : ''}`}
+                        onClick={() => setSelectedCategory(category === 'כל הקטגוריות' ? 'all' : category)}
+                    >
+                        {category}
+                    </button>
+                ))}
+
+
+
+                <div className="items-grid">
+                    {filteredItems.map(item => (
+                        <div key={item._id} className={`item-card ${item.inUse ? 'worn' : ''}`}>
+                            <div className="item-image">
+                                <img src={`http://localhost:3000/${item.image.replace(/^public[\\/]/, '')}`} alt={item.itemName} />
+                                {item.inUse && <div className="worn-overlay">✓</div>}
+                            </div>
+                            <div className="item-info">
+                                <h4>{item.itemName}</h4>
+                                <p>{item.categoryName} • {item.session}</p>
+                                <button
+                                    className={`wear-btn ${item.inUse ? 'worn' : ''}`}
+                                    onClick={() => handleWearItem(item._id)}
+                                    disabled={!!item.inUse}
+                                >
+                                    {item.inUse ? 'בלבישה' : 'לבש'}
+                                </button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+            </div>
+        </div>
+    );
 };
+
 
 export default MyWardrobe

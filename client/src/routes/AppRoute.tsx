@@ -1,14 +1,8 @@
 
-import UserHomePage from "../pages/UserHomePage"
-import MyWardrobe from "../pages/MyWardrobe"
-import MySets from "../pages/MySets"
 import { createBrowserRouter } from "react-router"
-import WardrobeLayout from "../components/WardrobeLayout"
+import HomePage from "../pages/HomePage"
+import MyWardrobe1 from "../pages/MyWardrobe"
 import AppLayout from "../components/AppLayout"
-import AddItem from "../pages/AddItem"
-import Weather from "../pages/Weather"
-import AlertExampel from "../pages/AlertExampel"
-
 // import GeneralCategory from "../pages/GeneralCategory"
 
 
@@ -17,16 +11,16 @@ import AlertExampel from "../pages/AlertExampel"
        children:[
         {
              index:true,
-             element:<UserHomePage/>
+             element:<HomePage/>
         },
-        {path:"addItem",element:<AddItem/>},
-        {path:"weather",element:<Weather city="אלעד" />},
-        {path:"myWardrobe",element:<WardrobeLayout/>,children:[
-            {index:true,element:<MyWardrobe/>},
+        // {path:"addItem",element:<AddItem/>},
+        // {path:"weather",element:<Weather city="אלעד" />},
+        {path:"myWardrobe",element:<MyWardrobe1/>}
+            // {index:true,element:<MyWardrobe1/>},
             // {path:":typeCategory", element: <GeneralCategory/>}
-        ]},
-        {path:"mySets",element:<MySets/>}
-       ]
+       
+        // {path:"mySets",element:<DigitalWardrobeApp/>}
+    ]
  }])
  export default router
 

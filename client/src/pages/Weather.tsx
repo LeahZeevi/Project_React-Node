@@ -21,7 +21,7 @@ import ShirtHangerLoader from '../components/ShirtHangerLoader';
  
    const apiKey = '47fa8cac82de9fb95d74187722119d68';  // הכנס את המפתח שלך כאן
    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=he`;
- 
+{console.log("weather")}
    useEffect(() => {
      const fetchWeather = async () => {
        try {
@@ -71,12 +71,12 @@ if(loading) {
 
      return (
      <div>
-       <h2>מזג האוויר ב-{weather.name}</h2>
+       <h4>מזג האוויר ב-{weather.name}</h4>
        <p>טמפרטורה: {weather.main.temp}°C</p>
-       <p>תיאור: {weather.weather[0].description}</p>
-       <p>לחות: {weather.main.humidity}%</p>
+       {/* <p>תיאור: {weather.weather[0].description}</p> */}
+       {/* <p>לחות: {weather.main.humidity}%</p> */}
 
-       {<p>{getWeatherFeeling(weather.main.temp)}</p>}
+       {/* {<p>{getWeatherFeeling(weather.main.temp)}</p>} */}
        
      </div>
    );
