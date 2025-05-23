@@ -2,14 +2,15 @@ import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router'
 import { useCookies } from 'react-cookie';
 import { Button } from '@mui/material';
-import Item from '../interfaces/Items';
-import { useGetAllItemsMutation, useUpdateItemMutation } from '../redux/api/apiSllices/itemsApiSlice';
-import { Users } from '../interfaces/Users';
+import { useAddHistoryItemMutation } from '../../redux/api/apiSllices/historyApiSlice';
+import { useAddEventWearningMutation } from '../../redux/api/apiSllices/wearningApiSlice';
+import { Users } from '../../interfaces/Users';
+import { selectUser } from '../../redux/slices/userSlice';
+import Item from '../../interfaces/Items';
+import { useGetAllItemsMutation, useUpdateItemMutation } from '../../redux/api/apiSllices/itemsApiSlice';
 import { useSelector } from 'react-redux';
-import { selectUser } from '../redux/slices/userSlice';
-import EventWearning from '../interfaces/EventWearning';
-import { useAddHistoryItemMutation } from '../redux/api/apiSllices/historyApiSlice';
-import { useAddEventWearningMutation } from '../redux/api/apiSllices/wearningApiSlice';
+import EventWearning from '../../interfaces/EventWearning';
+
 
 const Header = () => {
   const [cartItems, setCartItems] = useState<Item[]>();
@@ -59,7 +60,7 @@ const Header = () => {
       const wearning: EventWearning = { _id: "", user_id: user._id, items: items_id }
       //אם קיים כבר לא מוסיף את הלוק הזה
       try {
-        const newEventWearning: { message: string, newWearn: EventWearning } = await addEventWearning(wearning).unwrap();
+        const newEventWearning: { newWearn: EventWearning } = await addEventWearning(wearning).unwrap();
         console.log("newEventWearning", newEventWearning.newWearn._id);
         if (newEventWearning) {
           await Promise.all(

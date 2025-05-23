@@ -1250,245 +1250,245 @@
 
 
 
-import "../css/try.css"
+// import "../css/try.css"
 
-import { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, NavLink } from 'react-router';
-import { useSelector } from 'react-redux';
-import { useGetAllItemsMutation } from '../redux/api/apiSllices/itemsApiSlice';
-import { selectUser } from '../redux/slices/userSlice';
-import Item from '../interfaces/Items';
-// import { Users } from './interfaces/Users';
-import { Users } from '../interfaces/Users';
+// import { useEffect, useState } from 'react';
+// import { BrowserRouter as Router, Routes, Route, Link, NavLink } from 'react-router';
+// import { useSelector } from 'react-redux';
+// import { useGetAllItemsMutation } from '../redux/api/apiSllices/itemsApiSlice';
+// import { selectUser } from '../redux/slices/userSlice';
+// import Item from '../interfaces/Items';
+// // import { Users } from './interfaces/Users';
+// import { Users } from '../interfaces/Users';
 
-// Import Pages
-import HomePage from '../pages/HomePage';
-import MyWardrobePage from '../pages/MyWardrobePage';
-import SavedLooksPage from '../pages/SavedLooksPage';
-import HistoryPage from '../pages/HistoryPage';
+// // Import Pages
+// import HomePage from '../pages/HomePage';
+// import MyWardrobePage from '../pages/MyWardrobePage';
+// import SavedLooksPage from '../pages/SavedLooksPage';
+// import HistoryPage from '../pages/HistoryPage';
 
-// Import Components
-import  AddItemDialog from '../components/AddItemDialog';
-import Weather from '../pages/Weather'; // Assuming this is your existing Weather component
-import CurrentWorn from "../components/CurrentWorn";
+// // Import Components
+// import  AddItemDialog from '../components/AddItemDialog';
+// import Weather from '../pages/Weather'; // Assuming this is your existing Weather component
+// import CurrentWorn from "../components/CurrentWorn";
 
-// Define a type for SavedLook as it's used in multiple places
-interface SavedLook {
-  _id: number;
-  name: string;
-  items: number[];
-  date: string;
-}
+// // Define a type for SavedLook as it's used in multiple places
+// interface SavedLook {
+//   _id: number;
+//   name: string;
+//   items: number[];
+//   date: string;
+// }
 
-const DigitalWardrobeApp = () => {
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const [currentOutfit, setCurrentOutfit] = useState<number[]>([]);
-  const [addItemDialogOpen, setAddItemDialogOpen] = useState(false);
-  const [myWardrobe, setMyWardrobe] = useState<Item[]>([]);
-  const [getAllItems] = useGetAllItemsMutation();
-  const user: Users = useSelector(selectUser);
+// const DigitalWardrobeApp = () => {
+//   const [drawerOpen, setDrawerOpen] = useState(false);
+//   const [currentOutfit, setCurrentOutfit] = useState<number[]>([]);
+//   const [addItemDialogOpen, setAddItemDialogOpen] = useState(false);
+//   const [myWardrobe, setMyWardrobe] = useState<Item[]>([]);
+//   const [getAllItems] = useGetAllItemsMutation();
+//   const user: Users = useSelector(selectUser);
 
-  // Sample data (consider moving to Redux or context if it grows)
-  const [savedLooks, setSavedLooks] = useState<SavedLook[]>([
-    { _id: 1, name: 'לוק קז׳ואל', items: [1, 2, 4], date: '2024-11-15' },
-    { _id: 2, name: 'לוק אלגנטי', items: [3, 8], date: '2024-11-14' },
-    { _id: 3, name: 'לוק עסקי', items: [6, 7, 8], date: '2024-11-13' },
-  ]);
+//   // Sample data (consider moving to Redux or context if it grows)
+//   const [savedLooks, setSavedLooks] = useState<SavedLook[]>([
+//     { _id: 1, name: 'לוק קז׳ואל', items: [1, 2, 4], date: '2024-11-15' },
+//     { _id: 2, name: 'לוק אלגנטי', items: [3, 8], date: '2024-11-14' },
+//     { _id: 3, name: 'לוק עסקי', items: [6, 7, 8], date: '2024-11-13' },
+//   ]);
 
-  const [wearHistory, setWearHistory] = useState([
-    { date: '2024-11-15', items: [1, 2, 4] },
-    { date: '2024-11-14', items: [3, 8] },
-    { date: '2024-11-13', items: [6, 7, 8] },
-  ]);
+//   const [wearHistory, setWearHistory] = useState([
+//     { date: '2024-11-15', items: [1, 2, 4] },
+//     { date: '2024-11-14', items: [3, 8] },
+//     { date: '2024-11-13', items: [6, 7, 8] },
+//   ]);
 
-  const categories = ['כל הקטגוריות', 'חולצות', 'חצאיות', 'מכנסים', 'שמלות', 'נעלים'];
+//   const categories = ['כל הקטגוריות', 'חולצות', 'חצאיות', 'מכנסים', 'שמלות', 'נעלים'];
 
-  const fetchWardrobe = async () => {
-    try {
-      const response: Item[] = await getAllItems(user._id).unwrap();
-      console.log('getAllItems', response);
-      if (response) {
-        // Ensure that _id is treated as a number for `currentOutfit`
-        const processedWardrobe = response.map(item => ({
-          ...item,
-          _id: String(item._id), // Ensure _id is a string
-          inUse: false // Initialize inUse for all items
-        }));
-        setMyWardrobe(processedWardrobe);
-      }
-    } catch (error) {
-      console.error('שגיאה בקבלת פריטים:', error);
-    }
-  };
+//   const fetchWardrobe = async () => {
+//     try {
+//       const response: Item[] = await getAllItems(user._id).unwrap();
+//       console.log('getAllItems', response);
+//       if (response) {
+//         // Ensure that _id is treated as a number for `currentOutfit`
+//         const processedWardrobe = response.map(item => ({
+//           ...item,
+//           _id: String(item._id), // Ensure _id is a string
+//           inUse: false // Initialize inUse for all items
+//         }));
+//         setMyWardrobe(processedWardrobe);
+//       }
+//     } catch (error) {
+//       console.error('שגיאה בקבלת פריטים:', error);
+//     }
+//   };
 
-  useEffect(() => {
-    if (user && user._id) {
-      fetchWardrobe();
-    }
-  }, [user]); // Depend on user to refetch when user data is available
+//   useEffect(() => {
+//     if (user && user._id) {
+//       fetchWardrobe();
+//     }
+//   }, [user]); // Depend on user to refetch when user data is available
 
-  const handleWearItem = (itemId: number) => {
-    const updatedItems = myWardrobe.map(item =>
-      Number(item._id) === itemId ? { ...item, inUse: !item.inUse } : item
-    );
-    setMyWardrobe(updatedItems);
+//   const handleWearItem = (itemId: number) => {
+//     const updatedItems = myWardrobe.map(item =>
+//       Number(item._id) === itemId ? { ...item, inUse: !item.inUse } : item
+//     );
+//     setMyWardrobe(updatedItems);
 
-    const foundItem = myWardrobe.find(item => Number(item._id) === itemId);
-    if (foundItem && !foundItem.inUse) {
-      setCurrentOutfit([...currentOutfit, itemId]);
-      suggestItemsFromHistory(itemId);
-    } else {
-      setCurrentOutfit(currentOutfit.filter(id => id !== itemId));
-    }
-  };
+//     const foundItem = myWardrobe.find(item => Number(item._id) === itemId);
+//     if (foundItem && !foundItem.inUse) {
+//       setCurrentOutfit([...currentOutfit, itemId]);
+//       suggestItemsFromHistory(itemId);
+//     } else {
+//       setCurrentOutfit(currentOutfit.filter(id => id !== itemId));
+//     }
+//   };
 
-  const suggestItemsFromHistory = (itemId: number) => {
-    const relatedLooks = savedLooks.filter(look => look.items.includes(itemId));
-    if (relatedLooks.length > 0) {
-      console.log('Suggested items based on history:', relatedLooks);
-    }
-  };
+//   const suggestItemsFromHistory = (itemId: number) => {
+//     const relatedLooks = savedLooks.filter(look => look.items.includes(itemId));
+//     if (relatedLooks.length > 0) {
+//       console.log('Suggested items based on history:', relatedLooks);
+//     }
+//   };
 
-  const saveLook = () => {
-    if (currentOutfit.length > 0) {
-      const newLook: SavedLook = {
-        _id: savedLooks.length + 1,
-        name: `לוק ${new Date().toLocaleDateString('he-IL')}`,
-        items: [...currentOutfit],
-        date: new Date().toISOString().split('T')[0],
-      };
-      setSavedLooks([...savedLooks, newLook]);
+//   const saveLook = () => {
+//     if (currentOutfit.length > 0) {
+//       const newLook: SavedLook = {
+//         _id: savedLooks.length + 1,
+//         name: `לוק ${new Date().toLocaleDateString('he-IL')}`,
+//         items: [...currentOutfit],
+//         date: new Date().toISOString().split('T')[0],
+//       };
+//       setSavedLooks([...savedLooks, newLook]);
 
-      setWearHistory([
-        ...wearHistory,
-        {
-          date: new Date().toISOString().split('T')[0],
-          items: [...currentOutfit],
-        },
-      ]);
+//       setWearHistory([
+//         ...wearHistory,
+//         {
+//           date: new Date().toISOString().split('T')[0],
+//           items: [...currentOutfit],
+//         },
+//       ]);
 
-      const updatedItems = myWardrobe.map(item => ({ ...item, inUse: false }));
-      setMyWardrobe(updatedItems);
-      setCurrentOutfit([]);
-    }
-  };
+//       const updatedItems = myWardrobe.map(item => ({ ...item, inUse: false }));
+//       setMyWardrobe(updatedItems);
+//       setCurrentOutfit([]);
+//     }
+//   };
 
-  const handleItemAdded = () => {
-    fetchWardrobe(); // Re-fetch wardrobe to show new item
-  };
+//   const handleItemAdded = () => {
+//     fetchWardrobe(); // Re-fetch wardrobe to show new item
+//   };
 
-  return (
-    <Router>
-      <style>{`
-        /* Your existing CSS styles go here */
-        .drawer {
-         right: ${drawerOpen ? '0' : '-300px'}; */
-      }
-          .drawer{
-              display: ${drawerOpen ? 'block' : 'none'}; */
-}
-      `}</style>
+//   return (
+//     <Router>
+//       <style>{`
+//         /* Your existing CSS styles go here */
+//         .drawer {
+//          right: ${drawerOpen ? '0' : '-300px'}; */
+//       }
+//           .drawer{
+//               display: ${drawerOpen ? 'block' : 'none'}; */
+// }
+//       `}</style>
 
-      <div className="app">
-        <header className="header">
-          <button className="menu-btn" onClick={() => setDrawerOpen(true)}>
-            ☰
-          </button>
-          <h1>הארון הדיגיטלי שלי</h1>
-          <div style={{ position: 'relative' }}>
-            👔
-            {currentOutfit.length > 0 && (
-              <div className="outfit-badge">{currentOutfit.length}</div>
-            )}
-          </div>
-        </header>
+//       <div className="app">
+//         <header className="header">
+//           <button className="menu-btn" onClick={() => setDrawerOpen(true)}>
+//             ☰
+//           </button>
+//           <h1>הארון הדיגיטלי שלי</h1>
+//           <div style={{ position: 'relative' }}>
+//             👔
+//             {currentOutfit.length > 0 && (
+//               <div className="outfit-badge">{currentOutfit.length}</div>
+//             )}
+//           </div>
+//         </header>
 
-  <nav className="drawer">
-          <NavLink
-            to="/"
-            className={`menu-item ${location.pathname === '/' ? 'active' : ''}`}
-            onClick={() => setDrawerOpen(false)}
-          >
-            <span className="menu-icon">🏠</span>
-            בית
-          </NavLink>
-          <NavLink
-            to="/wardrobe"
-            className={`menu-item ${location.pathname === '/wardrobe' ? 'active' : ''}`}
-            onClick={() => setDrawerOpen(false)}
-          >
-            <span className="menu-icon">👔</span>
-            הארון שלי
-          </NavLink>
-          <NavLink
-            to="/looks"
-            className={`menu-item ${location.pathname === '/looks' ? 'active' : ''}`}
-            onClick={() => setDrawerOpen(false)}
-          >
-            <span className="menu-icon">✨</span>
-            הלוקים שלי
-          </NavLink>
-          <NavLink
-            to="/history"
-            className={`menu-item ${location.pathname === '/history' ? 'active' : ''}`}
-            onClick={() => setDrawerOpen(false)}
-          >
-            <span className="menu-icon">📅</span>
-            היסטוריה
-          </NavLink>
-        </nav>
+//   <nav className="drawer">
+//           <NavLink
+//             to="/"
+//             className={`menu-item ${location.pathname === '/' ? 'active' : ''}`}
+//             onClick={() => setDrawerOpen(false)}
+//           >
+//             <span className="menu-icon">🏠</span>
+//             בית
+//           </NavLink>
+//           <NavLink
+//             to="/wardrobe"
+//             className={`menu-item ${location.pathname === '/wardrobe' ? 'active' : ''}`}
+//             onClick={() => setDrawerOpen(false)}
+//           >
+//             <span className="menu-icon">👔</span>
+//             הארון שלי
+//           </NavLink>
+//           <NavLink
+//             to="/looks"
+//             className={`menu-item ${location.pathname === '/looks' ? 'active' : ''}`}
+//             onClick={() => setDrawerOpen(false)}
+//           >
+//             <span className="menu-icon">✨</span>
+//             הלוקים שלי
+//           </NavLink>
+//           <NavLink
+//             to="/history"
+//             className={`menu-item ${location.pathname === '/history' ? 'active' : ''}`}
+//             onClick={() => setDrawerOpen(false)}
+//           >
+//             <span className="menu-icon">📅</span>
+//             היסטוריה
+//           </NavLink>
+//         </nav>
 
-        <main>
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <HomePage
-                  currentOutfit={currentOutfit}
-                  myWardrobe={myWardrobe}
-                  savedLooks={savedLooks}
-                  wearHistory={wearHistory}
-                  handleWearItem={handleWearItem}
-                  saveLook={saveLook}
-                />
-              }
-            />
-            <Route
-              path="/wardrobe"
-              element={
-                <MyWardrobePage
-                  currentOutfit={currentOutfit}
-                  myWardrobe={myWardrobe}
-                  handleWearItem={handleWearItem}
-                  saveLook={saveLook}
-                  categories={categories}
-                />
-              }
-            />
-            <Route
-              path="/looks"
-              element={<SavedLooksPage savedLooks={savedLooks} myWardrobe={myWardrobe} />}
-            />
-            <Route
-              path="/history"
-              element={<HistoryPage wearHistory={wearHistory} myWardrobe={myWardrobe} />}
-            />
-          </Routes>
-        </main>
+//         <main>
+//           <Routes>
+//             <Route
+//               path="/"
+//               element={
+//                 <HomePage
+//                   currentOutfit={currentOutfit}
+//                   myWardrobe={myWardrobe}
+//                   savedLooks={savedLooks}
+//                   wearHistory={wearHistory}
+//                   handleWearItem={handleWearItem}
+//                   saveLook={saveLook}
+//                 />
+//               }
+//             />
+//             <Route
+//               path="/wardrobe"
+//               element={
+//                 <MyWardrobePage
+//                   currentOutfit={currentOutfit}
+//                   myWardrobe={myWardrobe}
+//                   handleWearItem={handleWearItem}
+//                   saveLook={saveLook}
+//                   categories={categories}
+//                 />
+//               }
+//             />
+//             <Route
+//               path="/looks"
+//               element={<SavedLooksPage savedLooks={savedLooks} myWardrobe={myWardrobe} />}
+//             />
+//             <Route
+//               path="/history"
+//               element={<HistoryPage wearHistory={wearHistory} myWardrobe={myWardrobe} />}
+//             />
+//           </Routes>
+//         </main>
 
-        <button className="fab" onClick={() => setAddItemDialogOpen(true)}>
-          +
-        </button>
+//         <button className="fab" onClick={() => setAddItemDialogOpen(true)}>
+//           +
+//         </button>
 
-      {addItemDialogOpen&&  <AddItemDialog
-          open={addItemDialogOpen}
-          onClose={() => setAddItemDialogOpen(false)}
-          onItemAdded={handleItemAdded}
+//       {addItemDialogOpen&&  <AddItemDialog
+//           open={addItemDialogOpen}
+//           onClose={() => setAddItemDialogOpen(false)}
+//           onItemAdded={handleItemAdded}
       
-    />}
-      </div>
-    </Router>
-  );
-};
+//     />}
+//       </div>
+//     </Router>
+//   );
+// };
 
-export default DigitalWardrobeApp;
+// export default DigitalWardrobeApp;
