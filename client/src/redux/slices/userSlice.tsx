@@ -5,7 +5,9 @@ interface CurrentUser {
 }
 const initialState: CurrentUser = {
   currentUsr: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")!) : null
+
 };
+
 
 const userSlice = createSlice({
   name: "users",

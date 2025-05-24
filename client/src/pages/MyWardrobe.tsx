@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import '../css/try.css'
 import Item from '../interfaces/Items';
-import { useGetAllItemsMutation, useUpdateItemMutation } from '../redux/api/apiSllices/itemsApiSlice';
+import { useDeleteItemMutation, useGetAllItemsMutation, useUpdateItemMutation } from '../redux/api/apiSllices/itemsApiSlice';
 import { Users } from '../interfaces/Users';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../redux/slices/userSlice';
 import CurrentWorn from '../components/CurrentWorn';
 const MyWardrobe = () => {
-    {console.log("Mywardrobe1")};
+    { console.log("Mywardrobe1") };
     const categories = ['כל הקטגוריות', 'חולצות', 'חצאיות', 'מכנסים', 'שמלות', 'נעלים'];
     const [selectedCategory, setSelectedCategory] = useState('all');
     const [myWardrobe, setMyWardrobe] = useState<Item[]>([]);
     const [getAllItems] = useGetAllItemsMutation();
     const [updatedItem] = useUpdateItemMutation();
+    const [deleteItem]=useDeleteItemMutation()
     const user: Users = useSelector(selectUser);
 
     const filteredItems =
@@ -36,6 +37,14 @@ const MyWardrobe = () => {
 
         const foundItem = myWardrobe.find(item => item._id === itemId);
     };
+    const handleRemoveItem = async (itemForRemove: Item)=>{
+        try {
+         await deleteItem(itemForRemove).unwrap();
+        setMyWardrobe(prev => prev.filter(item => item._id !== itemForRemove._id));
+        } catch (err) {
+            console.error("שגיאה בהסרה:", err);
+        }
+    };
 
 
     useEffect(() => {
@@ -53,7 +62,7 @@ const MyWardrobe = () => {
         fetchWardrobe();
     }, []);
     return (
-        
+
         <div className='page-content'>
 
             <CurrentWorn />
@@ -68,31 +77,37 @@ const MyWardrobe = () => {
                     </button>
                 ))}
 
-
-
-                <div className="items-grid">
-                    {filteredItems.map(item => (
-                        <div key={item._id} className={`item-card ${item.inUse ? 'worn' : ''}`}>
-                            <div className="item-image">
-                                <img src={`http://localhost:3000/${item.image.replace(/^public[\\/]/, '')}`} alt={item.itemName} />
-                                {item.inUse && <div className="worn-overlay">✓</div>}
-                            </div>
-                            <div className="item-info">
-                                <h4>{item.itemName}</h4>
-                                <p>{item.categoryName} • {item.session}</p>
-                                <button
-                                    className={`wear-btn ${item.inUse ? 'worn' : ''}`}
-                                    onClick={() => handleWearItem(item._id)}
-                                    disabled={!!item.inUse}
-                                >
-                                    {item.inUse ? 'בלבישה' : 'לבש'}
-                                </button>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-
             </div>
+
+            <div className="items-grid">
+                {filteredItems.map(item => (
+                    <div key={item._id} className={`item-card ${item.inUse ? 'worn' : ''}`}>
+                        <button
+                            className="remove-btn"
+                            onClick={() => handleRemoveItem(item)}
+                            title="הסר מהארון"
+                        >
+                            ✖
+                        </button>
+                        <div className="item-image">
+                            <img src={`http://localhost:3000/${item.image.replace(/^public[\\/]/, '')}`} alt={item.itemName} />
+                            {item.inUse && <div className="worn-overlay">✓</div>}
+                        </div>
+                        <div className="item-info">
+                            <h4>{item.itemName}</h4>
+                            <p>{item.categoryName} • {item.session}</p>
+                            <button
+                                className={`wear-btn ${item.inUse ? 'worn' : ''}`}
+                                onClick={() => handleWearItem(item._id)}
+                                disabled={!!item.inUse}
+                            >
+                                {item.inUse ? 'בלבישה' : 'לבש'}
+                            </button>
+                        </div>
+                    </div>
+                ))}
+            </div>
+
         </div>
     );
 };
