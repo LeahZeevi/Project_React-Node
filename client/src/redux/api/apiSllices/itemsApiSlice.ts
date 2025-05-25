@@ -26,8 +26,9 @@ export const itemsApiSlice = apiSlices.injectEndpoints({
         }),
         updateItem: builder.mutation<Item, { _id: string, inUse: boolean }>({
             query: ({ _id, inUse }: { _id: string; inUse: boolean }) => ({
-                url: `/items/${_id}/${inUse}`,
-                method: "PATCH"
+                url: `/items`,
+                method: "PATCH",
+                body: {_id, inUse }
             }),
             invalidatesTags: ["Items"]
         }),

@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import CurrentOutfit from '../components/CurrentOutfit';
 import WeatherWidget from '../components/WeatherWidget';
 import Item from '../interfaces/Items';
 import SavedLook from '../interfaces/SavedLook'; // Assuming you define this interface
 import CurrentWorn from '../components/CurrentWorn';
 import '../css/try.css'
+import { useGetAllItemsMutation } from '../redux/api/apiSllices/itemsApiSlice';
+import { Users } from '../interfaces/Users';
+import { selectUser } from '../redux/slices/userSlice';
+import { useSelector } from 'react-redux';
 interface HomePageProps {
     currentOutfit: number[];
     myWardrobe: Item[];
@@ -14,15 +18,35 @@ interface HomePageProps {
     saveLook: () => void;
 }
 
+
 const HomePage = () => {
-    {console.log("HomePage");
-    }
+    const user: Users = useSelector(selectUser);
+    const [myWardrobe, setMyWardrobe] = useState<Item[]>([]);
+    const [getAllItems] = useGetAllItemsMutation();
+    const fetchWardrobe = async () => {
+        try {
+            const response: Item[] = await getAllItems(user._id).unwrap();
+            console.log("getAllItems", response);
+            if (response) {
+                setMyWardrobe(response);
+                const wornItems1 = myWardrobe.filter(item => item.inUse);
+
+            }
+        } catch (error) {
+            console.error('שגיאה בקבלת פריטים:', error);
+        }
+    };
+    useEffect(() => {
+        fetchWardrobe();
+    }, []);
+    const wornItems1 = myWardrobe.filter(item => item.inUse);
+
     return (
-        
+
         <div className="page-content">
             <WeatherWidget city="ירושלים" />
-
-            <CurrentWorn />
+            {/* Pass the actual wardrobe data as a prop */}
+            <CurrentWorn wornItems={wornItems1} onRefresh={fetchWardrobe}/>
             <div className="stats-grid">
                 <div className="stat-card">
                     <div className="stat-number">2</div>
@@ -33,7 +57,7 @@ const HomePage = () => {
                     <div className="stat-label">לוקים שמורים</div>
                 </div>
                 <div className="stat-card">
-                    <div className="stat-number">3</div>
+                    <div className="stat-number">{wornItems1.length}</div>
                     <div className="stat-label">בלבישה</div>
                 </div>
             </div>
