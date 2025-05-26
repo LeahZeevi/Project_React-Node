@@ -94,8 +94,8 @@ const CurrentWorn: React.FC<CurrentWornProps> = ({ wornItems, onRefresh }) => {
           <div className="outfit-items">
             {wornItems.map(item => (
               <div key={item._id} className="outfit-chip">
-                <span>{item.itemName}</span>
                 <button onClick={() => handleUpdateItem(item._id)} className="remove-btn">×</button>
+                <span>{item.itemName}</span>
               </div>
             ))}
             <button onClick={saveLook} className="save-look-btn">שמור לוק</button>

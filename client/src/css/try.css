@@ -123,7 +123,7 @@
         }
 
         .weather-widget {
-          background: linear-gradient(135deg,  rgb(187, 2, 156) 0%, rgb(101, 120, 227) 100%);
+          background: linear-gradient(135deg, rgb(187, 2, 156) 0%, rgb(101, 120, 227) 100%);
           color: white;
           padding: 2rem;
           border-radius: 16px;
@@ -151,7 +151,7 @@
         }
 
         .current-outfit {
-          background: linear-gradient(135deg,  rgb(187, 2, 156) 0%, rgb(101, 120, 227) 100%);
+          background: linear-gradient(135deg, rgb(187, 2, 156) 0%, rgb(101, 120, 227) 100%);
           color: white;
           padding: 2rem;
           border-radius: 16px;
@@ -320,14 +320,14 @@
         }
 
         .tab:hover {
-          border-color:rgb(101, 120, 227);
+          border-color: rgb(101, 120, 227);
         }
 
         .tab.active {
           background: rgb(187, 2, 156);
           color: white;
           border-color: rgb(101, 120, 227);
-        } 
+        }
 
         .item-card {
           position: relative;
@@ -338,11 +338,17 @@
           transform: scale(1.02);
         }
 
+        .outfit-chip {
+          position: relative;
+          /* כדי שהכפתור ימוקם יחסית לפריט */
+        }
+
         .remove-btn {
           position: absolute;
           top: 6px;
           right: 6px;
-          background-color: rgba(255, 255, 255, 0.9);
+          background-color: rgba(255, 255, 255, 0.5);
+          /* רקע שקוף ועמום */
           border: none;
           color: rgb(0, 0, 0);
           font-size: 10px;
@@ -350,11 +356,18 @@
           padding: 2px 6px;
           border-radius: 50%;
           display: none;
+          /* מוסתר כברירת מחדל */
           z-index: 2;
-          transition: opacity 0.3s;
+          transition: opacity 0.3s ease;
         }
 
-        .item-card:hover .remove-btn {
+        .outfit-chip:hover .remove-btn {
+          display: block;
+          /* מציג את הכפתור רק בזמן ריחוף */
+        }
+
+
+        .item-card:hover .remove-btn:hover {
           display: block;
         }
 
@@ -551,7 +564,7 @@
           width: 56px;
           height: 56px;
           border-radius: 50%;
-           background: linear-gradient(135deg,  rgb(187, 2, 156) 0%, rgb(101, 120, 227) 100%); 
+          background: linear-gradient(135deg, rgb(187, 2, 156) 0%, rgb(101, 120, 227) 100%);
           border: none;
           color: white;
           font-size: 1.5rem;
