@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const axios=require("axios");
 const fs = require("fs");
 const FormData = require('form-data');
+const { log } = require("console");
 
 
 exports.addItem = async (req, res) => {
@@ -87,21 +88,19 @@ exports.deletItem = async (req, res) => {
     }
 }
 exports.updateItem = async (req, res) => {
-    const { _id ,inUse} = req.params;
-    const item=req.body;
+    //  const { _id } = req.params;
+    const {_id,inUse}=req.body;
     console.log("_id",_id);
-    console.log("item",item);
-    
+
     try {
         const updateItem = await Item.findByIdAndUpdate(
              _id ,
             {inUse:inUse},
-            {new:true}
-        );
+            {new:true});
         if (!updateItem)
             return res.status(404).json({ message: "not found item and not updated" })
 
-        res.json(updateItem)
+         return res.status(200).json(updateItem)
     }
     catch (error) {
         console.log('Failed to update item ', error);

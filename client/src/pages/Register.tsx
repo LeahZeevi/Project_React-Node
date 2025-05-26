@@ -9,7 +9,7 @@ import { useLoginMutation, useRegisterMutation } from '../redux/api/apiSllices/u
 import { useCookies } from 'react-cookie';
 import { RouterProvider } from 'react-router';
 import axios from 'axios';
- import router from '../routes/AppRoute';
+import router from '../routes/AppRoute';
 import { useDispatch } from 'react-redux';
 import { Controller } from 'react-hook-form';
 import Item from '../interfaces/Items';
@@ -22,14 +22,14 @@ interface Data {
 }
 
 const Register = () => {
-      const [openRegister, setOpenRegister] = useState<Boolean>(false);
+    const [openRegister, setOpenRegister] = useState<Boolean>(false);
     const [open, setOpenLogin] = useState<Boolean>(false)
     const [send, setSend] = useState<Boolean>(false);
     const [cities, setCities] = useState<Array<string>>([]);
-    const dispatch=useDispatch();
-    const [registerUser]=useRegisterMutation();
-    const [loginUser]=useLoginMutation();
-    const[cookies,setCookies]=useCookies(['token'])
+    const dispatch = useDispatch();
+    const [registerUser] = useRegisterMutation();
+    const [loginUser] = useLoginMutation();
+    const [cookies, setCookies] = useCookies(['token'])
 
 
 
@@ -48,7 +48,7 @@ const Register = () => {
         axios.get('http://localhost:3000/users/excel-column') // כתובת השרת של
             .then((response) => {
                 console.log(response.data);
-                
+
                 setCities(response.data);
             })
             .catch((error) => {
@@ -57,16 +57,15 @@ const Register = () => {
     }, []);
 
     const onSubmitRegister = async (newUser: { userName: string; city: string; email: string; password: string; }) => {
-        const userWithWardrobe: Users = { ...newUser, _id: ""};
+        const userWithWardrobe: Users = { ...newUser, _id: "" };
         console.log("1 - User data before registration:", userWithWardrobe, typeof userWithWardrobe);
 
         try {
-            const response:{accessToken:string,user:Users} = await registerUser(userWithWardrobe).unwrap();
-            console.log("response.user",response.user._id);
+            const response: { accessToken: string, user: Users } = await registerUser(userWithWardrobe).unwrap();
+            console.log("response.user", response.user._id);
             const currentUser = response.user;
             if (currentUser) {
                 localStorage.setItem('user', JSON.stringify(currentUser));
-                dispatch(setCurrentUser(currentUser))
             } else {
                 console.log('currentUser is undefined, not saving to localStorage.');
             }
@@ -75,7 +74,7 @@ const Register = () => {
             setSend(true);
             resetRegister();
         }
-    
+
         catch (error: any) {
             console.error("Registration error:", error);
             console.error("Registration error data:", error?.data);
@@ -85,11 +84,13 @@ const Register = () => {
 
     const onSubmitLogin = async (user: LoginedUser) => {
         try {
-            const response:{accessToken:string,user:Users} = await loginUser(user).unwrap();
+            const response: { accessToken: string, user: Users } = await loginUser(user).unwrap();
             const currentUser = response.user
             if (currentUser) {
                 localStorage.setItem('user', JSON.stringify(currentUser));
                 console.log('User saved to localStorage:', JSON.stringify(currentUser));
+                dispatch(setCurrentUser(currentUser));
+
             } else {
                 console.log('currentUser is undefined, not saving to localStorage.');
             }
