@@ -723,3 +723,92 @@
             left: 1rem;
           }
         }
+
+
+.heart-icon-wrapper {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden; /* חשוב מאוד */
+
+}
+
+.heart-icon {
+  font-size: 60px;
+  color: #bbb;
+  cursor: pointer;
+  user-select: none;
+  display: block;
+}
+
+.heart-icon.liked {
+  color: #e60023;
+}
+
+
+.outfit-container {
+  position: relative; /* חשוב כדי ש-icon יוכל להיות מוחלט */
+  padding: 16px;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+}
+
+.heart-button {
+  position: absolute;
+  top: 8px;
+  left: 8px; /* אם את רוצה בצד ימין: השתמשי ב-right: 8px */
+  z-index: 10;
+}
+
+.outfit-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+
+
+@keyframes popAndGlow {
+  0% {
+    transform: scale(1);
+    text-shadow: 0 0 5px rgba(255, 0, 0, 0.3);
+  }
+  50% {
+    transform: scale(1.5);
+    text-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
+  }
+  100% {
+    transform: scale(1.2);
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+  }
+}
+
+
+/* 
+  .heart-icon {
+  font-size: 28px;
+  color: gray;
+  transition: transform 0.3s ease, color 0.3s ease;
+  user-select: none;
+}
+
+.heart-icon.liked {
+  color: red;
+  animation: pulse 0.6s ease forwards;
+  transform-origin: center;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.4);
+  }
+  100% {
+    transform: scale(1);
+  }
+} */
