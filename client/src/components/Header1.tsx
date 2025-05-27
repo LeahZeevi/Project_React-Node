@@ -25,7 +25,7 @@ const Header1 = React.forwardRef((props, ref) => {
 
     const handleUpdateItem = async (_id: string) => {
         try {
-            await updateItem({ _id: _id, inUse: false }).unwrap();
+            await updateItem({ _id: _id, inUse: false,userId:user._id }).unwrap();
             // allItemsInUse();
         } catch (error) {
             console.error("שגיאה בעדכון הפריט:", error);

@@ -6,7 +6,6 @@ import { Users } from '../interfaces/Users';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../redux/slices/userSlice';
 import Header1 from '../components/Header1';
-
 import CurrentWorn from '../components/CurrentWorn';
 import AddItemDialog from '../components/AddItemDialog';
 
@@ -16,10 +15,10 @@ type Header1Ref = {
 };
 
 const MyWardrobe = () => {
-    { console.log("Mywardrobe1") };
     const categories = ['כל הקטגוריות', 'חולצות', 'חצאיות', 'מכנסים', 'שמלות', 'נעלים'];
     const [selectedCategory, setSelectedCategory] = useState('all');
     const [myWardrobe, setMyWardrobe] = useState<Item[]>([]);
+    const [currentlyWornItems, setCurrentlyWornItems] = useState<Item[]>([]);
     const [addItemDialog, setAddItemDialog] = useState<boolean>(false)
     const [getAllItems] = useGetAllItemsMutation();
     const [updatedItem] = useUpdateItemMutation();
@@ -27,27 +26,24 @@ const MyWardrobe = () => {
     const user: Users = useSelector(selectUser);
     const headerRef = useRef<Header1Ref>(null);
 
-
     const filteredItems =
         selectedCategory === 'all' || selectedCategory === 'כל הקטגוריות'
             ? myWardrobe
             : myWardrobe.filter(item => item.categoryName === selectedCategory);
 
-
-    const handleWearItem = async (itemId: string) => {
+    const handleWearItem = async (itemId: string,inUse:boolean) => {
         try {
-            await updatedItem({ _id: itemId, inUse: true });
+            const inUseItems: Item[] = await updatedItem({ _id: itemId, inUse: inUse, userId: user._id }).unwrap();
+            setCurrentlyWornItems(inUseItems)
         } catch (error) {
             console.error('Failed to update item:', error);
-
         }
         const updatedItems = myWardrobe.map(item =>
             item._id === itemId ? { ...item, inUse: !item.inUse } : item
         );
         setMyWardrobe(updatedItems);
-
-        const foundItem = myWardrobe.find(item => item._id === itemId);
     };
+
     const handleRemoveItem = async (itemForRemove: Item) => {
         try {
             await deleteItem(itemForRemove).unwrap();
@@ -56,12 +52,14 @@ const MyWardrobe = () => {
             console.error("שגיאה בהסרה:", err);
         }
     };
+
     const fetchWardrobe = async () => {
         try {
             const response: Item[] = await getAllItems(user._id).unwrap();
-            console.log("getAllItems", response);
             if (response) {
                 setMyWardrobe(response);
+                const wornItems: Item[] = response.filter(item => item.inUse == true)
+                setCurrentlyWornItems(wornItems);
             }
         } catch (error) {
             console.error('שגיאה בקבלת פריטים:', error);
@@ -77,16 +75,12 @@ const MyWardrobe = () => {
             headerRef.current.addItemsToLaundry(items);
         }
     };
-    const currentlyWornItems = myWardrobe.filter(item => item.inUse);
 
     return (
         <div className='page-content'>
             <Header1 ref={headerRef} />
-
-
-            <CurrentWorn wornItems={currentlyWornItems} onRefresh={fetchWardrobe} onSendToLaundry={handleSendToLaundry}
+            <CurrentWorn wornItems={currentlyWornItems} onRefresh={fetchWardrobe} onSendToLaundry={handleSendToLaundry} cancelWearning={handleWearItem}
             />
-            {/* <CurrentWorn  />    */}
             <div className="category-tabs">
                 {categories.map(category => (
                     <button
@@ -111,14 +105,18 @@ const MyWardrobe = () => {
                         </button>
                         <div className="item-image">
                             <img src={`http://localhost:3000/${item.image.replace(/^public[\\/]/, '')}`} alt={item.itemName} />
-                            {item.inUse && <div className="worn-overlay">✓</div>}
+                            {item.inUse && <div className="worn-overlay">
+                                ✓
+                                <button className="overlay-button">העבר לסל הלבישה</button>
+                            </div>}
+
                         </div>
                         <div className="item-info">
                             <h4>{item.itemName}</h4>
                             <p>{item.categoryName} • {item.session}</p>
                             <button
                                 className={`wear-btn ${item.inUse ? 'worn' : ''}`}
-                                onClick={() => handleWearItem(item._id)}
+                                onClick={() => handleWearItem(item._id,true)}
                                 disabled={!!item.inUse}
                             >
                                 {item.inUse ? 'בלבישה' : 'לבש'}

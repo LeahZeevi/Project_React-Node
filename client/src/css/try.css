@@ -371,10 +371,10 @@
           display: block;
         }
 
-
         .items-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          grid-template-columns: repeat(6, 1fr);
+          /* תמיד 6 עמודות */
           gap: 1.5rem;
         }
 
@@ -384,6 +384,37 @@
           overflow: hidden;
           box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
           transition: all 0.3s;
+        }
+
+        .overlay-button {
+          position: absolute;
+          bottom: 12px;
+          /* קרוב לתחתית */
+          left: 50%;
+          transform: translateX(-50%);
+          background: linear-gradient(to right, #7b60b0, #cb9ed7);
+          /* גרדיאנט כהה יותר */
+          color: white;
+          font-size: 0.8rem;
+          padding: 0.35rem 1.1rem;
+          /* קצת יותר רחב */
+          border: none;
+          border-radius: 16px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+          cursor: pointer;
+          white-space: nowrap;
+          z-index: 10;
+          opacity: 0.95;
+        }
+
+
+        .overlay-button:hover {
+          background: linear-gradient(135deg, #5a67d8, #6b46c1);
+        }
+
+        .move-to-basket-button:hover {
+          background: linear-gradient(135deg, #5a4dbb, #7360ff);
+          transform: translate(-50%, -50%) scale(1.05);
         }
 
         .item-card:hover {
@@ -738,69 +769,74 @@
         }
 
 
-.heart-icon-wrapper {
-  width: 60px;
-  height: 60px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden; /* חשוב מאוד */
+        .heart-icon-wrapper {
+          width: 60px;
+          height: 60px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          overflow: hidden;
+          /* חשוב מאוד */
 
-}
+        }
 
-.heart-icon {
-  font-size: 60px;
-  color: #bbb;
-  cursor: pointer;
-  user-select: none;
-  display: block;
-}
+        .heart-icon {
+          font-size: 60px;
+          color: #bbb;
+          cursor: pointer;
+          user-select: none;
+          display: block;
+        }
 
-.heart-icon.liked {
-  color: #e60023;
-}
-
-
-.outfit-container {
-  position: relative; /* חשוב כדי ש-icon יוכל להיות מוחלט */
-  padding: 16px;
-  border: 1px solid #ccc;
-  border-radius: 12px;
-}
-
-.heart-button {
-  position: absolute;
-  top: 8px;
-  left: 8px; /* אם את רוצה בצד ימין: השתמשי ב-right: 8px */
-  z-index: 10;
-}
-
-.outfit-items {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 12px;
-}
+        .heart-icon.liked {
+          color: #e60023;
+        }
 
 
+        .outfit-container {
+          position: relative;
+          /* חשוב כדי ש-icon יוכל להיות מוחלט */
+          padding: 16px;
+          border: 1px solid #ccc;
+          border-radius: 12px;
+        }
 
-@keyframes popAndGlow {
-  0% {
-    transform: scale(1);
-    text-shadow: 0 0 5px rgba(255, 0, 0, 0.3);
-  }
-  50% {
-    transform: scale(1.5);
-    text-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
-  }
-  100% {
-    transform: scale(1.2);
-    text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
-  }
-}
+        .heart-button {
+          position: absolute;
+          top: 8px;
+          left: 8px;
+          /* אם את רוצה בצד ימין: השתמשי ב-right: 8px */
+          z-index: 10;
+        }
+
+        .outfit-items {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+          margin-top: 12px;
+        }
 
 
-/* 
+
+        @keyframes popAndGlow {
+          0% {
+            transform: scale(1);
+            text-shadow: 0 0 5px rgba(255, 0, 0, 0.3);
+          }
+
+          50% {
+            transform: scale(1.5);
+            text-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
+          }
+
+          100% {
+            transform: scale(1.2);
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+          }
+        }
+
+
+        /* 
   .heart-icon {
   font-size: 28px;
   color: gray;
@@ -828,19 +864,19 @@
 
 
 
-/* קשור לינווט */
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 16px;
-    background-color: #f0f0f0;
-    position: relative;
-}
+        /* קשור לינווט */
+        .header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 10px 16px;
+          background-color: #f0f0f0;
+          position: relative;
+        }
 
-.basket-icon {
-    width: 40px;
-    height: 40px;
-    object-fit: contain;
-    cursor: pointer;
-}
+        .basket-icon {
+          width: 40px;
+          height: 40px;
+          object-fit: contain;
+          cursor: pointer;
+        }

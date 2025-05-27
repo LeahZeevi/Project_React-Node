@@ -20,12 +20,13 @@ const MotionFavoriteBorderIcon = motion(FavoriteBorderIcon);
 interface CurrentWornProps {
   wornItems: Item[];
   onRefresh: () => void
-  onSendToLaundry: (items: Item[]) => void;  // להוסיף פה את הפרופ
+  onSendToLaundry: (items: Item[]) => void; 
+  cancelWearning:(itemId: string,inUse:boolean)=>void; // להוסיף פה את הפרופ
 
 }
 
 
-const CurrentWorn: React.FC<CurrentWornProps> = ({ wornItems, onRefresh, onSendToLaundry }) => {
+const CurrentWorn: React.FC<CurrentWornProps> = ({ wornItems, onRefresh, onSendToLaundry,cancelWearning }) => {
 
   // const [currentOutfit, setCurrentOutfit] = useState<Item[]>([]);
   const user: Users = useSelector(selectUser);
@@ -40,33 +41,6 @@ const CurrentWorn: React.FC<CurrentWornProps> = ({ wornItems, onRefresh, onSendT
     items: string[];
     date: string;
   }
-
-  const handleUpdateItem = async (_id: string) => {
-    try {
-      await updateItem({ _id: _id, inUse: false }).unwrap();
-      await onRefresh(); // ← מרענן את הארון כולו מהשרת
-
-      allItemsInUse()
-    } catch (error) {
-      console.error("שגיאה בעדכון הפריט:", error);
-    }
-  };
-  const allItemsInUse = async () => {
-    try {
-      const response: Item[] = await getAllItems(user._id).unwrap()
-      console.log("response", response);
-      if (response) {
-        const filterItems: Item[] = response.filter(item => item.inUse == true);
-        wornItems = filterItems;
-      }
-    }
-    catch (error) {
-      console.error('שגיאה בקבלת פריטים:', error);
-    };
-  }
-  useEffect(() => {
-    allItemsInUse()
-  }, [])
 
 
   const toggleLike = () => {
@@ -107,6 +81,7 @@ const CurrentWorn: React.FC<CurrentWornProps> = ({ wornItems, onRefresh, onSendT
 
     }
   }
+
   return (
     <div>
 
@@ -125,8 +100,6 @@ const CurrentWorn: React.FC<CurrentWornProps> = ({ wornItems, onRefresh, onSendT
                 outline: 'none',
                 boxShadow: 'none',
                 fontSize: '40px',
-
-
 
               },
             }}
@@ -158,7 +131,7 @@ const CurrentWorn: React.FC<CurrentWornProps> = ({ wornItems, onRefresh, onSendT
           <div className="outfit-items">
             {wornItems.map(item => (
               <div key={item._id} className="outfit-chip">
-                <button onClick={() => handleUpdateItem(item._id)} className="remove-btn">×</button>
+                <button onClick={() => cancelWearning(item._id,false)} className="remove-btn">×</button>
                 <span>{item.itemName}</span>
               </div>
             ))}
