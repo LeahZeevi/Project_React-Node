@@ -7,6 +7,7 @@ interface Item{
     session:string,
     categoryId:Number,
     inUse:Boolean,
+    inLaundryBasket:Boolean,
     countWear:Number,
     style:string,
 

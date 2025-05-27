@@ -12,7 +12,7 @@ exports.addItem = async (req, res) => {
      const { _id } = req.params;
     
      
-    let { userId, itemName, categoryName,image, session, inUse, countWear, style } = req.body;
+    let { userId, itemName, categoryName,image, session, inUse, inLaundryBasket,countWear, style } = req.body;
     let imageUrl = null;
 
     if (req.file) {
@@ -25,7 +25,7 @@ exports.addItem = async (req, res) => {
         return res.status(400).json({ message: "ItemName and categoryName are required" });
     }
     try {
-        const item={userId,itemName,image:imageUrl,categoryName,session,inUse,countWear,style}
+        const item={userId,itemName,image:imageUrl,categoryName,session,inUse,inLaundryBasket,countWear,style}
        
       const newItem=await Item.create(item)
       if(newItem)
@@ -87,26 +87,76 @@ exports.deletItem = async (req, res) => {
         res.status(500).json({ message: "Failed to deleete item  " })
     }
 }
-exports.updateItem = async (req, res) => {
-    //  const { _id } = req.params;
-    const {_id,inUse}=req.body;
-    console.log("_id",_id);
 
+
+exports.updateItemInUse = async (req, res) => {
+    const { _id, inUse, userId } = req.body;
+
+    if (!_id || typeof inUse !== 'boolean' || !userId) {
+        return res.status(400).json({ message: "Missing _id, inUse or userId" });
+    }
     try {
-        const updateItem = await Item.findByIdAndUpdate(
-             _id ,
-            {inUse:inUse},
-            {new:true});
-        if (!updateItem)
-            return res.status(404).json({ message: "not found item and not updated" })
+        const updatedItem = await Item.findByIdAndUpdate(
+            _id,
+            { inUse },
+            { new: true }
+        );
 
-         return res.status(200).json(updateItem)
+        if (!updatedItem) {
+            return res.status(404).json({ message: "Item not found" });
+        }
+        const inUseItems = await Item.find({ userId, inUse: true });
+
+        return res.status(200).json(inUseItems);
+    } catch (error) {
+        console.error('Failed to update item', error);
+        return res.status(500).json({ message: "Failed to update item", error: error.message });
     }
-    catch (error) {
-        console.log('Failed to update item ', error);
-        res.status(500).json({ message: "Failed to deleete item  " })
+};
+
+
+exports.updateItemInLaundryBasket= async (req, res) => {
+    const { _id, inLaundryBasket, userId } = req.body;
+
+    if (!_id || typeof inLaundryBasket !== 'boolean' || !userId) {
+        return res.status(400).json({ message: "Missing _id, inUse or userId" });
     }
-}
+    try {
+        const updatedItem = await Item.findByIdAndUpdate(
+            _id,
+            { inLaundryBasket },
+            { new: true }
+        );
+        if (!updatedItem) {
+            return res.status(404).json({ message: "Item not found" });
+        }
+        const inLaundryBasketItems = await Item.find({ userId, inLaundryBasket: true });//מחזיר רשימה מעודכנת של פריטים בסל כביסה
+
+        return res.status(200).json(inLaundryBasketItems);
+    } catch (error) {
+        console.error('Failed to update item', error);
+        return res.status(500).json({ message: "Failed to update item", error: error.message });
+    }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 exports.predictCategory = async (req, res) => {

@@ -7,7 +7,7 @@ import { selectUser } from '../redux/slices/userSlice';
 import { useAddEventWearningMutation } from '../redux/api/apiSllices/wearningApiSlice';
 import { useAddHistoryItemMutation } from '../redux/api/apiSllices/historyApiSlice';
 import { useGetAllItemsMutation } from '../redux/api/apiSllices/itemsApiSlice';
-import { useUpdateItemMutation } from '../redux/api/apiSllices/itemsApiSlice';
+import { useUpdateItemInUseMutation } from '../redux/api/apiSllices/itemsApiSlice';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import IconButton from '@mui/material/IconButton';
@@ -20,18 +20,18 @@ const MotionFavoriteBorderIcon = motion(FavoriteBorderIcon);
 interface CurrentWornProps {
   wornItems: Item[];
   onRefresh: () => void
-  onSendToLaundry: (items: Item[]) => void;  // להוסיף פה את הפרופ
+  cancelWearning:(itemId: string,inUse:boolean)=>void; // להוסיף פה את הפרופ
 
 }
 
 
-const CurrentWorn: React.FC<CurrentWornProps> = ({ wornItems, onRefresh, onSendToLaundry }) => {
+const CurrentWorn: React.FC<CurrentWornProps> = ({ wornItems, onRefresh,cancelWearning }) => {
 
   // const [currentOutfit, setCurrentOutfit] = useState<Item[]>([]);
   const user: Users = useSelector(selectUser);
   const [addEventWearning] = useAddEventWearningMutation()
   const [addHistory] = useAddHistoryItemMutation();
-  const [updateItem] = useUpdateItemMutation();
+  const [updateItem] = useUpdateItemInUseMutation();
   const [getAllItems] = useGetAllItemsMutation();
   const [liked, setLiked] = useState(false);
 
@@ -40,33 +40,6 @@ const CurrentWorn: React.FC<CurrentWornProps> = ({ wornItems, onRefresh, onSendT
     items: string[];
     date: string;
   }
-
-  const handleUpdateItem = async (_id: string) => {
-    try {
-      await updateItem({ _id: _id, inUse: false }).unwrap();
-      await onRefresh(); // ← מרענן את הארון כולו מהשרת
-
-      allItemsInUse()
-    } catch (error) {
-      console.error("שגיאה בעדכון הפריט:", error);
-    }
-  };
-  const allItemsInUse = async () => {
-    try {
-      const response: Item[] = await getAllItems(user._id).unwrap()
-      console.log("response", response);
-      if (response) {
-        const filterItems: Item[] = response.filter(item => item.inUse == true);
-        wornItems = filterItems;
-      }
-    }
-    catch (error) {
-      console.error('שגיאה בקבלת פריטים:', error);
-    };
-  }
-  useEffect(() => {
-    allItemsInUse()
-  }, [])
 
 
   const toggleLike = () => {
@@ -100,13 +73,10 @@ const CurrentWorn: React.FC<CurrentWornProps> = ({ wornItems, onRefresh, onSendT
           }).unwrap()
         )
       );
-      onSendToLaundry(wornItems);
-      // שולחים ל-Header את הפריטים
-      await onRefresh();
       wornItems = [];
-
     }
   }
+
   return (
     <div>
 
@@ -125,8 +95,6 @@ const CurrentWorn: React.FC<CurrentWornProps> = ({ wornItems, onRefresh, onSendT
                 outline: 'none',
                 boxShadow: 'none',
                 fontSize: '40px',
-
-
 
               },
             }}
@@ -158,7 +126,7 @@ const CurrentWorn: React.FC<CurrentWornProps> = ({ wornItems, onRefresh, onSendT
           <div className="outfit-items">
             {wornItems.map(item => (
               <div key={item._id} className="outfit-chip">
-                <button onClick={() => handleUpdateItem(item._id)} className="remove-btn">×</button>
+                <button onClick={() => cancelWearning(item._id,false)} className="remove-btn">×</button>
                 <span>{item.itemName}</span>
               </div>
             ))}

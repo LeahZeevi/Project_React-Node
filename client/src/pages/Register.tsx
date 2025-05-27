@@ -108,8 +108,6 @@ const Register = () => {
 
     return (
         <div>
-
-
             {open &&
                 <div className={`modal ${open ? 'open' : ''}`}>
                     <div className="modal-content">
