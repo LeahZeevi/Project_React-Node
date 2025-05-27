@@ -8,6 +8,7 @@ import { selectUser } from '../redux/slices/userSlice';
 import Header1 from '../components/Header1';
 import CurrentWorn from '../components/CurrentWorn';
 import AddItemDialog from '../components/AddItemDialog';
+import HistoryAlert from '../components/HistoryAlert';
 
 // Define the type for the Header1 ref
 // type Header1Ref = {
@@ -17,6 +18,8 @@ import AddItemDialog from '../components/AddItemDialog';
 const MyWardrobe = () => {
     const categories = ['כל הקטגוריות', 'חולצות', 'חצאיות', 'מכנסים', 'שמלות', 'נעלים'];
     const [selectedCategory, setSelectedCategory] = useState('all');
+    const [showAlert, setShowAlert] = useState(false);
+    const [alertItemId, setAlertItemId] = useState<string | null>(null);
     const [myWardrobe, setMyWardrobe] = useState<Item[]>([]);
     const [currentlyWornItems, setCurrentlyWornItems] = useState<Item[]>([]);
     const [addItemDialog, setAddItemDialog] = useState<boolean>(false)
@@ -34,6 +37,8 @@ const MyWardrobe = () => {
 
     const handleWearItem = async (itemId: string,inUse:boolean) => {
         try {
+            setAlertItemId(itemId);
+            setShowAlert(inuse);
             const inUseItems: Item[] = await updateItemInUse({ _id: itemId, inUse: inUse, userId: user._id }).unwrap();
             setCurrentlyWornItems(inUseItems)
         } catch (error) {
@@ -142,6 +147,14 @@ const MyWardrobe = () => {
             </button>
 
             {addItemDialog && <AddItemDialog addItemDialogP={addItemDialog} setAddItemDialogP={setAddItemDialog} />}
+            {alertItemId && (
+                <HistoryAlert
+                    open={showAlert}
+                    onClose={() => setShowAlert(false)}
+                    item_Id={alertItemId}
+                />
+            )}
+
         </div>
     );
 };
