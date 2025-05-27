@@ -117,7 +117,8 @@ exports.updateItemInUse = async (req, res) => {
 
 exports.updateItemInLaundryBasket= async (req, res) => {
     const { _id, inLaundryBasket, userId } = req.body;
-
+          console.log("isLaundryBasket",inLaundryBasket);
+          
     if (!_id || typeof inLaundryBasket !== 'boolean' || !userId) {
         return res.status(400).json({ message: "Missing _id, inUse or userId" });
     }
