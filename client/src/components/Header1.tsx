@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import '../css/try.css'
 import { NavLink } from 'react-router';
 import Item from '../interfaces/Items';
-import { useGetAllItemsMutation, useUpdateItemMutation } from '../redux/api/apiSllices/itemsApiSlice';
+import { useGetAllItemsMutation, useUpdateItemInLaundryBasketMutation, useUpdateItemInUseMutation } from '../redux/api/apiSllices/itemsApiSlice';
 import { Users } from '../interfaces/Users';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../redux/slices/userSlice';
@@ -10,22 +10,22 @@ const Header1 = React.forwardRef((props, ref) => {
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [cartItems, setCartItems] = useState<Item[]>();
     const [getAllItems] = useGetAllItemsMutation();
-    const [updateItem] = useUpdateItemMutation();
+    const [updateItemInLaundry] = useUpdateItemInLaundryBasketMutation();
     const [isSideNavOpen, setIsSideNavOpen] = useState(false);
     const user: Users = useSelector(selectUser);
 
-    const addItemsToLaundry = (items: Item[]) => {
-    setCartItems(prev => [...(prev ?? []), ...items]);
-        setIsSideNavOpen(true); // לפתוח את סל הכביסה אם תרצי
+    // const addItemsToLaundry = (items: Item[]) => {
+    // setCartItems(prev => [...(prev ?? []), ...items]);
+    //     setIsSideNavOpen(true); // לפתוח את סל הכביסה אם תרצי
 
-    };
-    React.useImperativeHandle(ref, () => ({
-        addItemsToLaundry
-    }));
+    // };
+    // React.useImperativeHandle(ref, () => ({
+    //     addItemsToLaundry
+    // }));
 
     const handleUpdateItem = async (_id: string) => {
         try {
-            await updateItem({ _id: _id, inUse: false,userId:user._id }).unwrap();
+            await updateItemInLaundry({ _id: _id, inLaundryBasket: false,userId:user._id }).unwrap();
             // allItemsInUse();
         } catch (error) {
             console.error("שגיאה בעדכון הפריט:", error);
@@ -54,6 +54,28 @@ const Header1 = React.forwardRef((props, ref) => {
 const allItemsInUse = () => {
   setIsSideNavOpen(true); // רק פותח את סל הכביסה, לא משנה את הפריטים שבו
 };
+
+    const fetchWardrobe = async () => {
+        try {
+            const response: Item[] = await getAllItems(user._id).unwrap();
+            if (response) {
+                const itemInLaundry: Item[] = response.filter(item => item.inLaundryBasket == true)
+                setCartItems(itemInLaundry);
+            }
+        } catch (error) {
+            console.error('שגיאה בקבלת פריטים:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchWardrobe();
+    }, []);
+
+
+
+
+
+
     return (
         <div className="app">
             <header className="header">

@@ -7,7 +7,7 @@ import { selectUser } from '../redux/slices/userSlice';
 import { useAddEventWearningMutation } from '../redux/api/apiSllices/wearningApiSlice';
 import { useAddHistoryItemMutation } from '../redux/api/apiSllices/historyApiSlice';
 import { useGetAllItemsMutation } from '../redux/api/apiSllices/itemsApiSlice';
-import { useUpdateItemMutation } from '../redux/api/apiSllices/itemsApiSlice';
+import { useUpdateItemInUseMutation } from '../redux/api/apiSllices/itemsApiSlice';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import IconButton from '@mui/material/IconButton';
@@ -20,19 +20,18 @@ const MotionFavoriteBorderIcon = motion(FavoriteBorderIcon);
 interface CurrentWornProps {
   wornItems: Item[];
   onRefresh: () => void
-  onSendToLaundry: (items: Item[]) => void; 
   cancelWearning:(itemId: string,inUse:boolean)=>void; // להוסיף פה את הפרופ
 
 }
 
 
-const CurrentWorn: React.FC<CurrentWornProps> = ({ wornItems, onRefresh, onSendToLaundry,cancelWearning }) => {
+const CurrentWorn: React.FC<CurrentWornProps> = ({ wornItems, onRefresh,cancelWearning }) => {
 
   // const [currentOutfit, setCurrentOutfit] = useState<Item[]>([]);
   const user: Users = useSelector(selectUser);
   const [addEventWearning] = useAddEventWearningMutation()
   const [addHistory] = useAddHistoryItemMutation();
-  const [updateItem] = useUpdateItemMutation();
+  const [updateItem] = useUpdateItemInUseMutation();
   const [getAllItems] = useGetAllItemsMutation();
   const [liked, setLiked] = useState(false);
 
@@ -74,11 +73,7 @@ const CurrentWorn: React.FC<CurrentWornProps> = ({ wornItems, onRefresh, onSendT
           }).unwrap()
         )
       );
-      onSendToLaundry(wornItems);
-      // שולחים ל-Header את הפריטים
-      await onRefresh();
       wornItems = [];
-
     }
   }
 

@@ -29,6 +29,10 @@ const ItemsSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    inLaundryBasket:{
+        typeof:Boolean,
+        default:false
+    },
     countWear: {
         type: Number,
         default: 0

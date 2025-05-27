@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import '../css/try.css'
 import Item from '../interfaces/Items';
-import { useDeleteItemMutation, useGetAllItemsMutation, useUpdateItemMutation } from '../redux/api/apiSllices/itemsApiSlice';
+import { useDeleteItemMutation, useGetAllItemsMutation, useUpdateItemInLaundryBasketMutation, useUpdateItemInUseMutation } from '../redux/api/apiSllices/itemsApiSlice';
 import { Users } from '../interfaces/Users';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../redux/slices/userSlice';
@@ -10,9 +10,9 @@ import CurrentWorn from '../components/CurrentWorn';
 import AddItemDialog from '../components/AddItemDialog';
 
 // Define the type for the Header1 ref
-type Header1Ref = {
-    addItemsToLaundry: (items: Item[]) => void;
-};
+// type Header1Ref = {
+//     addItemsToLaundry: (items: Item[]) => void;
+// };
 
 const MyWardrobe = () => {
     const categories = ['כל הקטגוריות', 'חולצות', 'חצאיות', 'מכנסים', 'שמלות', 'נעלים'];
@@ -21,11 +21,12 @@ const MyWardrobe = () => {
     const [currentlyWornItems, setCurrentlyWornItems] = useState<Item[]>([]);
     const [addItemDialog, setAddItemDialog] = useState<boolean>(false)
     const [getAllItems] = useGetAllItemsMutation();
-    const [updatedItem] = useUpdateItemMutation();
+    const [updateItemInUse] = useUpdateItemInUseMutation();
     const [deleteItem] = useDeleteItemMutation()
+    const[updateItemInLaundry]=useUpdateItemInLaundryBasketMutation();
     const user: Users = useSelector(selectUser);
-    const headerRef = useRef<Header1Ref>(null);
-
+    // const headerRef = useRef<Header1Ref>(null);
+    
     const filteredItems =
         selectedCategory === 'all' || selectedCategory === 'כל הקטגוריות'
             ? myWardrobe
@@ -33,10 +34,10 @@ const MyWardrobe = () => {
 
     const handleWearItem = async (itemId: string,inUse:boolean) => {
         try {
-            const inUseItems: Item[] = await updatedItem({ _id: itemId, inUse: inUse, userId: user._id }).unwrap();
+            const inUseItems: Item[] = await updateItemInUse({ _id: itemId, inUse: inUse, userId: user._id }).unwrap();
             setCurrentlyWornItems(inUseItems)
         } catch (error) {
-            console.error('Failed to update item:', error);
+            console.error('Failed to update item inUse:', error);
         }
         const updatedItems = myWardrobe.map(item =>
             item._id === itemId ? { ...item, inUse: !item.inUse } : item
@@ -70,16 +71,28 @@ const MyWardrobe = () => {
         fetchWardrobe();
     }, []);
 
-    const handleSendToLaundry = (items: Item[]) => {
-        if (headerRef.current) {
-            headerRef.current.addItemsToLaundry(items);
+    const handleSendToLaundry = async(itemId:string,inLaundry:boolean) => {
+        // if (headerRef.current) {
+        //     headerRef.current.addItemsToLaundry(items);
+        // }
+        try{
+           const response= await updateItemInLaundry({_id:itemId,inLaundryBasket:inLaundry,userId:user._id})
+           if(response){
+            console.log("sucessfull");
+            
+           }
         }
+        catch(error){
+            console.error('Failed to update item inLaundry:', error);
+
+        }
+
     };
 
     return (
         <div className='page-content'>
-            <Header1 ref={headerRef} />
-            <CurrentWorn wornItems={currentlyWornItems} onRefresh={fetchWardrobe} onSendToLaundry={handleSendToLaundry} cancelWearning={handleWearItem}
+            {/* <Header1 ref={headerRef} /> */}
+            <CurrentWorn wornItems={currentlyWornItems} onRefresh={fetchWardrobe}  cancelWearning={handleWearItem}
             />
             <div className="category-tabs">
                 {categories.map(category => (
@@ -107,9 +120,8 @@ const MyWardrobe = () => {
                             <img src={`http://localhost:3000/${item.image.replace(/^public[\\/]/, '')}`} alt={item.itemName} />
                             {item.inUse && <div className="worn-overlay">
                                 ✓
-                                <button className="overlay-button">העבר לסל הלבישה</button>
+                                <button className="overlay-button" onClick={()=>handleSendToLaundry(item._id,true)}>העבר לסל כביסה</button>
                             </div>}
-
                         </div>
                         <div className="item-info">
                             <h4>{item.itemName}</h4>
