@@ -8,15 +8,24 @@ import { useAddEventWearningMutation } from '../redux/api/apiSllices/wearningApi
 import { useAddHistoryItemMutation } from '../redux/api/apiSllices/historyApiSlice';
 import { useGetAllItemsMutation } from '../redux/api/apiSllices/itemsApiSlice';
 import { useUpdateItemMutation } from '../redux/api/apiSllices/itemsApiSlice';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import IconButton from '@mui/material/IconButton';
+import { AnimatePresence, motion } from 'framer-motion';
 import Item from '../interfaces/Items';
 
+
+const MotionFavoriteIcon = motion(FavoriteIcon);
+const MotionFavoriteBorderIcon = motion(FavoriteBorderIcon);
 interface CurrentWornProps {
   wornItems: Item[];
   onRefresh: () => void
+  onSendToLaundry: (items: Item[]) => void;  // להוסיף פה את הפרופ
+
 }
 
 
-const CurrentWorn: React.FC<CurrentWornProps> = ({ wornItems, onRefresh }) => {
+const CurrentWorn: React.FC<CurrentWornProps> = ({ wornItems, onRefresh, onSendToLaundry }) => {
 
   // const [currentOutfit, setCurrentOutfit] = useState<Item[]>([]);
   const user: Users = useSelector(selectUser);
@@ -55,11 +64,17 @@ const CurrentWorn: React.FC<CurrentWornProps> = ({ wornItems, onRefresh }) => {
       console.error('שגיאה בקבלת פריטים:', error);
     };
   }
-  // useEffect(() => {
-  //   allItemsInUse()
-  // }, [])
+  useEffect(() => {
+    allItemsInUse()
+  }, [])
 
 
+  const toggleLike = () => {
+    setLiked(!liked);
+    if (!liked) {
+      alert("אהבתי");
+    }
+  }
 
 
 
@@ -85,11 +100,59 @@ const CurrentWorn: React.FC<CurrentWornProps> = ({ wornItems, onRefresh }) => {
           }).unwrap()
         )
       );
+      onSendToLaundry(wornItems);
+      // שולחים ל-Header את הפריטים
+      await onRefresh();
+      wornItems = [];
+
     }
   }
   return (
     <div>
+
       <div className="current-outfit">
+
+        {wornItems.length > 1 && (
+
+          <IconButton
+            onClick={() => setLiked(!liked)}
+            className="heart-button"
+            sx={{
+              outline: 'none',
+              boxShadow: 'none',
+              padding: 0,
+              '&:focus': {
+                outline: 'none',
+                boxShadow: 'none',
+                fontSize: '40px',
+
+
+
+              },
+            }}
+          >
+            <div className="heart-icon-wrapper">
+              {liked ? (
+                <MotionFavoriteIcon
+                  key="filled"
+                  className="heart-icon liked"
+                  fontSize="inherit"
+                  animate={{ scale: [1, 1.3, 1] }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
+                  style={{ fontSize: '50px' }}
+
+                />
+              ) : (
+                <MotionFavoriteBorderIcon
+                  key="outline"
+                  className="heart-icon"
+                  fontSize="inherit"
+                  animate={{ scale: [1, 1.2, 1] }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                />
+              )}
+            </div>
+          </IconButton>)}
         <h3>הלבוש הנוכחי</h3>
         {wornItems.length > 0 ? (
           <div className="outfit-items">
@@ -99,7 +162,7 @@ const CurrentWorn: React.FC<CurrentWornProps> = ({ wornItems, onRefresh }) => {
                 <span>{item.itemName}</span>
               </div>
             ))}
-            <button onClick={saveLook} className="save-look-btn">שמור לוק</button>
+            <button onClick={saveLook} className="save-look-btn">סיימתי </button>
           </div>
         ) : (
           <p className="no-outfit">בחר בגדים מהארון</p>
@@ -111,3 +174,14 @@ const CurrentWorn: React.FC<CurrentWornProps> = ({ wornItems, onRefresh }) => {
 }
 
 export default CurrentWorn
+
+
+
+
+
+
+
+
+
+
+

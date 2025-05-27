@@ -1,12 +1,20 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import '../css/try.css'
 import Item from '../interfaces/Items';
 import { useDeleteItemMutation, useGetAllItemsMutation, useUpdateItemMutation } from '../redux/api/apiSllices/itemsApiSlice';
 import { Users } from '../interfaces/Users';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../redux/slices/userSlice';
+import Header1 from '../components/Header1';
+
 import CurrentWorn from '../components/CurrentWorn';
 import AddItemDialog from '../components/AddItemDialog';
+
+// Define the type for the Header1 ref
+type Header1Ref = {
+    addItemsToLaundry: (items: Item[]) => void;
+};
+
 const MyWardrobe = () => {
     { console.log("Mywardrobe1") };
     const categories = ['כל הקטגוריות', 'חולצות', 'חצאיות', 'מכנסים', 'שמלות', 'נעלים'];
@@ -17,6 +25,9 @@ const MyWardrobe = () => {
     const [updatedItem] = useUpdateItemMutation();
     const [deleteItem] = useDeleteItemMutation()
     const user: Users = useSelector(selectUser);
+    const headerRef = useRef<Header1Ref>(null);
+
+
     const filteredItems =
         selectedCategory === 'all' || selectedCategory === 'כל הקטגוריות'
             ? myWardrobe
@@ -60,13 +71,21 @@ const MyWardrobe = () => {
     useEffect(() => {
         fetchWardrobe();
     }, []);
+
+    const handleSendToLaundry = (items: Item[]) => {
+        if (headerRef.current) {
+            headerRef.current.addItemsToLaundry(items);
+        }
+    };
     const currentlyWornItems = myWardrobe.filter(item => item.inUse);
 
     return (
-
         <div className='page-content'>
+            <Header1 ref={headerRef} />
 
-            <CurrentWorn wornItems={currentlyWornItems} onRefresh={fetchWardrobe} />
+
+            <CurrentWorn wornItems={currentlyWornItems} onRefresh={fetchWardrobe} onSendToLaundry={handleSendToLaundry}
+            />
             {/* <CurrentWorn  />    */}
             <div className="category-tabs">
                 {categories.map(category => (

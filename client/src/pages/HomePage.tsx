@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import CurrentOutfit from '../components/CurrentOutfit';
 import WeatherWidget from '../components/WeatherWidget';
 import Item from '../interfaces/Items';
@@ -23,6 +23,9 @@ const HomePage = () => {
     const user: Users = useSelector(selectUser);
     const [myWardrobe, setMyWardrobe] = useState<Item[]>([]);
     const [getAllItems] = useGetAllItemsMutation();
+    const [currentOutfit, setCurrentOutfit] = useState<Item[]>([]);
+const headerRef = useRef<any>(null);
+
     const fetchWardrobe = async () => {
         try {
             const response: Item[] = await getAllItems(user._id).unwrap();
@@ -41,15 +44,28 @@ const HomePage = () => {
     }, []);
     const wornItems1 = myWardrobe.filter(item => item.inUse);
 
+    // Define the onSendToLaundry function
+    const onSendToLaundry = (items: Item[]) => {
+        console.log(`Send items to laundry`, items);
+        setCurrentOutfit([]); // איפוס הלבוש הנוכחי
+        headerRef.current?.addItemsToLaundry(items);
+    };
+    const handleWearItem = (item: Item) => {
+        if (!currentOutfit.find(i => i._id === item._id)) {
+            setCurrentOutfit(prev => [...prev, item]);
+        }
+    };
+
+
     return (
 
         <div className="page-content">
             <WeatherWidget city="ירושלים" />
             {/* Pass the actual wardrobe data as a prop */}
-            <CurrentWorn wornItems={wornItems1} onRefresh={fetchWardrobe}/>
+            <CurrentWorn wornItems={wornItems1} onRefresh={fetchWardrobe} onSendToLaundry={onSendToLaundry} />
             <div className="stats-grid">
                 <div className="stat-card">
-                    <div className="stat-number">2</div>
+                    <div className="stat-number">{myWardrobe.length}</div>
                     <div className="stat-label">פריטים בארון</div>
                 </div>
                 <div className="stat-card">
