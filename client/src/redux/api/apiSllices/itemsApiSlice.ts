@@ -24,14 +24,22 @@ export const itemsApiSlice = apiSlices.injectEndpoints({
             query: (id) => `/items/${id}`,
             providesTags: ["Items"]
         }),
-        updateItem: builder.mutation<Item[], { _id: string, inUse: boolean,userId:string}>({
+        updateItemInUse: builder.mutation<Item[], { _id: string, inUse: boolean,userId:string}>({
             query: ({ _id, inUse,userId }: { _id: string; inUse: boolean,userId:string }) => ({
                 url: `/items`,
                 method: "PATCH",
                 body: {_id, inUse,userId }
             }),
             invalidatesTags: ["Items"]
+        }),  updateItemInLaundryBasket: builder.mutation<Item[], { _id: string, inLaundryBasket: boolean,userId:string}>({
+            query: ({ _id, inLaundryBasket,userId }: { _id: string; inLaundryBasket: boolean,userId:string }) => ({
+                url: `/items/inLaundryBasket`,
+                method: "PATCH",
+                body: {_id, inLaundryBasket,userId }
+            }),
+            invalidatesTags: ["Items"]
         }),
+
         deleteItem: builder.mutation<void, Item>({
             query: (item) => ({
                 url: `/items/${item._id}`,
@@ -46,6 +54,7 @@ export const {
     useAddItemMutation,
     useGetAllItemsMutation,
     useGetItemByIdQuery,
-    useUpdateItemMutation,
+    useUpdateItemInLaundryBasketMutation,
+    useUpdateItemInUseMutation,
     useDeleteItemMutation,
 } = itemsApiSlice;
