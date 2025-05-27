@@ -6,6 +6,7 @@ import { Users } from '../interfaces/Users';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../redux/slices/userSlice';
 import CurrentWorn from '../components/CurrentWorn';
+import HistoryAlert from '../components/HistoryAlert';
 const MyWardrobe = () => {
     { console.log("Mywardrobe1") };
     const categories = ['כל הקטגוריות', 'חולצות', 'חצאיות', 'מכנסים', 'שמלות', 'נעלים'];
@@ -26,6 +27,7 @@ const MyWardrobe = () => {
         try {
             const response: Item = await updatedItem({ _id: user._id, inUse: true }).unwrap();
             console.log('Item updated on server:', response);
+            <HistoryAlert itemId={itemId}></HistoryAlert>
         } catch (error) {
             console.error('Failed to update item:', error);
 
