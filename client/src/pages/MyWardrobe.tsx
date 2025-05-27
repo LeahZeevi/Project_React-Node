@@ -1,21 +1,35 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import '../css/try.css'
 import Item from '../interfaces/Items';
 import { useDeleteItemMutation, useGetAllItemsMutation, useUpdateItemMutation } from '../redux/api/apiSllices/itemsApiSlice';
 import { Users } from '../interfaces/Users';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../redux/slices/userSlice';
+import Header1 from '../components/Header1';
+
 import CurrentWorn from '../components/CurrentWorn';
+import AddItemDialog from '../components/AddItemDialog';
 import HistoryAlert from '../components/HistoryAlert';
+
+// Define the type for the Header1 ref
+type Header1Ref = {
+    addItemsToLaundry: (items: Item[]) => void;
+};
+
 const MyWardrobe = () => {
     { console.log("Mywardrobe1") };
     const categories = ['כל הקטגוריות', 'חולצות', 'חצאיות', 'מכנסים', 'שמלות', 'נעלים'];
     const [selectedCategory, setSelectedCategory] = useState('all');
+    const [showAlert, setShowAlert] = useState(false);
+    const [alertItemId, setAlertItemId] = useState<string | null>(null);
     const [myWardrobe, setMyWardrobe] = useState<Item[]>([]);
+    const [addItemDialog, setAddItemDialog] = useState<boolean>(false)
     const [getAllItems] = useGetAllItemsMutation();
     const [updatedItem] = useUpdateItemMutation();
-    const [deleteItem]=useDeleteItemMutation()
+    const [deleteItem] = useDeleteItemMutation()
     const user: Users = useSelector(selectUser);
+    const headerRef = useRef<Header1Ref>(null);
+
 
     const filteredItems =
         selectedCategory === 'all' || selectedCategory === 'כל הקטגוריות'
@@ -23,11 +37,11 @@ const MyWardrobe = () => {
             : myWardrobe.filter(item => item.categoryName === selectedCategory);
 
 
-    const handleWearItem = async (itemId: any) => {
+    const handleWearItem = async (itemId: string) => {
         try {
-            const response: Item = await updatedItem({ _id: user._id, inUse: true }).unwrap();
-            console.log('Item updated on server:', response);
-            <HistoryAlert itemId={itemId}></HistoryAlert>
+            await updatedItem({ _id: itemId, inUse: true });
+            setAlertItemId(itemId);
+            setShowAlert(true);
         } catch (error) {
             console.error('Failed to update item:', error);
 
@@ -39,42 +53,51 @@ const MyWardrobe = () => {
 
         const foundItem = myWardrobe.find(item => item._id === itemId);
     };
-    const handleRemoveItem = async (itemForRemove: Item)=>{
+    const handleRemoveItem = async (itemForRemove: Item) => {
         try {
-         await deleteItem(itemForRemove).unwrap();
-        setMyWardrobe(prev => prev.filter(item => item._id !== itemForRemove._id));
+            await deleteItem(itemForRemove).unwrap();
+            setMyWardrobe(prev => prev.filter(item => item._id !== itemForRemove._id));
         } catch (err) {
             console.error("שגיאה בהסרה:", err);
         }
     };
-
+    const fetchWardrobe = async () => {
+        try {
+            const response: Item[] = await getAllItems(user._id).unwrap();
+            console.log("getAllItems", response);
+            if (response) {
+                setMyWardrobe(response);
+            }
+        } catch (error) {
+            console.error('שגיאה בקבלת פריטים:', error);
+        }
+    };
 
     useEffect(() => {
-        const fetchWardrobe = async () => {
-            try {
-                const response: Item[] = await getAllItems(user._id).unwrap();
-                console.log("getAllItems", response);
-                if (response) {
-                    setMyWardrobe(response);
-                }
-            } catch (error) {
-                console.error('שגיאה בקבלת פריטים:', error);
-            }
-        };
         fetchWardrobe();
     }, []);
+
+    const handleSendToLaundry = (items: Item[]) => {
+        if (headerRef.current) {
+            headerRef.current.addItemsToLaundry(items);
+        }
+    };
+    const currentlyWornItems = myWardrobe.filter(item => item.inUse);
+
     return (
-
         <div className='page-content'>
+            <Header1 ref={headerRef} />
 
-            <CurrentWorn />
+
+            <CurrentWorn wornItems={currentlyWornItems} onRefresh={fetchWardrobe} onSendToLaundry={handleSendToLaundry}
+            />
+            {/* <CurrentWorn  />    */}
             <div className="category-tabs">
                 {categories.map(category => (
                     <button
                         key={category}
                         className={`tab ${(selectedCategory === category || (selectedCategory === 'all' && category === 'כל הקטגוריות')) ? 'active' : ''}`}
-                        onClick={() => setSelectedCategory(category === 'כל הקטגוריות' ? 'all' : category)}
-                    >
+                        onClick={() => setSelectedCategory(category === 'כל הקטגוריות' ? 'all' : category)}>
                         {category}
                     </button>
                 ))}
@@ -109,6 +132,18 @@ const MyWardrobe = () => {
                     </div>
                 ))}
             </div>
+            <button className="fab" onClick={() => setAddItemDialog(true)}>
+                +
+            </button>
+
+            {addItemDialog && <AddItemDialog addItemDialogP={addItemDialog} setAddItemDialogP={setAddItemDialog} />}
+            {alertItemId && (
+                <HistoryAlert
+                    open={showAlert}
+                    onClose={() => setShowAlert(false)}
+                    item_Id={alertItemId}
+                />
+            )}
 
         </div>
     );
