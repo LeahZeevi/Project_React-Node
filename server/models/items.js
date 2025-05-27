@@ -30,7 +30,7 @@ const ItemsSchema = new mongoose.Schema({
         default: false
     },
     inLaundryBasket:{
-        typeof:Boolean,
+        type:Boolean,
         default:false
     },
     countWear: {

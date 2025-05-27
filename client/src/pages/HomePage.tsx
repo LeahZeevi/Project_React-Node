@@ -5,10 +5,12 @@ import Item from '../interfaces/Items';
 import SavedLook from '../interfaces/SavedLook'; // Assuming you define this interface
 import CurrentWorn from '../components/CurrentWorn';
 import '../css/try.css'
-import { useGetAllItemsMutation } from '../redux/api/apiSllices/itemsApiSlice';
+import { useGetAllItemsMutation, useUpdateItemInUseMutation } from '../redux/api/apiSllices/itemsApiSlice';
 import { Users } from '../interfaces/Users';
 import { selectUser } from '../redux/slices/userSlice';
 import { useSelector } from 'react-redux';
+import Typography from '@mui/material/Typography';
+import CountUp from '../components/CountUp';
 interface HomePageProps {
     currentOutfit: number[];
     myWardrobe: Item[];
@@ -23,8 +25,9 @@ const HomePage = () => {
     const user: Users = useSelector(selectUser);
     const [myWardrobe, setMyWardrobe] = useState<Item[]>([]);
     const [getAllItems] = useGetAllItemsMutation();
+    const [updateItemInUse] = useUpdateItemInUseMutation();
     const [currentOutfit, setCurrentOutfit] = useState<Item[]>([]);
-const headerRef = useRef<any>(null);
+    const headerRef = useRef<any>(null);
 
     const fetchWardrobe = async () => {
         try {
@@ -50,22 +53,39 @@ const headerRef = useRef<any>(null);
         setCurrentOutfit([]); // איפוס הלבוש הנוכחי
         headerRef.current?.addItemsToLaundry(items);
     };
-    const handleWearItem = (item: Item) => {
-        if (!currentOutfit.find(i => i._id === item._id)) {
-            setCurrentOutfit(prev => [...prev, item]);
+    // const handleWearItem = (item: Item) => {
+    //     if (!currentOutfit.find(i => i._id === item._id)) {
+    //         setCurrentOutfit(prev => [...prev, item]);
+    //     }
+    // };
+    const handleWearItem = async (itemId: string, inUse: boolean) => {
+        try {
+            // setAlertItemId(itemId);
+            // setShowAlert(inUse);
+            const inUseItems: Item[] = await updateItemInUse({ _id: itemId, inUse: inUse, userId: user._id }).unwrap();
+            // setCurrentlyWornItems(inUseItems)
+        } catch (error) {
+            console.error('Failed to update item inUse:', error);
         }
+        const updatedItems = myWardrobe.map(item =>
+            item._id === itemId ? { ...item, inUse: !item.inUse } : item
+        );
+        setMyWardrobe(updatedItems);
     };
-
 
     return (
 
         <div className="page-content">
             <WeatherWidget city="ירושלים" />
             {/* Pass the actual wardrobe data as a prop */}
-            <CurrentWorn wornItems={wornItems1} onRefresh={fetchWardrobe} onSendToLaundry={onSendToLaundry} />
+            <CurrentWorn wornItems={wornItems1} onRefresh={fetchWardrobe} cancelWearning={handleWearItem} />
             <div className="stats-grid">
                 <div className="stat-card">
-                    <div className="stat-number">{myWardrobe.length}</div>
+                    <div className="stat-number">
+                        {/* <Typography variant="h4"> */}
+                        <CountUp target={myWardrobe.length} duration={900} />
+                        {/* </Typography> */}
+                    </div>
                     <div className="stat-label">פריטים בארון</div>
                 </div>
                 <div className="stat-card">
@@ -73,7 +93,10 @@ const headerRef = useRef<any>(null);
                     <div className="stat-label">לוקים שמורים</div>
                 </div>
                 <div className="stat-card">
-                    <div className="stat-number">{wornItems1.length}</div>
+                    <div className="stat-number">
+                        <CountUp target={wornItems1.length} duration={200} />
+
+                       </div>
                     <div className="stat-label">בלבישה</div>
                 </div>
             </div>

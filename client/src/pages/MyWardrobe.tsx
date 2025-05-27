@@ -38,7 +38,7 @@ const MyWardrobe = () => {
     const handleWearItem = async (itemId: string,inUse:boolean) => {
         try {
             setAlertItemId(itemId);
-            setShowAlert(inuse);
+            setShowAlert(inUse);
             const inUseItems: Item[] = await updateItemInUse({ _id: itemId, inUse: inUse, userId: user._id }).unwrap();
             setCurrentlyWornItems(inUseItems)
         } catch (error) {

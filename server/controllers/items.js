@@ -14,7 +14,8 @@ exports.addItem = async (req, res) => {
      
     let { userId, itemName, categoryName,image, session, inUse, inLaundryBasket,countWear, style } = req.body;
     let imageUrl = null;
-
+    console.log(inLaundryBasket);
+    
     if (req.file) {
         imageUrl = req.file.path.replace(/\\/g, '/');
           console.log("בקשה",imageUrl,"req.file",image);

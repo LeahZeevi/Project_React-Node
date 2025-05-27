@@ -409,11 +409,11 @@
 
 
         .overlay-button:hover {
-          background: linear-gradient(135deg, #5a67d8, #6b46c1);
+          background: linear-gradient(135deg, rgb(187, 2, 156) 0%, rgb(101, 120, 227) 100%);
         }
 
         .move-to-basket-button:hover {
-          background: linear-gradient(135deg, #5a4dbb, #7360ff);
+          background: linear-gradient(135deg, rgb(187, 2, 156) 0%, rgb(101, 120, 227) 100%);
           transform: translate(-50%, -50%) scale(1.05);
         }
 
@@ -478,7 +478,7 @@
           padding: 0.8rem;
           border: none;
           border-radius: 8px;
-          background: rgb(101, 120, 227);
+          background:linear-gradient(135deg, rgb(187, 2, 156) 0%, rgb(101, 120, 227) 100%);
           color: white;
           cursor: pointer;
           transition: background 0.2s;
@@ -486,7 +486,7 @@
         }
 
         .wear-btn:hover {
-          background: #5a6fd8;
+          background:linear-gradient(135deg, rgb(187, 2, 156) 0%, rgb(101, 120, 227) 100%);
         }
 
         .wear-btn.worn {
@@ -548,16 +548,16 @@
         .wear-again-btn {
           width: 100%;
           padding: 0.8rem;
-          border: 2px solid #667eea;
+          border: 2px solid linear-gradient(135deg, rgb(187, 2, 156) 0%, rgb(101, 120, 227) 100%);
           background: none;
-          color: #667eea;
+          color:linear-gradient(135deg, rgb(187, 2, 156) 0%, rgb(101, 120, 227) 100%);
           border-radius: 8px;
           cursor: pointer;
           transition: all 0.2s;
         }
 
         .wear-again-btn:hover {
-          background: #667eea;
+          background:linear-gradient(135deg, rgb(187, 2, 156) 0%, rgb(101, 120, 227) 100%);
           color: white;
         }
 
@@ -661,7 +661,7 @@
         .form-group input:focus,
         .form-group select:focus {
           outline: none;
-          border-color: #667eea;
+          border-color:linear-gradient(135deg, rgb(187, 2, 156) 0%, rgb(101, 120, 227) 100%);
         }
 
         .form-actions {
@@ -681,7 +681,7 @@
         }
 
         .btn-primary {
-          background: #667eea;
+          background:linear-gradient(135deg, rgb(187, 2, 156) 0%, rgb(101, 120, 227) 100%);
           color: white;
         }
 
@@ -691,12 +691,12 @@
 
         .btn-secondary {
           background: white;
-          color: #667eea;
-          border: 2px solid #667eea;
+          color:linear-gradient(135deg, rgb(187, 2, 156) 0%, rgb(101, 120, 227) 100%);
+          border: 2px solid linear-gradient(135deg, rgb(187, 2, 156) 0%, rgb(101, 120, 227) 100%);
         }
 
         .btn-secondary:hover {
-          background: #667eea;
+          background:linear-gradient(135deg, rgb(187, 2, 156) 0%, rgb(101, 120, 227) 100%);
           color: white;
         }
 
@@ -713,8 +713,8 @@
         }
 
         .photo-btn:hover {
-          border-color: #667eea;
-          color: #667eea;
+          border-color:linear-gradient(135deg, rgb(187, 2, 156) 0%, rgb(101, 120, 227) 100%);
+          color: linear-gradient(135deg, rgb(187, 2, 156) 0%, rgb(101, 120, 227) 100%);
         }
 
         @media (max-width: 768px) {
