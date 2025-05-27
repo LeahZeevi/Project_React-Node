@@ -15,7 +15,6 @@ const itemsRouter = require('./routes/items')
 const historyRouter = require('./routes/history')
 const wearning=require('./routes/wearnings')
 const predictRoute = require('./routes/predictRoute');
-const { log } = require("console");
 const app=express();
 
 const cachePath = path.join(__dirname, 'predictions_cache.json');
