@@ -9,14 +9,19 @@ import { selectUser } from '../redux/slices/userSlice';
 import { selectAllItems, setAllItems, setItemsInLaundry, setItemsInUse } from '../redux/slices/itemSlice';
 import AddItemDialog from '../components/AddItemDialog';
 import CurrentWorn from '../components/CurrentWorn';
+import HistoryAlert from '../components/HistoryAlert';
+
+
 
 const MyWardrobe = () => {
     console.log("MyWardrobe");
-    
+
     const categories = ['כל הקטגוריות', 'חולצות', 'חצאיות', 'מכנסים', 'שמלות', 'נעלים'];
     const [selectedCategory, setSelectedCategory] = useState('all');
-    const allItems=useSelector(selectAllItems);
+    const allItems = useSelector(selectAllItems);
     const [myWardrobe, setMyWardrobe] = useState<Item[]>(allItems);
+    const [showAlert, setShowAlert] = useState(false);
+    const [alertItemId, setAlertItemId] = useState<string | null>(null);
     const [currentlyWornItems, setCurrentlyWornItems] = useState<Item[]>([]);
     const [addItemDialog, setAddItemDialog] = useState(false);
 
@@ -32,6 +37,30 @@ const MyWardrobe = () => {
         ? myWardrobe
         : myWardrobe.filter(item => item.categoryName === selectedCategory);
 
+    const handleWearItem = async (itemId: string, inUse: boolean) => {
+        try {
+            setAlertItemId(itemId);
+            setShowAlert(inUse);
+            const inUseItems: Item[] = await updateItemInUse({ _id: itemId, inUse: inUse, userId: user._id }).unwrap();
+            setCurrentlyWornItems(inUseItems)
+        } catch (error) {
+            console.error('Failed to update item inUse:', error);
+        }
+        const updatedItems = myWardrobe.map(item =>
+            item._id === itemId ? { ...item, inUse: !item.inUse } : item
+        );
+        setMyWardrobe(updatedItems);
+    }
+
+    const handleRemoveItem = async (itemForRemove: Item) => {
+        try {
+            await deleteItem(itemForRemove).unwrap();
+            setMyWardrobe(prev => prev.filter(item => item._id !== itemForRemove._id));
+        } catch (err) {
+            console.error("שגיאה בהסרה:", err);
+        }
+    };
+
     const fetchWardrobe = async () => {
         if (myWardrobe.length === 0) {
             try {
@@ -43,15 +72,15 @@ const MyWardrobe = () => {
                 console.error('שגיאה בקבלת פריטים:', err);
             }
         }
-        else{
-            setCurrentlyWornItems(myWardrobe.filter(item=>item.inUse));
+        else {
+            setCurrentlyWornItems(myWardrobe.filter(item => item.inUse));
         }
     };
 
     useEffect(() => {
         fetchWardrobe();
     }, [allItems]);
-console.log("allItems",allItems);
+    console.log("allItems", allItems);
 
     const handleUpdateItem = async (item: Item, inUse: boolean) => {
         try {
@@ -75,14 +104,7 @@ console.log("allItems",allItems);
         }
     };
 
-    const handleRemoveItem = async (item: Item) => {
-        try {
-            await deleteItem(item).unwrap();
-            setMyWardrobe(prev => prev.filter(i => i._id !== item._id));
-        } catch (err) {
-            console.error('שגיאה בהסרה:', err);
-        }
-    };
+
 
     return (
         <div className='page-content'>
@@ -147,10 +169,13 @@ console.log("allItems",allItems);
 
             <button className="fab" onClick={() => setAddItemDialog(true)}>+</button>
 
-            {addItemDialog && (
-                <AddItemDialog
-                    addItemDialogP={addItemDialog}
-                    setAddItemDialogP={setAddItemDialog}
+
+            {addItemDialog && <AddItemDialog addItemDialogP={addItemDialog} setAddItemDialogP={setAddItemDialog} />}
+            {alertItemId && (
+                <HistoryAlert
+                    open={showAlert}
+                    onClose={() => setShowAlert(false)}
+                    item_Id={alertItemId}
                 />
             )}
         </div>
