@@ -9,6 +9,7 @@ import Header1 from '../components/Header1';
 import CurrentWorn from '../components/CurrentWorn';
 import AddItemDialog from '../components/AddItemDialog';
 import HistoryAlert from '../components/HistoryAlert';
+import FilterMenu from '../components/FilterMenu';
 
 // Define the type for the Header1 ref
 // type Header1Ref = {
@@ -26,16 +27,21 @@ const MyWardrobe = () => {
     const [getAllItems] = useGetAllItemsMutation();
     const [updateItemInUse] = useUpdateItemInUseMutation();
     const [deleteItem] = useDeleteItemMutation()
-    const[updateItemInLaundry]=useUpdateItemInLaundryBasketMutation();
+    const [updateItemInLaundry] = useUpdateItemInLaundryBasketMutation();
+    const [selectedFilter, setSelectedFilter] = useState<string | null>(null);
+
     const user: Users = useSelector(selectUser);
     // const headerRef = useRef<Header1Ref>(null);
-    
-    const filteredItems =
-        selectedCategory === 'all' || selectedCategory === 'כל הקטגוריות'
-            ? myWardrobe
-            : myWardrobe.filter(item => item.categoryName === selectedCategory);
+    const filteredItems = myWardrobe.filter(item => {
+        if (selectedCategory !== 'all' && item.categoryName !== selectedCategory) return false;
+        if (!selectedFilter) return true;
+        return (
+            item.session === selectedFilter ||
+            item.style === selectedFilter // תלוי מה בדיוק את מסננת
+        );
+    });
 
-    const handleWearItem = async (itemId: string,inUse:boolean) => {
+    const handleWearItem = async (itemId: string, inUse: boolean) => {
         try {
             setAlertItemId(itemId);
             setShowAlert(inUse);
@@ -76,18 +82,18 @@ const MyWardrobe = () => {
         fetchWardrobe();
     }, []);
 
-    const handleSendToLaundry = async(itemId:string,inLaundry:boolean) => {
+    const handleSendToLaundry = async (itemId: string, inLaundry: boolean) => {
         // if (headerRef.current) {
         //     headerRef.current.addItemsToLaundry(items);
         // }
-        try{
-           const response= await updateItemInLaundry({_id:itemId,inLaundryBasket:inLaundry,userId:user._id})
-           if(response){
-            console.log("sucessfull");
-            
-           }
+        try {
+            const response = await updateItemInLaundry({ _id: itemId, inLaundryBasket: inLaundry, userId: user._id })
+            if (response) {
+                console.log("sucessfull");
+
+            }
         }
-        catch(error){
+        catch (error) {
             console.error('Failed to update item inLaundry:', error);
 
         }
@@ -97,9 +103,12 @@ const MyWardrobe = () => {
     return (
         <div className='page-content'>
             {/* <Header1 ref={headerRef} /> */}
-            <CurrentWorn wornItems={currentlyWornItems} onRefresh={fetchWardrobe}  cancelWearning={handleWearItem}
+            <CurrentWorn wornItems={currentlyWornItems} onRefresh={fetchWardrobe} cancelWearning={handleWearItem}
             />
+
             <div className="category-tabs">
+                <FilterMenu onFilterSelect={(filter) => setSelectedFilter(filter)} />
+
                 {categories.map(category => (
                     <button
                         key={category}
@@ -125,7 +134,7 @@ const MyWardrobe = () => {
                             <img src={`http://localhost:3000/${item.image.replace(/^public[\\/]/, '')}`} alt={item.itemName} />
                             {item.inUse && <div className="worn-overlay">
                                 ✓
-                                <button className="overlay-button" onClick={()=>handleSendToLaundry(item._id,true)}>העבר לסל כביסה</button>
+                                <button className="overlay-button" onClick={() => handleSendToLaundry(item._id, true)}>העבר לסל כביסה</button>
                             </div>}
                         </div>
                         <div className="item-info">
@@ -133,7 +142,7 @@ const MyWardrobe = () => {
                             <p>{item.categoryName} • {item.session}</p>
                             <button
                                 className={`wear-btn ${item.inUse ? 'worn' : ''}`}
-                                onClick={() => handleWearItem(item._id,true)}
+                                onClick={() => handleWearItem(item._id, true)}
                                 disabled={!!item.inUse}
                             >
                                 {item.inUse ? 'בלבישה' : 'לבש'}
