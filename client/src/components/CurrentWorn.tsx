@@ -20,7 +20,7 @@ const MotionFavoriteBorderIcon = motion(FavoriteBorderIcon);
 interface CurrentWornProps {
   wornItems: Item[];
   onRefresh: () => void
-  cancelWearning:(itemId: string,inUse:boolean)=>void; // להוסיף פה את הפרופ
+  cancelWearning:(item: Item,inUse:boolean)=>void; // להוסיף פה את הפרופ
 
 }
 
@@ -126,7 +126,7 @@ const CurrentWorn: React.FC<CurrentWornProps> = ({ wornItems, onRefresh,cancelWe
           <div className="outfit-items">
             {wornItems.map(item => (
               <div key={item._id} className="outfit-chip">
-                <button onClick={() => cancelWearning(item._id,false)} className="remove-btn">×</button>
+                <button onClick={() => cancelWearning(item,false)} className="remove-btn">×</button>
                 <span>{item.itemName}</span>
               </div>
             ))}

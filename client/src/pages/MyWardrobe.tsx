@@ -1,29 +1,31 @@
-import React, { useEffect, useRef, useState } from 'react'
-import '../css/try.css'
+
+import React, { useEffect, useState } from 'react';
+import '../css/try.css';
 import Item from '../interfaces/Items';
 import { useDeleteItemMutation, useGetAllItemsMutation, useUpdateItemInLaundryBasketMutation, useUpdateItemInUseMutation } from '../redux/api/apiSllices/itemsApiSlice';
 import { Users } from '../interfaces/Users';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { selectUser } from '../redux/slices/userSlice';
-import Header1 from '../components/Header1';
-import CurrentWorn from '../components/CurrentWorn';
+import { selectAllItems, setAllItems, setItemsInLaundry, setItemsInUse } from '../redux/slices/itemSlice';
 import AddItemDialog from '../components/AddItemDialog';
+import CurrentWorn from '../components/CurrentWorn';
 import HistoryAlert from '../components/HistoryAlert';
 import FilterMenu from '../components/FilterMenu';
 
-// Define the type for the Header1 ref
-// type Header1Ref = {
-//     addItemsToLaundry: (items: Item[]) => void;
-// };
+
 
 const MyWardrobe = () => {
+    console.log("MyWardrobe");
+
     const categories = ['כל הקטגוריות', 'חולצות', 'חצאיות', 'מכנסים', 'שמלות', 'נעלים'];
     const [selectedCategory, setSelectedCategory] = useState('all');
+    const allItems = useSelector(selectAllItems);
+    const [myWardrobe, setMyWardrobe] = useState<Item[]>(allItems);
     const [showAlert, setShowAlert] = useState(false);
     const [alertItemId, setAlertItemId] = useState<string | null>(null);
-    const [myWardrobe, setMyWardrobe] = useState<Item[]>([]);
     const [currentlyWornItems, setCurrentlyWornItems] = useState<Item[]>([]);
-    const [addItemDialog, setAddItemDialog] = useState<boolean>(false)
+    const [addItemDialog, setAddItemDialog] = useState(false);
+    const dispatch=useDispatch();
     const [getAllItems] = useGetAllItemsMutation();
     const [updateItemInUse] = useUpdateItemInUseMutation();
     const [deleteItem] = useDeleteItemMutation()
@@ -41,20 +43,20 @@ const MyWardrobe = () => {
         );
     });
 
-    const handleWearItem = async (itemId: string, inUse: boolean) => {
+    const handleWearItem = async (item: Item, inUse: boolean) => {
         try {
-            setAlertItemId(itemId);
+            setAlertItemId(item._id);
             setShowAlert(inUse);
-            const inUseItems: Item[] = await updateItemInUse({ _id: itemId, inUse: inUse, userId: user._id }).unwrap();
+            const inUseItems: Item[] = await updateItemInUse({ _id: item._id, inUse: inUse, userId: user._id }).unwrap();
             setCurrentlyWornItems(inUseItems)
         } catch (error) {
             console.error('Failed to update item inUse:', error);
         }
         const updatedItems = myWardrobe.map(item =>
-            item._id === itemId ? { ...item, inUse: !item.inUse } : item
+            item._id === item._id ? { ...item, inUse: !item.inUse } : item
         );
         setMyWardrobe(updatedItems);
-    };
+    }
 
     const handleRemoveItem = async (itemForRemove: Item) => {
         try {
@@ -66,39 +68,50 @@ const MyWardrobe = () => {
     };
 
     const fetchWardrobe = async () => {
-        try {
-            const response: Item[] = await getAllItems(user._id).unwrap();
-            if (response) {
+        if (myWardrobe.length === 0) {
+            try {
+                const response = await getAllItems(user._id).unwrap();
+                dispatch(setAllItems(response));
                 setMyWardrobe(response);
-                const wornItems: Item[] = response.filter(item => item.inUse == true)
-                setCurrentlyWornItems(wornItems);
+                setCurrentlyWornItems(response.filter(i => i.inUse));
+            } catch (err) {
+                console.error('שגיאה בקבלת פריטים:', err);
             }
-        } catch (error) {
-            console.error('שגיאה בקבלת פריטים:', error);
+        }
+        else {
+            setCurrentlyWornItems(myWardrobe.filter(item => item.inUse));
         }
     };
 
     useEffect(() => {
         fetchWardrobe();
-    }, []);
+    }, [allItems]);
+    console.log("allItems", allItems);
 
-    const handleSendToLaundry = async (itemId: string, inLaundry: boolean) => {
-        // if (headerRef.current) {
-        //     headerRef.current.addItemsToLaundry(items);
-        // }
+
+    const handleUpdateItem = async (item: Item, inUse: boolean) => {
         try {
-            const response = await updateItemInLaundry({ _id: itemId, inLaundryBasket: inLaundry, userId: user._id })
-            if (response) {
-                console.log("sucessfull");
-
-            }
+            const updated = await updateItemInUse({ _id: item._id, inUse, userId: user._id }).unwrap();
+            dispatch(setItemsInUse(updated));
+            dispatch(setAllItems(updated));
+            setMyWardrobe(prev => prev.map(i => i._id === item._id ? { ...i, inUse } : i));
+            setCurrentlyWornItems(updated);
+        } catch (err) {
+            console.error('שגיאה בעדכון לבישה:', err);
         }
-        catch (error) {
-            console.error('Failed to update item inLaundry:', error);
-
-        }
-
     };
+
+    const handleSendToLaundry = async (item: Item, inLaundry: boolean) => {
+        try {
+            const updated = await updateItemInLaundry({ _id: item._id, inLaundryBasket: inLaundry, userId: user._id }).unwrap();
+            dispatch(setItemsInLaundry(updated));
+            setMyWardrobe(prev => prev.map(i => i._id === item._id ? { ...i, inLaundryBasket: inLaundry } : i));
+        } catch (err) {
+            console.error('שגיאה בשליחת לכביסה:', err);
+        }
+    };
+
+
 
     return (
         <div className='page-content'>
@@ -109,51 +122,63 @@ const MyWardrobe = () => {
             <div className="category-tabs">
                 <FilterMenu onFilterSelect={(filter) => setSelectedFilter(filter)} />
 
-                {categories.map(category => (
+
+                {categories.map(cat => (
                     <button
-                        key={category}
-                        className={`tab ${(selectedCategory === category || (selectedCategory === 'all' && category === 'כל הקטגוריות')) ? 'active' : ''}`}
-                        onClick={() => setSelectedCategory(category === 'כל הקטגוריות' ? 'all' : category)}>
-                        {category}
+                        key={cat}
+                        className={`tab ${selectedCategory === cat || (selectedCategory === 'all' && cat === 'כל הקטגוריות') ? 'active' : ''}`}
+                        onClick={() => setSelectedCategory(cat === 'כל הקטגוריות' ? 'all' : cat)}
+                    >
+                        {cat}
                     </button>
                 ))}
-
             </div>
 
             <div className="items-grid">
                 {filteredItems.map(item => (
-                    <div key={item._id} className={`item-card ${item.inUse ? 'worn' : ''}`}>
-                        <button
-                            className="remove-btn"
-                            onClick={() => handleRemoveItem(item)}
-                            title="הסר מהארון"
-                        >
-                            ✖
-                        </button>
+                    <div key={item._id} className={`item-card ${item.inUse || item.inLaundryBasket ? 'worn' : ''}`}>
+                        <button className="remove-btn" onClick={() => handleRemoveItem(item)} title="הסר מהארון">✖</button>
                         <div className="item-image">
                             <img src={`http://localhost:3000/${item.image.replace(/^public[\\/]/, '')}`} alt={item.itemName} />
-                            {item.inUse && <div className="worn-overlay">
-                                ✓
-                                <button className="overlay-button" onClick={() => handleSendToLaundry(item._id, true)}>העבר לסל כביסה</button>
-                            </div>}
+
+                            {(item.inUse || item.inLaundryBasket) && (
+                                <div className="worn-overlay">
+                                    ✓
+                                    <button
+                                        className={`overlay-button ${item.inLaundryBasket ? 'clicked' : ''}`}
+                                        onClick={(e) => {
+                                            if (!item.inLaundryBasket) {
+                                                e.currentTarget.classList.add("clicked");
+                                                e.currentTarget.disabled = true;
+                                                handleSendToLaundry(item, true);
+                                            }
+                                        }}
+                                        disabled={!!item.inLaundryBasket}
+                                    >
+                                        העבר לסל כביסה
+                                    </button>
+                                    <label>{item.inLaundryBasket.toString()}</label>
+                                </div>
+                            )}
                         </div>
                         <div className="item-info">
                             <h4>{item.itemName}</h4>
                             <p>{item.categoryName} • {item.session}</p>
                             <button
-                                className={`wear-btn ${item.inUse ? 'worn' : ''}`}
-                                onClick={() => handleWearItem(item._id, true)}
+
+                                className={`wear-btn ${item.inUse || item.inLaundryBasket ? 'worn' : ''}`}
+                                onClick={() => handleUpdateItem(item, true)}
                                 disabled={!!item.inUse}
                             >
-                                {item.inUse ? 'בלבישה' : 'לבש'}
+                                {item.inUse || item.inLaundryBasket ? 'בלבישה' : 'לבש'}
                             </button>
                         </div>
                     </div>
                 ))}
             </div>
-            <button className="fab" onClick={() => setAddItemDialog(true)}>
-                +
-            </button>
+
+            <button className="fab" onClick={() => setAddItemDialog(true)}>+</button>
+
 
             {addItemDialog && <AddItemDialog addItemDialogP={addItemDialog} setAddItemDialogP={setAddItemDialog} />}
             {alertItemId && (
@@ -163,10 +188,9 @@ const MyWardrobe = () => {
                     item_Id={alertItemId}
                 />
             )}
-
         </div>
     );
 };
 
+export default MyWardrobe;
 
-export default MyWardrobe
