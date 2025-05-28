@@ -412,6 +412,13 @@
           background: linear-gradient(135deg, #5a67d8, #6b46c1);
         }
 
+        .overlay-button.clicked {
+          background: linear-gradient(135deg, #5a67d8, #6b46c1);
+          /* כמו hover */
+          cursor: not-allowed;
+          pointer-events: none;
+        }
+
         .move-to-basket-button:hover {
           background: linear-gradient(135deg, #5a4dbb, #7360ff);
           transform: translate(-50%, -50%) scale(1.05);

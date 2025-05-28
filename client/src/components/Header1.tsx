@@ -6,14 +6,17 @@ import { useGetAllItemsMutation, useUpdateItemInLaundryBasketMutation, useUpdate
 import { Users } from '../interfaces/Users';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../redux/slices/userSlice';
-const Header1 = React.forwardRef((props, ref) => {
+import { selectItemInLaundry, setItemsInLaundry } from '../redux/slices/itemSlice';
+import { useDispatch } from 'react-redux';
+import { set } from 'react-hook-form';
+const Header1 = () => {
     const [drawerOpen, setDrawerOpen] = useState(false);
-    const [cartItems, setCartItems] = useState<Item[]>();
     const [getAllItems] = useGetAllItemsMutation();
     const [updateItemInLaundry] = useUpdateItemInLaundryBasketMutation();
     const [isSideNavOpen, setIsSideNavOpen] = useState(false);
     const user: Users = useSelector(selectUser);
-
+    const itemInLaundry: Item[] = useSelector(selectItemInLaundry);
+    const dispatch = useDispatch();
     // const addItemsToLaundry = (items: Item[]) => {
     // setCartItems(prev => [...(prev ?? []), ...items]);
     //     setIsSideNavOpen(true); // לפתוח את סל הכביסה אם תרצי
@@ -25,7 +28,8 @@ const Header1 = React.forwardRef((props, ref) => {
 
     const handleUpdateItem = async (_id: string) => {
         try {
-            await updateItemInLaundry({ _id: _id, inLaundryBasket: false,userId:user._id }).unwrap();
+            const updateItems: Item[] = await updateItemInLaundry({ _id: _id, inLaundryBasket: false, userId: user._id }).unwrap();
+            setItemsInLaundry(updateItems);
             // allItemsInUse();
         } catch (error) {
             console.error("שגיאה בעדכון הפריט:", error);
@@ -51,30 +55,28 @@ const Header1 = React.forwardRef((props, ref) => {
     //     }
     // };
 
-const allItemsInUse = () => {
-  setIsSideNavOpen(true); // רק פותח את סל הכביסה, לא משנה את הפריטים שבו
-};
+    const allItemsInUse = () => {
+        setIsSideNavOpen(true); // רק פותח את סל הכביסה, לא משנה את הפריטים שבו
+    };
 
     const fetchWardrobe = async () => {
-        try {
-            const response: Item[] = await getAllItems(user._id).unwrap();
-            if (response) {
-                const itemInLaundry: Item[] = response.filter(item => item.inLaundryBasket == true)
-                setCartItems(itemInLaundry);
+        if (itemInLaundry.length === 0) {
+            try {
+                const response: Item[] = await getAllItems(user._id).unwrap();
+                if (response) {
+                    const filterItems: Item[] = response.filter(item => item.inLaundryBasket == true)
+                    setItemsInLaundry(filterItems);
+                    dispatch(setItemsInLaundry(filterItems))
+                }
+            } catch (error) {
+                console.error('שגיאה בקבלת פריטים:', error);
             }
-        } catch (error) {
-            console.error('שגיאה בקבלת פריטים:', error);
         }
-    };
+    }
 
     useEffect(() => {
         fetchWardrobe();
-    }, []);
-
-
-
-
-
+    }, [itemInLaundry]);
 
     return (
         <div className="app">
@@ -130,11 +132,11 @@ const allItemsInUse = () => {
             ))}
           </ul>
         )} */}
-                {cartItems?.length === 0 ? (
+                {/* {itemInLaundry?.length === 0 ? (
                     <p>הסל ריק</p>
                 ) : (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                        {cartItems?.map(item => (
+                        {itemInLaundry?.map(item => (
                             <div key={item._id} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                                 <img
                                     src={item.image} // ודאי שזו התכונה הנכונה אצלך
@@ -158,7 +160,7 @@ const allItemsInUse = () => {
                             </div>
                         ))}
                     </div>
-                )}
+                )} */}
 
             </div>
 
@@ -178,6 +180,7 @@ const allItemsInUse = () => {
             )}
         </div>
     )
-})
+
+}
 
 export default Header1
