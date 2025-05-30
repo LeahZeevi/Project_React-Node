@@ -62,7 +62,7 @@ const headerRef = useRef<any>(null);
         <div className="page-content">
             <WeatherWidget city="ירושלים" />
             {/* Pass the actual wardrobe data as a prop */}
-            <CurrentWorn wornItems={wornItems1} onRefresh={fetchWardrobe} onSendToLaundry={onSendToLaundry} />
+            <CurrentWorn wornItems={wornItems1} onRefresh={fetchWardrobe}  />
             <div className="stats-grid">
                 <div className="stat-card">
                     <div className="stat-number">{myWardrobe.length}</div>

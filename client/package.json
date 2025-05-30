@@ -18,6 +18,7 @@
     "axios": "^1.8.3",
     "framer-motion": "^12.9.1",
     "jwt-decode": "^4.0.0",
+    "lucide-react": "^0.511.0",
     "react": "^19.0.0",
     "react-cookie": "^8.0.1",
     "react-cookies": "^0.1.1",
