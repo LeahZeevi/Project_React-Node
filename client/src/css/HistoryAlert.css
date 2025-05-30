@@ -1,0 +1,114 @@
+.suggested-item-card {
+    display: flex;
+    flex-direction: column;
+    width: 200px; /* הגדלתי את רוחב הכרטיס מעט כדי להתאים לכפתור הרחב יותר */
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
+    overflow: hidden;
+    position: relative;
+}
+
+/* רווח בין כרטיסים - מומלץ להשתמש ב-gap בקונטיינר האב אם יש */
+/* לדוגמה, אם קונטיינר האב הוא flex או grid: */
+/* .suggestions-container { display: flex; flex-wrap: wrap; gap: 20px; } */
+/* אם אין קונטיינר כזה, ניתן להשתמש בזה: */
+.suggested-item-card:not(:last-child) {
+    margin-right: 20px; /* הגדלתי את הרווח בין הכרטיסים */
+}
+
+
+.suggested-item-image-wrapper {
+    position: relative;
+    width: 100%;
+    padding-top: 100%; /* יחס גובה-רוחב של 1:1, ניתן לשנות ליחס רצוי */
+    overflow: hidden;
+}
+
+.suggested-item-image-wrapper img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.suggested-item-info {
+    padding: 10px;
+    text-align: right;
+    flex-grow: 1;
+}
+
+.suggested-item-info h4 {
+    margin: 0 0 5px 0;
+    font-size: 1.1em;
+    color: #333;
+}
+
+.suggested-item-info p {
+    margin: 0;
+    font-size: 0.9em;
+    color: #777;
+}
+
+.suggested-item-image-wrapper .wear-btn {
+    position: absolute;
+    bottom: 8px; /* מיקום הכפתור - שיניתי ל-8px כדי שלא יהיה נמוך מדי אך עדיין למטה */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%; /* רוחב הכפתור - הגדלתי ל-80% מרוחב התמונה */
+    max-width: 180px; /* הגבלה רוחב מקסימלי, ניתן להתאים */
+    padding: 4px 10px; /* ריווח פנימי - הקטנתי את הגובה (padding-top/bottom) כדי שיהיה קצר יותר */
+    font-size: 0.8em; /* גודל פונט מעט קטן יותר כדי להתאים לגובה */
+    border-radius: 15px; /* פינות מעוגלות פחות קיצוניות, שיתאים לגובה קצר יותר */
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+    opacity: 0.95;
+    transition: background-color 0.3s ease, opacity 0.3s ease;
+
+    /* צבע סגול-כחול פחות כהה */
+    background: linear-gradient(to right, #8a2be2, #4682b4); /* כחול-סגול (BlueViolet) + כחול פלדה (SteelBlue) */
+    color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* צל עדין יותר */
+}
+
+.suggested-item-image-wrapper .wear-btn:hover:not(:disabled) {
+    opacity: 1;
+    background: linear-gradient(to right, #7b1bd1, #3a72a1); /* גוונים כהים יותר במעבר עכבר */
+}
+
+.suggested-item-image-wrapper .wear-btn.worn {
+    background-color: #bbbbbb; /* אפור בהיר יותר כשהוא בלבישה */
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.history-alert-title {
+    font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif; 
+    font-size: 1.8em; 
+    text-align: right; 
+    margin-top: 0; 
+    margin-bottom: 25px; 
+    
+    padding-top: 0;
+    padding-bottom: 0;
+    border-bottom: none; 
+    background: linear-gradient(to right, #8a2be2, #4169e1, #dda0dd); 
+    
+    -webkit-background-clip: text; 
+    background-clip: text;
+    -webkit-text-fill-color: transparent; 
+    color: transparent; 
+
+    letter-spacing: 0.04em; 
+    font-weight: 600; 
+    text-transform: none; 
+    line-height: 1.4; 
+    text-shadow: none; 
+
+    padding-left: 15px;
+}

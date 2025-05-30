@@ -2,31 +2,32 @@ import React, { useEffect, useState } from 'react'
 import '../css/try.css'
 import { NavLink } from 'react-router';
 import Item from '../interfaces/Items';
-import { useGetAllItemsMutation, useUpdateItemInLaundryBasketMutation, useUpdateItemInUseMutation } from '../redux/api/apiSllices/itemsApiSlice';
+import { useGetAllItemsQuery, useUpdateItemInLaundryBasketMutation, useUpdateItemInUseMutation } from '../redux/api/apiSllices/itemsApiSlice';
 import { Users } from '../interfaces/Users';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../redux/slices/userSlice';
 import { selectItemInLaundry, setAllItems, setItemsInLaundry, updateAllItems } from '../redux/slices/itemSlice';
 import { useDispatch } from 'react-redux';
 import { set } from 'react-hook-form';
-const Header1 = () => {
+const Header = () => {
     console.log("Header");
-    
+
     const [drawerOpen, setDrawerOpen] = useState(false);
-    const [getAllItems] = useGetAllItemsMutation();
+    // const [getAllItems] = useGetAllItemsMutation();
     const [updateItemInLaundry] = useUpdateItemInLaundryBasketMutation();
     const [isSideNavOpen, setIsSideNavOpen] = useState(false);
     const user: Users = useSelector(selectUser);
-const [itemInLaundryBasket, setItemsInLaundryBasket] = useState<Item[]>(useSelector(selectItemInLaundry));
+    const { data, error, isLoading } = useGetAllItemsQuery(user._id);
+    const itemInLaundryBasket = useSelector(selectItemInLaundry);
     const dispatch = useDispatch();
- 
+
 
     const handleUpdateItem = async (_id: string) => {
         try {
-            const updateItems: Item[] = await updateItemInLaundry({ _id: _id, inLaundryBasket: false, userId: user._id }).unwrap();
-             dispatch(setItemsInLaundry(updateItems));
-             setItemsInLaundryBasket(updateItems);
-             dispatch(updateAllItems(updateItems));
+            const { itemsInLaundry, updatedItem } = await updateItemInLaundry({ _id: _id, inLaundryBasket: false, userId: user._id }).unwrap();
+            const updateItems = [...itemsInLaundry, updatedItem]
+            dispatch(setItemsInLaundry(itemsInLaundry));
+            dispatch(updateAllItems(updateItems));
         } catch (error) {
             console.error("שגיאה בעדכון הפריט:", error);
         }
@@ -35,7 +36,7 @@ const [itemInLaundryBasket, setItemsInLaundryBasket] = useState<Item[]>(useSelec
         setIsSideNavOpen(false);
     };
 
-    const allItemsInLaundry =async () => {
+    const allItemsInLaundry = async () => {
         setIsSideNavOpen(true);
         await fetchWardrobe();
     };
@@ -43,12 +44,8 @@ const [itemInLaundryBasket, setItemsInLaundryBasket] = useState<Item[]>(useSelec
     const fetchWardrobe = async () => {
         if (itemInLaundryBasket.length === 0) {
             try {
-                const response: Item[] = await getAllItems(user._id).unwrap();
-                if (response) {
-                    const filterItems: Item[] = response.filter(item => item.inLaundryBasket == true)
-                    setItemsInLaundryBasket(filterItems);
-                    dispatch(setItemsInLaundry(filterItems))
-                }
+                const allItems = data ? data : []
+                dispatch(setAllItems(allItems))
             } catch (error) {
                 console.error('שגיאה בקבלת פריטים:', error);
             }
@@ -113,35 +110,26 @@ const [itemInLaundryBasket, setItemsInLaundryBasket] = useState<Item[]>(useSelec
             ))}
           </ul>
         )} */}
-                 {itemInLaundryBasket?.length === 0 ? (
+                {itemInLaundryBasket?.length === 0 ? (
                     <p>הסל ריק</p>
                 ) : (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                         {itemInLaundryBasket?.map(item => (
-                            <div key={item._id} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                <img
-                                    src={item.image}
-                                    // alt={item.itemName}
-                                    style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '8px' }}
-                                />
-                                <h4>{item.itemName}</h4>
-                                <button
-                                    onClick={() => handleUpdateItem(item._id)}
-                                    style={{
-                                        backgroundColor: 'transparent',
-                                        border: 'none',
-                                        color: 'red',
-                                        fontSize: '10px',
-                                        cursor: 'pointer',
-                                    }}
-                                >
-                                    ❌
-                                </button>
-
+                            <div key={item._id} className="laundry-item-card">
+                                <div className="laundry-item-image-container">
+                                    <img src={`http://localhost:3000/${item.image.replace(/^public[\\/]/, '')}`} alt={item.itemName} />
+                                    <button className="remove-laundry-item-btn" onClick={() => handleUpdateItem(item._id)}>
+                                        &times; {/* סימן X */}
+                                    </button>
+                                </div>
+                                <div className="laundry-item-details">
+                                    <h4>{item.itemName}</h4>
+                                    <p>{item.categoryName}</p> {/* או כל פרט נוסף כמו צבע, גודל וכו' */}
+                                </div>
                             </div>
                         ))}
                     </div>
-                )} 
+                )}
 
             </div>
 
@@ -164,7 +152,7 @@ const [itemInLaundryBasket, setItemsInLaundryBasket] = useState<Item[]>(useSelec
 
 }
 
-export default Header1
+export default Header
 
 
 

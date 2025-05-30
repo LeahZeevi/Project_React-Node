@@ -1,12 +1,12 @@
 import React from 'react'
 import { Outlet } from 'react-router'
-import Header1 from './Header1'
+import Header from './Header'
 
 
 const AppLayout = () => {
   return (
     <div>
-      <Header1/>
+      <Header/>
       <Outlet/>
     </div>
   )
