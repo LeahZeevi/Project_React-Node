@@ -107,8 +107,7 @@ exports.updateItemInUse = async (req, res) => {
             return res.status(404).json({ message: "Item not found" });
         }
         const inUseItems = await Item.find({ userId, inUse: true });
-
-        return res.status(200).json(inUseItems);
+        return res.status(200).json({inUseItems:inUseItems,updatedItem:updatedItem});
     } catch (error) {
         console.error('Failed to update item', error);
         return res.status(500).json({ message: "Failed to update item", error: error.message });
@@ -133,8 +132,8 @@ exports.updateItemInLaundryBasket= async (req, res) => {
             return res.status(404).json({ message: "Item not found" });
         }
         const inLaundryBasketItems = await Item.find({ userId, inLaundryBasket: true });//מחזיר רשימה מעודכנת של פריטים בסל כביסה
-
-        return res.status(200).json(inLaundryBasketItems);
+        
+        return res.status(200).json({itemsInLaundry:inLaundryBasketItems,updatedItem:updatedItem});
     } catch (error) {
         console.error('Failed to update item', error);
         return res.status(500).json({ message: "Failed to update item", error: error.message });

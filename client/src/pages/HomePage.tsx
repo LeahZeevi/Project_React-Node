@@ -5,7 +5,7 @@ import Item from '../interfaces/Items';
 import SavedLook from '../interfaces/SavedLook'; // Assuming you define this interface
 import CurrentWorn from '../components/CurrentWorn';
 import '../css/try.css'
-import { useGetAllItemsMutation, useUpdateItemInUseMutation } from '../redux/api/apiSllices/itemsApiSlice';
+import { useGetAllItemsQuery, useUpdateItemInUseMutation } from '../redux/api/apiSllices/itemsApiSlice';
 import { Users } from '../interfaces/Users';
 import { selectUser } from '../redux/slices/userSlice';
 import { useSelector } from 'react-redux';
@@ -24,17 +24,15 @@ interface HomePageProps {
 const HomePage = () => {
     const user: Users = useSelector(selectUser);
     const [myWardrobe, setMyWardrobe] = useState<Item[]>([]);
-    const [getAllItems] = useGetAllItemsMutation();
+     const { data, error, isLoading } = useGetAllItemsQuery(user._id);
     const [updateItemInUse] = useUpdateItemInUseMutation();
     const [currentOutfit, setCurrentOutfit] = useState<Item[]>([]);
     const headerRef = useRef<any>(null);
 
     const fetchWardrobe = async () => {
         try {
-            const response: Item[] = await getAllItems(user._id).unwrap();
-            console.log("getAllItems", response);
-            if (response) {
-                setMyWardrobe(response);
+            if (data) {
+                setMyWardrobe(data);
                 const wornItems1 = myWardrobe.filter(item => item.inUse);
 
             }
@@ -58,17 +56,17 @@ const HomePage = () => {
     //         setCurrentOutfit(prev => [...prev, item]);
     //     }
     // };
-    const handleWearItem = async (itemId: string, inUse: boolean) => {
+    const handleWearItem = async (item: Item, inUse: boolean) => {
         try {
             // setAlertItemId(itemId);
             // setShowAlert(inUse);
-            const inUseItems: Item[] = await updateItemInUse({ _id: itemId, inUse: inUse, userId: user._id }).unwrap();
+            const inUseItems: Item[] = await updateItemInUse({ _id: item._id, inUse: inUse, userId: user._id }).unwrap();
             // setCurrentlyWornItems(inUseItems)
         } catch (error) {
             console.error('Failed to update item inUse:', error);
         }
         const updatedItems = myWardrobe.map(item =>
-            item._id === itemId ? { ...item, inUse: !item.inUse } : item
+            item._id === item._id ? { ...item, inUse: !item.inUse } : item
         );
         setMyWardrobe(updatedItems);
     };

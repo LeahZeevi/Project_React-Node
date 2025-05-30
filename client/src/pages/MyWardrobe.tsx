@@ -2,15 +2,17 @@
 import React, { useEffect, useState } from 'react';
 import '../css/try.css';
 import Item from '../interfaces/Items';
-import { useDeleteItemMutation, useGetAllItemsMutation, useUpdateItemInLaundryBasketMutation, useUpdateItemInUseMutation } from '../redux/api/apiSllices/itemsApiSlice';
+import { useDeleteItemMutation, useGetAllItemsQuery, useUpdateItemInLaundryBasketMutation, useUpdateItemInUseMutation } from '../redux/api/apiSllices/itemsApiSlice';
 import { Users } from '../interfaces/Users';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectUser } from '../redux/slices/userSlice';
-import { selectAllItems, setAllItems, setItemsInLaundry, setItemsInUse } from '../redux/slices/itemSlice';
+import { selectAllItems, selectItemInUse, setAllItems, setItemsInLaundry, setItemsInUse, updateAllItems } from '../redux/slices/itemSlice';
 import AddItemDialog from '../components/AddItemDialog';
 import CurrentWorn from '../components/CurrentWorn';
 import HistoryAlert from '../components/HistoryAlert';
 import FilterMenu from '../components/FilterMenu';
+import { set } from 'zod';
+import useUpdateItem from '../hooks/useUpdateItem';
 
 
 
@@ -19,21 +21,21 @@ const MyWardrobe = () => {
 
     const categories = ['כל הקטגוריות', 'חולצות', 'חצאיות', 'מכנסים', 'שמלות', 'נעלים'];
     const [selectedCategory, setSelectedCategory] = useState('all');
-    const allItems = useSelector(selectAllItems);
-    const [myWardrobe, setMyWardrobe] = useState<Item[]>(allItems);
     const [showAlert, setShowAlert] = useState(false);
     const [alertItemId, setAlertItemId] = useState<string | null>(null);
-    const [currentlyWornItems, setCurrentlyWornItems] = useState<Item[]>([]);
+    const currentlyWornItem = useSelector(selectItemInUse);
     const [addItemDialog, setAddItemDialog] = useState(false);
-    const dispatch=useDispatch();
-    const [getAllItems] = useGetAllItemsMutation();
-    const [updateItemInUse] = useUpdateItemInUseMutation();
+    const dispatch = useDispatch();
+    // const [updateItemInUse] = useUpdateItemInUseMutation();
     const [deleteItem] = useDeleteItemMutation()
     const [updateItemInLaundry] = useUpdateItemInLaundryBasketMutation();
     const [selectedFilter, setSelectedFilter] = useState<string | null>(null);
-
     const user: Users = useSelector(selectUser);
-    // const headerRef = useRef<Header1Ref>(null);
+    const myWardrobe = useSelector(selectAllItems);
+    const { updateItem } = useUpdateItem();
+    const { data, error, isLoading } = useGetAllItemsQuery(user._id);
+
+
     const filteredItems = myWardrobe.filter(item => {
         if (selectedCategory !== 'all' && item.categoryName !== selectedCategory) return false;
         if (!selectedFilter) return true;
@@ -42,82 +44,58 @@ const MyWardrobe = () => {
             item.style === selectedFilter // תלוי מה בדיוק את מסננת
         );
     });
+    console.log("filteredItems", filteredItems);
 
-    const handleWearItem = async (item: Item, inUse: boolean) => {
-        try {
-            setAlertItemId(item._id);
-            setShowAlert(inUse);
-            const inUseItems: Item[] = await updateItemInUse({ _id: item._id, inUse: inUse, userId: user._id }).unwrap();
-            setCurrentlyWornItems(inUseItems)
-        } catch (error) {
-            console.error('Failed to update item inUse:', error);
-        }
-        const updatedItems = myWardrobe.map(item =>
-            item._id === item._id ? { ...item, inUse: !item.inUse } : item
-        );
-        setMyWardrobe(updatedItems);
-    }
+
 
     const handleRemoveItem = async (itemForRemove: Item) => {
         try {
             await deleteItem(itemForRemove).unwrap();
-            setMyWardrobe(prev => prev.filter(item => item._id !== itemForRemove._id));
+            // setMyWardrobe(prev => prev.filter(item => item._id !== itemForRemove._id));
         } catch (err) {
             console.error("שגיאה בהסרה:", err);
         }
     };
 
-    const fetchWardrobe = async () => {
-        if (myWardrobe.length === 0) {
-            try {
-                const response = await getAllItems(user._id).unwrap();
-                dispatch(setAllItems(response));
-                setMyWardrobe(response);
-                setCurrentlyWornItems(response.filter(i => i.inUse));
-            } catch (err) {
-                console.error('שגיאה בקבלת פריטים:', err);
-            }
-        }
-        else {
-            setCurrentlyWornItems(myWardrobe.filter(item => item.inUse));
-        }
-    };
-
-    useEffect(() => {
-        fetchWardrobe();
-    }, [allItems]);
-    console.log("allItems", allItems);
-
-
-    const handleUpdateItem = async (item: Item, inUse: boolean) => {
+    const handleSendToLaundry = async (item: Item, inLaundry: boolean) => {//כאן רק מכניסים לסל הכביסה ולא מוציאים
         try {
-            const updated = await updateItemInUse({ _id: item._id, inUse, userId: user._id }).unwrap();
-            dispatch(setItemsInUse(updated));
-            dispatch(setAllItems(updated));
-            setMyWardrobe(prev => prev.map(i => i._id === item._id ? { ...i, inUse } : i));
-            setCurrentlyWornItems(updated);
-        } catch (err) {
-            console.error('שגיאה בעדכון לבישה:', err);
-        }
-    };
-
-    const handleSendToLaundry = async (item: Item, inLaundry: boolean) => {
-        try {
-            const updated = await updateItemInLaundry({ _id: item._id, inLaundryBasket: inLaundry, userId: user._id }).unwrap();
-            dispatch(setItemsInLaundry(updated));
-            setMyWardrobe(prev => prev.map(i => i._id === item._id ? { ...i, inLaundryBasket: inLaundry } : i));
+            const { itemsInLaundry, updatedItem } = await updateItemInLaundry({ _id: item._id, inLaundryBasket: inLaundry, userId: user._id }).unwrap();
+            dispatch(setItemsInLaundry(itemsInLaundry));
+            dispatch(updateAllItems(itemsInLaundry))
         } catch (err) {
             console.error('שגיאה בשליחת לכביסה:', err);
         }
     };
 
+    const handleUpdateItem = async (item: Item, inUse: boolean) => {
+        updateItem(item, inUse);
+        if (inUse === true) {
+            setAlertItemId(item._id);
+            setShowAlert(true)
+        }
 
+    };
 
+    const fetchWardrobe = async () => {
+        if (myWardrobe.length === 0) {
+            try {
+                const items = data ? data : [];
+                dispatch(setAllItems(items));
+            } catch (err) {
+                console.error('שגיאה בקבלת פריטים:', err);
+            }
+        }
+    };
+
+    useEffect(() => {
+        fetchWardrobe();
+    }, [data]);
+
+    useEffect(() => {
+    }, [myWardrobe]);
     return (
         <div className='page-content'>
-            {/* <Header1 ref={headerRef} /> */}
-            <CurrentWorn wornItems={currentlyWornItems} onRefresh={fetchWardrobe} cancelWearning={handleWearItem}
-            />
+            <CurrentWorn />
 
             <div className="category-tabs">
                 <FilterMenu onFilterSelect={(filter) => setSelectedFilter(filter)} />
@@ -157,7 +135,6 @@ const MyWardrobe = () => {
                                     >
                                         העבר לסל כביסה
                                     </button>
-                                    <label>{item.inLaundryBasket.toString()}</label>
                                 </div>
                             )}
                         </div>
