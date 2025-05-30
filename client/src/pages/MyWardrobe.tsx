@@ -163,7 +163,6 @@ const MyWardrobe = () => {
                     item_Id={alertItemId}
                 />
             )}
-
         </div>
     );
 };
