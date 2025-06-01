@@ -111,7 +111,6 @@ const MyWardrobe = () => {
             <CurrentWorn
                 wornItems={currentlyWornItems}
                 onRefresh={fetchWardrobe}
-                cancelWearning={handleUpdateItem}
             />
 
             <div className="category-tabs">

@@ -1,5 +1,5 @@
 import type React from "react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import {
   Box,
   Typography,
@@ -35,38 +35,14 @@ import {
   Area,
 } from "recharts"
 import "../css/Graphs.css"
+import { useDispatch, useSelector } from "react-redux"
+import { selectAllItems, setAllItems } from "../redux/slices/itemSlice"
+import Item from "../interfaces/Items"
+import { useGetAllItemsMutation } from "../redux/api/apiSllices/itemsApiSlice"
+import { Users } from "../interfaces/Users"
+import { selectUser } from "../redux/slices/userSlice"
 
-// נתונים לגרף עוגה - פילוח ארון בגדים לפי קטגוריות
-const pieChartData = [
-  { name: "חולצות", value: 35, color: " rgb(187, 2, 156)"},
-  { name: "חצאיות", value: 25, color: " rgb(117, 7, 99)" },
-  { name: "שמלות", value: 15, color: " rgb(100, 5, 159)" },
-  { name: "מכנסים", value: 20, color: " rgb(90, 13, 191)" },
-  { name: "נעלים", value: 5, color: " rgb(51, 2, 187)" },
-]
-
-// נתונים לגרף עמודות - כמות פריטים לפי צבע
-const barChartData = [
-  { name: "שחור", items: 42 },
-  { name: "לבן", items: 28 },
-  { name: "כחול", items: 23 },
-  { name: "אדום", items: 15 },
-  { name: "ורוד", items: 12 },
-  { name: "ירוק", items: 10 },
-  { name: "צהוב", items: 8 },
-]
-
-// נתונים לגרף קווי - שימוש בפריטים לאורך זמן
-const lineChartData = [
-  { month: "ינואר", חולצות: 10, מכנסיים: 5, שמלות: 2 },
-  { month: "פברואר", חולצות: 12, מכנסיים: 6, שמלות: 4 },
-  { month: "מרץ", חולצות: 15, מכנסיים: 8, שמלות: 6 },
-  { month: "אפריל", חולצות: 20, מכנסיים: 10, שמלות: 8 },
-  { month: "מאי", חולצות: 18, מכנסיים: 12, שמלות: 10 },
-  { month: "יוני", חולצות: 22, מכנסיים: 15, שמלות: 12 },
-]
-
-// נתונים לגרף שטח - הוצאות על בגדים לאורך זמן
+// // נתונים לגרף שטח - הוצאות על בגדים לאורך זמן
 const areaChartData = [
   { month: "ינואר", הוצאות: 500 },
   { month: "פברואר", הוצאות: 700 },
@@ -77,10 +53,34 @@ const areaChartData = [
 ]
 
 // רכיב גרף עוגה מותאם אישית
-const CustomPieChart: React.FC = () => {
+interface CustomPieChartProps {
+  myWardrobe: Item[];
+}
+const CustomPieChart: React.FC<CustomPieChartProps> = ({ myWardrobe }) => {
+  const [tabValue, setTabValue] = useState(0)
+
+  const seasonCountMap: Record<string, number> = {}
+
+  myWardrobe.forEach((item) => {
+    const session = item.session
+    if (session) {
+      seasonCountMap[session] = (seasonCountMap[session] || 0) + 1
+    }
+  })
+  const seasonColors: Record<string, string> = {
+    קיץ: "rgb(187, 2, 156)",
+    כללי: "rgb(100, 5, 159)",
+    חורף: "rgb(90, 13, 191)",
+  }
+
+  const pieChartData = Object.entries(seasonCountMap).map(([season, count]) => ({
+    name: season,
+    value: count,
+    color: seasonColors[season] || "#ccc",
+  }))
   return (
     <Card className="chart-card">
-      <CardHeader title="פילוח ארון הבגדים" subheader="התפלגות פריטים לפי קטגוריה" className="chart-header" />
+      <CardHeader title="פילוח ארון הבגדים" subheader="התפלגות פריטים לפי עונה" className="chart-header" />
       <CardContent>
         <Box className="chart-container" height={300}>
           <ResponsiveContainer width="100%" height="100%">
@@ -91,9 +91,11 @@ const CustomPieChart: React.FC = () => {
                 cy="50%"
                 labelLine={false}
                 outerRadius={100}
-                fill="#8884d8"
+                fill="  rgb(187,92, 156)"
                 dataKey="value"
-                label={({ name, percent }: { name: string; percent: number }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                label={({ name, percent }: { name: string; percent: number }) =>
+                  `${name} ${(percent * 100).toFixed(0)}%`
+                }
               >
                 {pieChartData.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={entry.color} />
@@ -108,11 +110,20 @@ const CustomPieChart: React.FC = () => {
     </Card>
   )
 }
-
+interface CustomBarChartProps {
+  myWardrobe: Item[];
+}
 // רכיב גרף עמודות מותאם אישית
-const CustomBarChart: React.FC = () => {
+const CustomBarChart: React.FC<CustomBarChartProps> = ({ myWardrobe }) => {
   const [chartType, setChartType] = useState<"vertical" | "horizontal">("vertical")
 
+  const categoryMap: Record<string, number> = {};
+  myWardrobe.forEach((item) => {
+    const category = item.categoryName || "ללא קטגוריה";
+    categoryMap[category] = (categoryMap[category] || 0) + 1;
+  });
+
+  const barChartData = Object.entries(categoryMap).map(([name, items]) => ({ name, items }));
   const handleChange = (event: SelectChangeEvent) => {
     setChartType(event.target.value as "vertical" | "horizontal")
   }
@@ -120,8 +131,8 @@ const CustomBarChart: React.FC = () => {
   return (
     <Card className="chart-card">
       <CardHeader
-        title="פריטים לפי צבע"
-        subheader="כמות הפריטים בארון לפי צבע"
+        title="פריטים לפי קטגוריה"
+        subheader="כמות פריטים בארון לפי קטגוריה"
         className="chart-header"
         action={
           <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }}>
@@ -151,7 +162,7 @@ const CustomBarChart: React.FC = () => {
                 <YAxis />
                 <Tooltip formatter={(value: any) => `${value} פריטים`} />
                 <Legend />
-                <Bar dataKey="items" name="כמות פריטים" fill="#8884d8" />
+                <Bar dataKey="items" name="כמות פריטים" fill="rgb(90, 109, 213)" />
               </BarChart>
             ) : (
               <BarChart
@@ -169,7 +180,7 @@ const CustomBarChart: React.FC = () => {
                 <YAxis dataKey="name" type="category" />
                 <Tooltip formatter={(value: any) => `${value} פריטים`} />
                 <Legend />
-                <Bar dataKey="items" name="כמות פריטים" fill="#82ca9d" />
+                <Bar dataKey="items" name="כמות פריטים" fill="rgb(234, 7, 223)" />
               </BarChart>
             )}
           </ResponsiveContainer>
@@ -180,12 +191,75 @@ const CustomBarChart: React.FC = () => {
 }
 
 // רכיב גרף קווי מותאם אישית
-const CustomLineChart: React.FC = () => {
-  const [chartType, setChartType] = useState<"line" | "area">("line")
+interface CustomLineChartProps {
+  myWardrobe: Item[];
+}
 
+const CustomLineChart: React.FC<CustomLineChartProps> = ({ myWardrobe }) => {
+  const [chartType, setChartType] = useState<"line" | "area">("line");
+
+  // const styleWearMap: Record<string, number> = {};
+
+  // myWardrobe.forEach((item) => {
+  //   const style = item.style || "ללא סגנון";
+  //   const countWear = Number(item.countWear) || 0;
+
+  //   styleWearMap[style] = (styleWearMap[style] || 0) + countWear;
+  // });
+
+  // const lineChartData = Object.entries(styleWearMap).map(([style, count]) => ({
+  //   style,
+  //   לבישות: count,
+  // }));
+
+
+  // const styleKeys = [...new Set(myWardrobe.map((item) => item.style).filter(Boolean))];
+
+  // const wearRanges = [
+  //   { label: "0", from: 0, to: 0 },
+  //   { label: "1-5", from: 1, to: 5 },
+  //   { label: "6-10", from: 6, to: 10 },
+  //   { label: "11+", from: 11, to: Infinity },
+  // ];
+
+  // const groupedByRange: Record<string, Record<string, number>> = {};
+
+  // wearRanges.forEach(({ label }) => {
+  //   groupedByRange[label] = {};
+  // });
+
+  // myWardrobe.forEach((item) => {
+  //   const style = item.style || "ללא סגנון";
+  //   const count = Number(item.countWear) || 0;
+  //   const range = wearRanges.find(r => count >= r.from && count <= r.to);
+
+  //   if (range) {
+  //     groupedByRange[range.label][style] = (groupedByRange[range.label][style] || 0) + 1;
+  //   }
+  // });
+
+  // const lineChartData = Object.entries(groupedByRange).map(([rangeLabel, styleCounts]) => ({
+  //   range: rangeLabel,
+  //   ...styleCounts,
+  // }));
   const handleChange = (event: SelectChangeEvent) => {
     setChartType(event.target.value as "line" | "area")
   }
+  const sumByCategory = (items: Item[]) => {
+    const map = new Map<string, number>();
+
+    items.forEach(item => {
+      const prev = map.get(item.categoryName) || 0;
+      map.set(item.categoryName, prev + Number(item.countWear));
+    });
+
+    // הפוך למערך שמתאים ל־Recharts
+    return Array.from(map.entries()).map(([category, count]) => ({
+      category,
+      countWear: count,
+    }));
+  };
+  const itemsByCategory = sumByCategory(myWardrobe);
 
   return (
     <Card className="chart-card">
@@ -208,22 +282,27 @@ const CustomLineChart: React.FC = () => {
           <ResponsiveContainer width="100%" height="100%">
             {chartType === "line" ? (
               <LineChart
-                data={lineChartData}
+                data={itemsByCategory}
                 margin={{
                   top: 5,
                   right: 30,
                   left: 20,
                   bottom: 5,
                 }}
+
               >
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
+                <XAxis dataKey="category" />
                 <YAxis />
                 <Tooltip />
                 <Legend />
-                <Line type="monotone" dataKey="חולצות" stroke="#8884d8" activeDot={{ r: 8 }} />
-                <Line type="monotone" dataKey="מכנסיים" stroke="#82ca9d" />
-                <Line type="monotone" dataKey="שמלות" stroke="#ffc658" />
+                {/* <Line type="monotone" dataKey="ביסיק" stroke=" rgb(230, 31, 204)" name="ביסיק" />
+                <Line type="monotone" dataKey="ספורט" stroke="rgb(200, 27, 227)" name="ספורט" />
+                <Line type="monotone" dataKey=" ספורט אלגנט " stroke="rgb(144, 39, 219)" name=" ספורט אלגנט" />
+                <Line type="monotone" dataKey="אלגנט" stroke="rgb(96, 94, 229)" name="  אלגנט" />
+                <Line type="monotone" dataKey="11+" stroke="rgb(7, 41, 234)" name="אחר" /> */}
+                <Line type="monotone" dataKey="countWear" stroke="rgb(234, 7, 200)" name="כמות לבישות" />
+
               </LineChart>
             ) : (
               <AreaChart
@@ -251,12 +330,32 @@ const CustomLineChart: React.FC = () => {
 
 // רכיב ראשי שמציג את כל הגרפים
 const Graphs: React.FC = () => {
-  const theme = useTheme()
   const [tabValue, setTabValue] = useState(0)
+  const allItems = useSelector(selectAllItems);
+  const [myWardrobe, setMyWardrobe] = useState<Item[]>(allItems);
+  const dispatch = useDispatch();
+  const [getAllItems] = useGetAllItemsMutation();
+  const user: Users = useSelector(selectUser);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue)
   }
+
+  const fetchWardrobe = async () => {
+    if (myWardrobe.length === 0) {
+      try {
+        const response = await getAllItems(user._id).unwrap();
+        dispatch(setAllItems(response));
+        setMyWardrobe(response);
+      } catch (err) {
+        console.error('שגיאה בקבלת פריטים:', err);
+      }
+    }
+  };
+
+  useEffect(() => {
+    fetchWardrobe();
+  }, [allItems]);
 
   return (
     <Box className="charts-container">
@@ -286,32 +385,32 @@ const Graphs: React.FC = () => {
       {tabValue === 0 && (
         <Grid container spacing={3} className="charts-grid">
           <Grid item xs={12} md={4}>
-            <CustomPieChart />
+            <CustomPieChart myWardrobe={myWardrobe} />
           </Grid>
           <Grid item xs={12} md={4}>
-            <CustomBarChart />
+            <CustomBarChart myWardrobe={myWardrobe} />
           </Grid>
           <Grid item xs={12} md={4}>
-            <CustomLineChart />
+            <CustomLineChart myWardrobe={myWardrobe} />
           </Grid>
         </Grid>
       )}
 
       {tabValue === 1 && (
         <Box className="single-chart-container">
-          <CustomPieChart />
+          <CustomPieChart myWardrobe={myWardrobe} />
         </Box>
       )}
 
       {tabValue === 2 && (
         <Box className="single-chart-container">
-          <CustomBarChart />
+          <CustomBarChart myWardrobe={myWardrobe} />
         </Box>
       )}
 
       {tabValue === 3 && (
         <Box className="single-chart-container">
-          <CustomLineChart />
+          <CustomLineChart myWardrobe={myWardrobe} />
         </Box>
       )}
     </Box>
