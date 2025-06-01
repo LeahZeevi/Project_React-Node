@@ -1,7 +1,7 @@
 
 import { createBrowserRouter } from "react-router"
 import HomePage from "../pages/HomePage"
-import MyWardrobe1 from "../pages/MyWardrobe"
+import MyWardrobe from "../pages/MyWardrobe"
 import AppLayout from "../components/AppLayout"
 import Graphs from "../pages/Graphs"
 // import GeneralCategory from "../pages/GeneralCategory"
@@ -16,7 +16,7 @@ import Graphs from "../pages/Graphs"
         },
         // {path:"addItem",element:<AddItem/>},
         // {path:"weather",element:<Weather city="אלעד" />},
-        {path:"myWardrobe",element:<MyWardrobe1/>},
+        {path:"myWardrobe",element:<MyWardrobe/>},
         {path:"graphs",element:<Graphs/>}
 
             // {index:true,element:<MyWardrobe1/>},

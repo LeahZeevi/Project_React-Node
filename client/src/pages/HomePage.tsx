@@ -5,10 +5,14 @@ import Item from '../interfaces/Items';
 import SavedLook from '../interfaces/SavedLook'; // Assuming you define this interface
 import CurrentWorn from '../components/CurrentWorn';
 import '../css/try.css'
-import { useGetAllItemsMutation } from '../redux/api/apiSllices/itemsApiSlice';
+import { useGetAllItemsQuery, useUpdateItemInUseMutation } from '../redux/api/apiSllices/itemsApiSlice';
 import { Users } from '../interfaces/Users';
 import { selectUser } from '../redux/slices/userSlice';
 import { useSelector } from 'react-redux';
+import Typography from '@mui/material/Typography';
+import CountUp from '../components/CountUp';
+import { selectAllItems, setAllItems } from '../redux/slices/itemSlice';
+import { useDispatch } from 'react-redux';
 interface HomePageProps {
     currentOutfit: number[];
     myWardrobe: Item[];
@@ -21,41 +25,25 @@ interface HomePageProps {
 
 const HomePage = () => {
     const user: Users = useSelector(selectUser);
-    const [myWardrobe, setMyWardrobe] = useState<Item[]>([]);
-    const [getAllItems] = useGetAllItemsMutation();
-    const [currentOutfit, setCurrentOutfit] = useState<Item[]>([]);
-const headerRef = useRef<any>(null);
+    const myWardrobe = useSelector(selectAllItems);
+    const { data, error, isLoading } = useGetAllItemsQuery(user._id);
+    const dispatch = useDispatch()
+ 
 
     const fetchWardrobe = async () => {
-        try {
-            const response: Item[] = await getAllItems(user._id).unwrap();
-            console.log("getAllItems", response);
-            if (response) {
-                setMyWardrobe(response);
-                const wornItems1 = myWardrobe.filter(item => item.inUse);
-
+        if (myWardrobe.length === 0) {
+            try {
+                const items = data ? data : [];
+                dispatch(setAllItems(items));
+            } catch (err) {
+                console.error('שגיאה בקבלת פריטים:', err);
             }
-        } catch (error) {
-            console.error('שגיאה בקבלת פריטים:', error);
         }
     };
     useEffect(() => {
         fetchWardrobe();
-    }, []);
+    }, [data]);
     const wornItems1 = myWardrobe.filter(item => item.inUse);
-
-    // Define the onSendToLaundry function
-    const onSendToLaundry = (items: Item[]) => {
-        console.log(`Send items to laundry`, items);
-        setCurrentOutfit([]); // איפוס הלבוש הנוכחי
-        headerRef.current?.addItemsToLaundry(items);
-    };
-    const handleWearItem = (item: Item) => {
-        if (!currentOutfit.find(i => i._id === item._id)) {
-            setCurrentOutfit(prev => [...prev, item]);
-        }
-    };
-
 
     return (
 
@@ -65,7 +53,9 @@ const headerRef = useRef<any>(null);
             <CurrentWorn wornItems={wornItems1} onRefresh={fetchWardrobe}  />
             <div className="stats-grid">
                 <div className="stat-card">
-                    <div className="stat-number">{myWardrobe.length}</div>
+                    <div className="stat-number">
+                        <CountUp target={myWardrobe.length} duration={900} />
+                    </div>
                     <div className="stat-label">פריטים בארון</div>
                 </div>
                 <div className="stat-card">
@@ -73,7 +63,10 @@ const headerRef = useRef<any>(null);
                     <div className="stat-label">לוקים שמורים</div>
                 </div>
                 <div className="stat-card">
-                    <div className="stat-number">{wornItems1.length}</div>
+                    <div className="stat-number">
+                        <CountUp target={wornItems1.length} duration={200} />
+
+                    </div>
                     <div className="stat-label">בלבישה</div>
                 </div>
             </div>

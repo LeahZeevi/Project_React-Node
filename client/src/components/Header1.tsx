@@ -2,31 +2,36 @@ import React, { useEffect, useState } from 'react'
 import '../css/try.css'
 import { NavLink } from 'react-router';
 import Item from '../interfaces/Items';
-import { useGetAllItemsMutation, useUpdateItemInLaundryBasketMutation, useUpdateItemInUseMutation } from '../redux/api/apiSllices/itemsApiSlice';
+import { useGetAllItemsQuery, useUpdateItemInLaundryBasketMutation, useUpdateItemInUseMutation } from '../redux/api/apiSllices/itemsApiSlice';
 import { Users } from '../interfaces/Users';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../redux/slices/userSlice';
-import { selectItemInLaundry, setAllItems, setItemsInLaundry, updateAllItems } from '../redux/slices/itemSlice';
+import { selectAllItems, selectItemInLaundry, setAllItems, setItemsInLaundry, updateAllItems } from '../redux/slices/itemSlice';
 import { useDispatch } from 'react-redux';
 import { set } from 'react-hook-form';
+import useUpdateItem from '../hooks/useUpdateItem';
 const Header1 = () => {
+  
     console.log("Header");
     
     const [drawerOpen, setDrawerOpen] = useState(false);
-    const [getAllItems] = useGetAllItemsMutation();
     const [updateItemInLaundry] = useUpdateItemInLaundryBasketMutation();
     const [isSideNavOpen, setIsSideNavOpen] = useState(false);
     const user: Users = useSelector(selectUser);
 const [itemInLaundryBasket, setItemsInLaundryBasket] = useState<Item[]>(useSelector(selectItemInLaundry));
     const dispatch = useDispatch();
+      const { updateItem } = useUpdateItem();
+    const { data, error, isLoading } = useGetAllItemsQuery(user._id);
+     const myWardrobe = useSelector(selectAllItems);
  
 
     const handleUpdateItem = async (_id: string) => {
         try {
-            const updateItems: Item[] = await updateItemInLaundry({ _id: _id, inLaundryBasket: false, userId: user._id }).unwrap();
-             dispatch(setItemsInLaundry(updateItems));
-             setItemsInLaundryBasket(updateItems);
-             dispatch(updateAllItems(updateItems));
+            const response = await updateItemInLaundry({ _id: _id, inLaundryBasket: false, userId: user._id }).unwrap();
+            const updateItems: Item[] = response.itemsInLaundry;
+            dispatch(setItemsInLaundry(updateItems));
+            setItemsInLaundryBasket(updateItems);
+            dispatch(updateAllItems(updateItems));
         } catch (error) {
             console.error("שגיאה בעדכון הפריט:", error);
         }
@@ -40,20 +45,24 @@ const [itemInLaundryBasket, setItemsInLaundryBasket] = useState<Item[]>(useSelec
         await fetchWardrobe();
     };
 
-    const fetchWardrobe = async () => {
-        if (itemInLaundryBasket.length === 0) {
-            try {
-                const response: Item[] = await getAllItems(user._id).unwrap();
-                if (response) {
-                    const filterItems: Item[] = response.filter(item => item.inLaundryBasket == true)
-                    setItemsInLaundryBasket(filterItems);
-                    dispatch(setItemsInLaundry(filterItems))
+ 
+
+        const fetchWardrobe = async () => {
+            if (myWardrobe.length === 0) {
+                try {
+                    const items = data ? data : [];
+                    dispatch(setAllItems(items));
+                } catch (err) {
+                    console.error('שגיאה בקבלת פריטים:', err);
                 }
-            } catch (error) {
-                console.error('שגיאה בקבלת פריטים:', error);
             }
-        }
-    }
+        };
+    
+        useEffect(() => {
+            fetchWardrobe();
+        }, [data]);
+    
+      
 
     useEffect(() => {
         fetchWardrobe();

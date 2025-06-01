@@ -38,10 +38,9 @@ import "../css/Graphs.css"
 import { useDispatch, useSelector } from "react-redux"
 import { selectAllItems, setAllItems } from "../redux/slices/itemSlice"
 import Item from "../interfaces/Items"
-import { useGetAllItemsMutation } from "../redux/api/apiSllices/itemsApiSlice"
 import { Users } from "../interfaces/Users"
 import { selectUser } from "../redux/slices/userSlice"
-
+import {useGetAllItemsQuery} from "../redux/api/apiSllices/itemsApiSlice"
 // // נתונים לגרף שטח - הוצאות על בגדים לאורך זמן
 const areaChartData = [
   { month: "ינואר", הוצאות: 500 },
@@ -334,31 +333,35 @@ const Graphs: React.FC = () => {
   const allItems = useSelector(selectAllItems);
   const [myWardrobe, setMyWardrobe] = useState<Item[]>(allItems);
   const dispatch = useDispatch();
-  const [getAllItems] = useGetAllItemsMutation();
   const user: Users = useSelector(selectUser);
+    const { data } = useGetAllItemsQuery(user._id);
+
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue)
   }
 
-  const fetchWardrobe = async () => {
-    if (myWardrobe.length === 0) {
-      try {
-        const response = await getAllItems(user._id).unwrap();
-        dispatch(setAllItems(response));
-        setMyWardrobe(response);
-      } catch (err) {
-        console.error('שגיאה בקבלת פריטים:', err);
-      }
-    }
-  };
+
+    const fetchWardrobe = async () => {
+        if (myWardrobe.length === 0) {
+            try {
+                const items = data ? data : [];
+                dispatch(setAllItems(items));
+            } catch (err) {
+                console.error('שגיאה בקבלת פריטים:', err);
+            }
+        }
+    };
+
+    useEffect(() => {
+        fetchWardrobe();
+    }, [data]);
 
   useEffect(() => {
-    fetchWardrobe();
-  }, [allItems]);
+  }, [myWardrobe]);
 
-  return (
-    <Box className="charts-container">
+return (
+  <Box className="charts-container">
       <Paper className="charts-header">
         <Typography variant="h4" component="h1" className="charts-title">
           ניתוח ארון הבגדים שלך

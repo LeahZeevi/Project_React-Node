@@ -8,7 +8,6 @@ const ItemSchema = z.object({
     message: "יש להעלות תמונה",
   }),
   session: z.string().optional().nullable(),
-
   style: z.string(),
 });
 
