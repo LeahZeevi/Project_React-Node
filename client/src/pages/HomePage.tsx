@@ -11,6 +11,8 @@ import { selectUser } from '../redux/slices/userSlice';
 import { useSelector } from 'react-redux';
 import Typography from '@mui/material/Typography';
 import CountUp from '../components/CountUp';
+import { selectAllItems, setAllItems } from '../redux/slices/itemSlice';
+import { useDispatch } from 'react-redux';
 interface HomePageProps {
     currentOutfit: number[];
     myWardrobe: Item[];
@@ -23,66 +25,35 @@ interface HomePageProps {
 
 const HomePage = () => {
     const user: Users = useSelector(selectUser);
-    const [myWardrobe, setMyWardrobe] = useState<Item[]>([]);
-     const { data, error, isLoading } = useGetAllItemsQuery(user._id);
-    const [updateItemInUse] = useUpdateItemInUseMutation();
-    const [currentOutfit, setCurrentOutfit] = useState<Item[]>([]);
-    const headerRef = useRef<any>(null);
+    const myWardrobe = useSelector(selectAllItems);
+    const { data, error, isLoading } = useGetAllItemsQuery(user._id);
+    const dispatch = useDispatch()
+ 
 
     const fetchWardrobe = async () => {
-        try {
-            if (data) {
-                setMyWardrobe(data);
-                const wornItems1 = myWardrobe.filter(item => item.inUse);
-
+        if (myWardrobe.length === 0) {
+            try {
+                const items = data ? data : [];
+                dispatch(setAllItems(items));
+            } catch (err) {
+                console.error('שגיאה בקבלת פריטים:', err);
             }
-        } catch (error) {
-            console.error('שגיאה בקבלת פריטים:', error);
         }
     };
     useEffect(() => {
         fetchWardrobe();
-    }, []);
+    }, [data]);
     const wornItems1 = myWardrobe.filter(item => item.inUse);
-
-    // Define the onSendToLaundry function
-    const onSendToLaundry = (items: Item[]) => {
-        console.log(`Send items to laundry`, items);
-        setCurrentOutfit([]); // איפוס הלבוש הנוכחי
-        headerRef.current?.addItemsToLaundry(items);
-    };
-    // const handleWearItem = (item: Item) => {
-    //     if (!currentOutfit.find(i => i._id === item._id)) {
-    //         setCurrentOutfit(prev => [...prev, item]);
-    //     }
-    // };
-    const handleWearItem = async (item: Item, inUse: boolean) => {
-        try {
-            // setAlertItemId(itemId);
-            // setShowAlert(inUse);
-            const inUseItems: Item[] = await updateItemInUse({ _id: item._id, inUse: inUse, userId: user._id }).unwrap();
-            // setCurrentlyWornItems(inUseItems)
-        } catch (error) {
-            console.error('Failed to update item inUse:', error);
-        }
-        const updatedItems = myWardrobe.map(item =>
-            item._id === item._id ? { ...item, inUse: !item.inUse } : item
-        );
-        setMyWardrobe(updatedItems);
-    };
 
     return (
 
         <div className="page-content">
             <WeatherWidget city="ירושלים" />
-            {/* Pass the actual wardrobe data as a prop */}
-            <CurrentWorn wornItems={wornItems1} onRefresh={fetchWardrobe} cancelWearning={handleWearItem} />
+            <CurrentWorn />
             <div className="stats-grid">
                 <div className="stat-card">
                     <div className="stat-number">
-                        {/* <Typography variant="h4"> */}
                         <CountUp target={myWardrobe.length} duration={900} />
-                        {/* </Typography> */}
                     </div>
                     <div className="stat-label">פריטים בארון</div>
                 </div>
@@ -94,7 +65,7 @@ const HomePage = () => {
                     <div className="stat-number">
                         <CountUp target={wornItems1.length} duration={200} />
 
-                       </div>
+                    </div>
                     <div className="stat-label">בלבישה</div>
                 </div>
             </div>
