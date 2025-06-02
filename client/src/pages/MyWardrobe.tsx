@@ -46,6 +46,7 @@ const MyWardrobe = () => {
     });
     console.log("filteredItems", filteredItems);
 
+console.log("xxxxxxxxxx");
 
 
     const handleRemoveItem = async (itemForRemove: Item) => {

@@ -119,6 +119,10 @@ const Header = () => {
           <span className="menu-icon">👔</span>
           הארון שלי
         </NavLink>
+        <NavLink to="/graphs" className={`menu-item ${location.pathname === '/graphs' ? 'active' : ''}`} onClick={() => setDrawerOpen(false)} >
+          <span className="menu-icon">📊</span>
+          ניתוח נתוני לבישה
+        </NavLink>
       </nav>
 
       <Drawer
