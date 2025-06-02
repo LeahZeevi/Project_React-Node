@@ -49,8 +49,7 @@ const HomePage = () => {
 
         <div className="page-content">
             <WeatherWidget city="ירושלים" />
-            {/* Pass the actual wardrobe data as a prop */}
-            <CurrentWorn wornItems={wornItems1} onRefresh={fetchWardrobe}  />
+            <CurrentWorn />
             <div className="stats-grid">
                 <div className="stat-card">
                     <div className="stat-number">
