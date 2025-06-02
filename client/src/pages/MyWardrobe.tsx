@@ -96,7 +96,10 @@ console.log("xxxxxxxxxx");
     }, [myWardrobe]);
     return (
         <div className='page-content'>
-            <CurrentWorn />
+            <CurrentWorn
+                wornItems={currentlyWornItem}
+                onRefresh={fetchWardrobe}
+            />
 
             <div className="category-tabs">
                 <FilterMenu onFilterSelect={(filter) => setSelectedFilter(filter)} />

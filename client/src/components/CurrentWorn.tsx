@@ -18,15 +18,21 @@ import { selectItemInUse, setItemsInLaundry, setItemsInUse, updateAllItems } fro
 import useUpdateItem from '../hooks/useUpdateItem';
 const MotionFavoriteIcon = motion(FavoriteIcon);
 const MotionFavoriteBorderIcon = motion(FavoriteBorderIcon);
+interface CurrentWornProps {
+  wornItems: Item[];
+  onRefresh: () => void
+
+}
 
 
-const CurrentWorn = () => {
+const CurrentWorn: React.FC<CurrentWornProps> = ({ wornItems, onRefresh }) => {
+
 
   const user: Users = useSelector(selectUser);
   const [addEventWearning] = useAddEventWearningMutation()
   const [addHistory] = useAddHistoryItemMutation();
   const [liked, setLiked] = useState(false);
-  const wornItems = useSelector(selectItemInUse)
+  // const wornItems = useSelector(selectItemInUse)
   const dispatch = useDispatch();
   const { updateItem } = useUpdateItem();
   // interface SavedLook {
