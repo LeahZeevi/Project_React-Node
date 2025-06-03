@@ -13,6 +13,8 @@ import HistoryAlert from '../components/HistoryAlert';
 import FilterMenu from '../components/FilterMenu';
 import { set } from 'zod';
 import useUpdateItem from '../hooks/useUpdateItem';
+import ShirtHangerLoader from '../components/ShirtHangerLoader';
+import ErrorPage from './ErrorPage';
 
 
 
@@ -46,7 +48,7 @@ const MyWardrobe = () => {
     });
     console.log("filteredItems", filteredItems);
 
-console.log("xxxxxxxxxx");
+    console.log("xxxxxxxxxx");
 
 
     const handleRemoveItem = async (itemForRemove: Item) => {
@@ -95,79 +97,84 @@ console.log("xxxxxxxxxx");
     useEffect(() => {
     }, [myWardrobe]);
     return (
-        <div className='page-content'>
-            <CurrentWorn />
+        <>
+            {isLoading ? (
+                <ShirtHangerLoader />
+            ) : error ? (
+                <ErrorPage errorMessage="There is a problem loading the site. Please try again later." />
+            ) : (
+                <div className='page-content'>
+                    <CurrentWorn />
+                    <div className="category-tabs">
+                        <FilterMenu onFilterSelect={(filter) => setSelectedFilter(filter)} />
+                        {categories.map(cat => (
+                            <button
+                                key={cat}
+                                className={`tab ${selectedCategory === cat || (selectedCategory === 'all' && cat === 'כל הקטגוריות') ? 'active' : ''}`}
+                                onClick={() => setSelectedCategory(cat === 'כל הקטגוריות' ? 'all' : cat)}
+                            >
+                                {cat}
+                            </button>
+                        ))}
+                    </div>
 
-            <div className="category-tabs">
-                <FilterMenu onFilterSelect={(filter) => setSelectedFilter(filter)} />
+                    <div className="items-grid">
+                        {filteredItems.map(item => (
+                            <div key={item._id} className={`item-card ${item.inUse || item.inLaundryBasket ? 'worn' : ''}`}>
+                                <button className="remove-btn" onClick={() => handleRemoveItem(item)} title="הסר מהארון">✖</button>
+                                <div className="item-image">
+                                    <img src={`http://localhost:3000/${item.image.replace(/^public[\\/]/, '')}`} alt={item.itemName} />
 
-
-                {categories.map(cat => (
-                    <button
-                        key={cat}
-                        className={`tab ${selectedCategory === cat || (selectedCategory === 'all' && cat === 'כל הקטגוריות') ? 'active' : ''}`}
-                        onClick={() => setSelectedCategory(cat === 'כל הקטגוריות' ? 'all' : cat)}
-                    >
-                        {cat}
-                    </button>
-                ))}
-            </div>
-
-            <div className="items-grid">
-                {filteredItems.map(item => (
-                    <div key={item._id} className={`item-card ${item.inUse || item.inLaundryBasket ? 'worn' : ''}`}>
-                        <button className="remove-btn" onClick={() => handleRemoveItem(item)} title="הסר מהארון">✖</button>
-                        <div className="item-image">
-                            <img src={`http://localhost:3000/${item.image.replace(/^public[\\/]/, '')}`} alt={item.itemName} />
-
-                            {(item.inUse || item.inLaundryBasket) && (
-                                <div className="worn-overlay">
-                                    ✓
+                                    {(item.inUse || item.inLaundryBasket) && (
+                                        <div className="worn-overlay">
+                                            ✓
+                                            <button
+                                                className={`overlay-button ${item.inLaundryBasket ? 'clicked' : ''}`}
+                                                onClick={(e) => {
+                                                    if (!item.inLaundryBasket) {
+                                                        e.currentTarget.classList.add("clicked");
+                                                        e.currentTarget.disabled = true;
+                                                        handleSendToLaundry(item, true);
+                                                    }
+                                                }}
+                                                disabled={!!item.inLaundryBasket}
+                                            >
+                                                העבר לסל כביסה
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="item-info">
+                                    <h4>{item.itemName}</h4>
+                                    <p>{item.categoryName} • {item.session}</p>
                                     <button
-                                        className={`overlay-button ${item.inLaundryBasket ? 'clicked' : ''}`}
-                                        onClick={(e) => {
-                                            if (!item.inLaundryBasket) {
-                                                e.currentTarget.classList.add("clicked");
-                                                e.currentTarget.disabled = true;
-                                                handleSendToLaundry(item, true);
-                                            }
-                                        }}
-                                        disabled={!!item.inLaundryBasket}
+
+                                        className={`wear-btn ${item.inUse || item.inLaundryBasket ? 'worn' : ''}`}
+                                        onClick={() => handleUpdateItem(item, true)}
+                                        disabled={!!item.inUse}
                                     >
-                                        העבר לסל כביסה
+                                        {item.inUse || item.inLaundryBasket ? 'בלבישה' : 'לבש'}
                                     </button>
                                 </div>
-                            )}
-                        </div>
-                        <div className="item-info">
-                            <h4>{item.itemName}</h4>
-                            <p>{item.categoryName} • {item.session}</p>
-                            <button
-
-                                className={`wear-btn ${item.inUse || item.inLaundryBasket ? 'worn' : ''}`}
-                                onClick={() => handleUpdateItem(item, true)}
-                                disabled={!!item.inUse}
-                            >
-                                {item.inUse || item.inLaundryBasket ? 'בלבישה' : 'לבש'}
-                            </button>
-                        </div>
+                            </div>
+                        ))}
                     </div>
-                ))}
-            </div>
 
-            <button className="fab" onClick={() => setAddItemDialog(true)}>+</button>
+                    <button className="fab" onClick={() => setAddItemDialog(true)}>+</button>
 
 
-            {addItemDialog && <AddItemDialog addItemDialogP={addItemDialog} setAddItemDialogP={setAddItemDialog} />}
-            {alertItemId && (
-                <HistoryAlert
-                    open={showAlert}
-                    onClose={() => setShowAlert(false)}
-                    item_Id={alertItemId}
-                />
+                    {addItemDialog && <AddItemDialog addItemDialogP={addItemDialog} setAddItemDialogP={setAddItemDialog} />}
+                    {alertItemId && (
+                        <HistoryAlert
+                            open={showAlert}
+                            onClose={() => setShowAlert(false)}
+                            item_Id={alertItemId}
+                        />
+                    )}
+                </div>
             )}
-        </div>
-    );
+        </>
+    )
 };
 
 export default MyWardrobe;

@@ -4,8 +4,8 @@ import { useCookies } from 'react-cookie'
 import { Provider } from 'react-redux'
 import store from './redux/store'
 import router from './routes/AppRoute'
-import Register from './pages/Register'
 import './css/try.css'
+import LandingPage from './pages/LandingPage'
 
 
 
@@ -18,7 +18,7 @@ function App() {
         {cookies.token ?
           <RouterProvider router={router}>
           </RouterProvider>
-          : <Register/>}
+          : <LandingPage/>}
       </Provider>
 
     </>
