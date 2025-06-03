@@ -1,5 +1,6 @@
 import EventWearning from "../../../interfaces/EventWearning";
 import HistoryItem from "../../../interfaces/HistoryItem";
+import Item from "../../../interfaces/Items";
 import apiSlice from "../apiSlices";
 
 const wearningApiSlice = apiSlice.injectEndpoints({
@@ -12,17 +13,16 @@ const wearningApiSlice = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ["Wearning"]
         }),
-        getEventWearning: builder.query<EventWearning[], string>({
+            getEventsWearning: builder.query<Item[], string>({
             query: (_id) => `/wearnings/${_id}`,
-            providesTags: ["History"]
-
-        })
+            providesTags: ["Wearning"]
+        }),
 
     })
 })
 
 export const {
     useAddEventWearningMutation,
-    useGetEventWearningQuery
+    useGetEventsWearningQuery
 } = wearningApiSlice;
 

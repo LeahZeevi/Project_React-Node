@@ -18,6 +18,10 @@ const itemSlice = createSlice({
   reducers: {
     setAllItems(state, action: PayloadAction<Item[]>) {
       state.allItems = action.payload
+      action.payload.map(item=>{
+        item.inUse&&state.itemsInUse.push(item);
+        item.inLaundryBasket&&state.itemInLaundry.push(item);
+      })
     },
     
     updateAllItems(state, action: PayloadAction<Item[]>) {
@@ -30,11 +34,10 @@ const itemSlice = createSlice({
 
     setItemsInUse(state, action: PayloadAction<Item | Item[]>) {
       const payload = action.payload;
-
       if (Array.isArray(payload)) {
-        state.itemInLaundry = payload; // אם זה מערך, מוסיפים את כולם
+        state.itemsInUse = payload; // אם זה מערך, מוסיפים את כולם
       } else {
-        state.itemInLaundry.push(payload); // אם זה פריט יחיד
+        state.itemsInUse.push(payload); // אם זה פריט יחיד
       }
     },
     setItemsInLaundry(state, action: PayloadAction<Item | Item[]>) {
@@ -51,7 +54,10 @@ const itemSlice = createSlice({
 export const selectItemInUse = (state: { items: Items }): Item[] => { return state.items.itemsInUse };
 export const selectItemInLaundry = (state: { items: Items }): Item[] => { return state.items.itemInLaundry };
 export const selectAllItems = (state: { items: Items }): Item[] => { return state.items.allItems }
-export const { setItemsInUse, setItemsInLaundry, setAllItems,updateAllItems } = itemSlice.actions;
+// export const selectCurrentWorn = (state: { items: Items }): Item[] => {
+//   return state.items.allItems.filter(item => item.inUse);
+// };
+export const { setItemsInUse, setItemsInLaundry, setAllItems,updateAllItems} = itemSlice.actions;
 
 
 

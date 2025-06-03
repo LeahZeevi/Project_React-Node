@@ -2,7 +2,7 @@ import React from 'react';
 import Weather from '../pages/Weather'; // Assuming Weather is a separate component you have
 import '../css/try.css'
 interface WeatherWidgetProps {
-  city: string;
+  city: String;
 }
 
 const WeatherWidget: React.FC<WeatherWidgetProps> = ({ city }) => {
@@ -14,7 +14,7 @@ const WeatherWidget: React.FC<WeatherWidgetProps> = ({ city }) => {
         <div className="temp"></div>
         <Weather city={city}></Weather>
         <div className="condition"></div>
-      </div>
+      </div> 
     </div>
   );
 };
