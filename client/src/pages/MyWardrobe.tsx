@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import '../css/try.css';
 import Item from '../interfaces/Items';
 import { useDeleteItemMutation, useGetAllItemsQuery, useUpdateItemInLaundryBasketMutation, useUpdateItemInUseMutation } from '../redux/api/apiSllices/itemsApiSlice';
@@ -11,55 +11,49 @@ import AddItemDialog from '../components/AddItemDialog';
 import CurrentWorn from '../components/CurrentWorn';
 import HistoryAlert from '../components/HistoryAlert';
 import FilterMenu from '../components/FilterMenu';
-import { set } from 'zod';
 import useUpdateItem from '../hooks/useUpdateItem';
 import ShirtHangerLoader from '../components/ShirtHangerLoader';
 import ErrorPage from './ErrorPage';
 
 
-
+//Showing my entire wardrobe
 const MyWardrobe = () => {
-    console.log("MyWardrobe");
 
     const categories = ['כל הקטגוריות', 'חולצות', 'חצאיות', 'מכנסים', 'שמלות', 'נעלים'];
     const [selectedCategory, setSelectedCategory] = useState('all');
     const [showAlert, setShowAlert] = useState(false);
     const [alertItemId, setAlertItemId] = useState<string | null>(null);
-    const currentlyWornItem = useSelector(selectItemInUse);
     const [addItemDialog, setAddItemDialog] = useState(false);
+    const [selectedFilter, setSelectedFilter] = useState<string | null>(null);
     const dispatch = useDispatch();
-    // const [updateItemInUse] = useUpdateItemInUseMutation();
     const [deleteItem] = useDeleteItemMutation()
     const [updateItemInLaundry] = useUpdateItemInLaundryBasketMutation();
-    const [selectedFilter, setSelectedFilter] = useState<string | null>(null);
     const user: Users = useSelector(selectUser);
     const myWardrobe = useSelector(selectAllItems);
     const { updateItem } = useUpdateItem();
     const { data, error, isLoading } = useGetAllItemsQuery(user._id);
 
-
+//Filters the items according to the desired category.
     const filteredItems = myWardrobe.filter(item => {
-        if (selectedCategory !== 'all' && item.categoryName !== selectedCategory) return false;
-        if (!selectedFilter) return true;
+        if (selectedCategory !== 'all' && item.categoryName !== selectedCategory)
+            return false;
+        if (!selectedFilter)
+            return true;
         return (
             item.session === selectedFilter ||
-            item.style === selectedFilter // תלוי מה בדיוק את מסננת
+            item.style === selectedFilter
         );
     });
-    console.log("filteredItems", filteredItems);
 
-    console.log("xxxxxxxxxx");
-
-
+    //לא גמור
     const handleRemoveItem = async (itemForRemove: Item) => {
         try {
             await deleteItem(itemForRemove).unwrap();
-            // setMyWardrobe(prev => prev.filter(item => item._id !== itemForRemove._id));
         } catch (err) {
             console.error("שגיאה בהסרה:", err);
         }
     };
-
+//Sending the item to the laundry basket
     const handleSendToLaundry = async (item: Item, inLaundry: boolean) => {//כאן רק מכניסים לסל הכביסה ולא מוציאים
         try {
             const { itemsInLaundry, updatedItem } = await updateItemInLaundry({ _id: item._id, inLaundryBasket: inLaundry, userId: user._id }).unwrap();
@@ -69,33 +63,30 @@ const MyWardrobe = () => {
             console.error('שגיאה בשליחת לכביסה:', err);
         }
     };
-
+//Updates a single item's usage status
     const handleUpdateItem = async (item: Item, inUse: boolean) => {
         updateItem(item, inUse);
         if (inUse === true) {
             setAlertItemId(item._id);
             setShowAlert(true)
         }
-
     };
-
+//Reorganizing the items in the wardrobe
     const fetchWardrobe = async () => {
         if (myWardrobe.length === 0) {
-            try {
-                const items = data ? data : [];
-                dispatch(setAllItems(items));
-            } catch (err) {
-                console.error('שגיאה בקבלת פריטים:', err);
-            }
+            const items = data ? data : [];
+            dispatch(setAllItems(items));
         }
     };
-
+//Reorganizing the items in the wardrobe
     useEffect(() => {
         fetchWardrobe();
     }, [data]);
-
+    
+//Listen to the status. If you update something, they will see the updates on the screen.
     useEffect(() => {
     }, [myWardrobe]);
+
     return (
         <>
             {isLoading ? (
@@ -104,7 +95,10 @@ const MyWardrobe = () => {
                 <ErrorPage errorMessage="There is a problem loading the site. Please try again later." />
             ) : (
                 <div className='page-content'>
+
+            {/* Shows the details of the clothing */}
                     <CurrentWorn />
+
                     <div className="category-tabs">
                         <FilterMenu onFilterSelect={(filter) => setSelectedFilter(filter)} />
                         {categories.map(cat => (
@@ -121,7 +115,9 @@ const MyWardrobe = () => {
                     <div className="items-grid">
                         {filteredItems.map(item => (
                             <div key={item._id} className={`item-card ${item.inUse || item.inLaundryBasket ? 'worn' : ''}`}>
+
                                 <button className="remove-btn" onClick={() => handleRemoveItem(item)} title="הסר מהארון">✖</button>
+
                                 <div className="item-image">
                                     <img src={`http://localhost:3000/${item.image.replace(/^public[\\/]/, '')}`} alt={item.itemName} />
 
@@ -147,9 +143,7 @@ const MyWardrobe = () => {
                                 <div className="item-info">
                                     <h4>{item.itemName}</h4>
                                     <p>{item.categoryName} • {item.session}</p>
-                                    <button
-
-                                        className={`wear-btn ${item.inUse || item.inLaundryBasket ? 'worn' : ''}`}
+                                    <button className={`wear-btn ${item.inUse || item.inLaundryBasket ? 'worn' : ''}`}
                                         onClick={() => handleUpdateItem(item, true)}
                                         disabled={!!item.inUse}
                                     >

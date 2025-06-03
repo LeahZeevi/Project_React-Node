@@ -16,12 +16,16 @@ const itemSlice = createSlice({
   name: "items",
   initialState,
   reducers: {
-    setAllItems(state, action: PayloadAction<Item[]>) {
+    setAllItems(state, action: PayloadAction<Item[] | Item>) {
+       if (Array.isArray(action.payload)){
       state.allItems = action.payload
       action.payload.map(item=>{
         item.inUse&&state.itemsInUse.push(item);
         item.inLaundryBasket&&state.itemInLaundry.push(item);
-      })
+      })}
+      else{
+        state.allItems.push(action.payload);
+      }
     },
     
     updateAllItems(state, action: PayloadAction<Item[]>) {
@@ -54,9 +58,7 @@ const itemSlice = createSlice({
 export const selectItemInUse = (state: { items: Items }): Item[] => { return state.items.itemsInUse };
 export const selectItemInLaundry = (state: { items: Items }): Item[] => { return state.items.itemInLaundry };
 export const selectAllItems = (state: { items: Items }): Item[] => { return state.items.allItems }
-// export const selectCurrentWorn = (state: { items: Items }): Item[] => {
-//   return state.items.allItems.filter(item => item.inUse);
-// };
+
 export const { setItemsInUse, setItemsInLaundry, setAllItems,updateAllItems} = itemSlice.actions;
 
 
