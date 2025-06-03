@@ -1,143 +1,481 @@
+import { useState, useEffect } from "react"
+import { useForm, Controller } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useCookies } from "react-cookie"
+import { useDispatch } from "react-redux"
+import { RegisterUserSchema, UserSchema } from "../schemas/UserSchema"
+import axios from "axios"
+import {
+    Box,
+    Typography,
+    Button,
+    TextField,
+    Card,
+    CardContent,
+    Tabs,
+    Tab,
+    Select,
+    MenuItem,
+    FormControl,
+    InputLabel,
+    IconButton,
+    InputAdornment,
+    FormHelperText,
+    Link,
+    Fade,
+    Grow,
+} from "@mui/material"
+import { Visibility, VisibilityOff, ArrowForward, Checkroom, AutoAwesome, Bolt, Palette } from "@mui/icons-material"
+import "../css/Register.css"
+import { LoginedUser, Users } from "../interfaces/Users"
+import { useLoginMutation, useRegisterMutation } from "../redux/api/apiSllices/usersApiSlice"
+import { setCurrentUser } from "../redux/slices/userSlice"
 
-import { Box, Typography, Button, TextField } from '@mui/material';
-import '../css/login.css'; // ייבוא קובץ ה-CSS
-import { useEffect, useState } from "react";
-import { useForm } from 'react-hook-form';
-import { RegisterUserSchema, UserSchema } from '../schemas/UserSchema'
-import { LoginedUser, Users } from '../interfaces/Users';
-import { useLoginMutation, useRegisterMutation } from '../redux/api/apiSllices/usersApiSlice';
-import { useCookies } from 'react-cookie';
-import { RouterProvider } from 'react-router';
-import axios from 'axios';
-import router from '../routes/AppRoute';
-import { useDispatch } from 'react-redux';
-import { Controller } from 'react-hook-form';
-import Item from '../interfaces/Items';
-import { setCurrentUser } from '../redux/slices/userSlice';
-import { zodResolver } from '@hookform/resolvers/zod';
-
-interface Data {
-    user: Users | undefined,
-    accessToken: string
-}
 
 const Register = () => {
-    const [openRegister, setOpenRegister] = useState<Boolean>(false);
-    const [open, setOpenLogin] = useState<Boolean>(false)
-    const [send, setSend] = useState<Boolean>(false);
-    const [cities, setCities] = useState<Array<string>>([]);
-    const dispatch = useDispatch();
+    const [showAuth, setShowAuth] = useState(false)
+    const [showPassword, setShowPassword] = useState(false)
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+    const [cities, setCities] = useState<Array<string>>([])
+    const [send, setSend] = useState<boolean>(false)
+    const [tabValue, setTabValue] = useState(0)
+    const dispatch = useDispatch()
     const [registerUser] = useRegisterMutation();
-    const [loginUser] = useLoginMutation();
-    const [cookies, setCookies] = useCookies(['token'])
+    const [loginUser] = useLoginMutation()
+    const [cookies, setCookies] = useCookies(["token"]);
 
-
-
-    const { register: registerRegister, handleSubmit: handleSubmitRegister, control, formState: { errors: errorsRegister }, reset: resetRegister } = useForm({
+    const {
+        register: registerRegister,
+        handleSubmit: handleSubmitRegister,
+        control: controlRegister,
+        formState: { errors: errorsRegister },
+        reset: resetRegister,
+    } = useForm({
         mode: "onBlur",
-        resolver: zodResolver(RegisterUserSchema)
-    });
+        resolver: zodResolver(RegisterUserSchema),
+    })
 
-    const { register: registeLogin, handleSubmit: handleSubmitLogin, formState: { errors: errorsLogin }, reset: resetLogin } = useForm({
+    // Login form
+    const {
+        register: registerLogin,
+        handleSubmit: handleSubmitLogin,
+        formState: { errors: errorsLogin },
+        reset: resetLogin,
+    } = useForm({
         mode: "onBlur",
-        resolver: zodResolver(UserSchema)
-    });
+        resolver: zodResolver(UserSchema),
+    })
 
+    // Fetch cities
     useEffect(() => {
-
-        axios.get('http://localhost:3000/users/excel-column') // כתובת השרת של
+        axios
+            .get("http://localhost:3000/users/excel-column")
             .then((response) => {
-                console.log(response.data);
-
-                setCities(response.data);
+                console.log(response.data)
+                setCities(response.data)
             })
             .catch((error) => {
-                console.error('שגיאה בקבלת ערי ישראל:', error);
-            });
-    }, []);
+                console.error("שגיאה בקבלת ערי ישראל:", error)
+            })
+    }, [])
 
-    const onSubmitRegister = async (newUser: { userName: string; city: string; email: string; password: string; }) => {
-        const userWithWardrobe: Users = { ...newUser, _id: "" };
-        console.log("1 - User data before registration:", userWithWardrobe, typeof userWithWardrobe);
-
+    // Register submission
+    const onSubmitRegister = async (newUser: { userName: string; city: string; email: string; password: string }) => {
+        const userWithWardrobe: Users = { ...newUser, _id: "" }
         try {
-            const response: { accessToken: string, user: Users } = await registerUser(userWithWardrobe).unwrap();
-            console.log("response.user", response.user._id);
-            const currentUser = response.user;
+            const response: { accessToken: string; user: Users } = await registerUser(userWithWardrobe).unwrap();
+            console.log("response", response)
+            const currentUser = response.user
+
             if (currentUser) {
-                localStorage.setItem('user', JSON.stringify(currentUser));
+                localStorage.setItem("user", JSON.stringify(currentUser))
+                dispatch(setCurrentUser(currentUser))
             } else {
-                console.log('currentUser is undefined, not saving to localStorage.');
+                console.log("currentUser is undefined, not saving to localStorage.")
             }
-            setCookies("token", response.accessToken, { path: "/", maxAge: 3600 * 24 * 7 });
-            setOpenRegister(false);
-            setSend(true);
-            resetRegister();
-        }
 
-        catch (error: any) {
-            console.error("Registration error:", error);
-            console.error("Registration error data:", error?.data);
-            console.error("Registration error status:", error?.status);
+            setCookies("token", response.accessToken, { path: "/", maxAge: 3600 * 24 * 7 })
+            setSend(true)
+            resetRegister()
+        } catch (error: any) {
+            console.error("Registration error:", error)
+            console.error("Registration error data:", error?.data)
+            console.error("Registration error status:", error?.status)
         }
-    };
+    }
 
+    // Login submission
     const onSubmitLogin = async (user: LoginedUser) => {
         try {
-            const response: { accessToken: string, user: Users } = await loginUser(user).unwrap();
+            const response: { accessToken: string; user: Users } = await loginUser(user).unwrap()
             const currentUser = response.user
             if (currentUser) {
-                localStorage.setItem('user', JSON.stringify(currentUser));
-                console.log('User saved to localStorage:', JSON.stringify(currentUser));
-                dispatch(setCurrentUser(currentUser));
-
+                localStorage.setItem("user", JSON.stringify(currentUser))
+                console.log("User saved to localStorage:", JSON.stringify(currentUser))
+                dispatch(setCurrentUser(currentUser))
             } else {
-                console.log('currentUser is undefined, not saving to localStorage.');
+                console.log("currentUser is undefined, not saving to localStorage.")
             }
-            setCookies("token", response.accessToken, { path: "/", maxAge: 3600 * 24 * 7 });
-            console.log(response);
+            setCookies("token", response.accessToken, { path: "/", maxAge: 3600 * 24 * 7 })
+            console.log(response)
+        } catch (error) {
+            console.log(error)
         }
-        catch (error) {
-            console.log(error);
-        }
-        setSend(true)
-        setOpenLogin(false);
-        resetLogin()
-    };
 
+        setSend(true)
+        resetLogin()
+    }
+
+    // If user is logged in, show success
+    if (send) {
+        return (
+            <Box className="success-container">
+                <Fade in={true} timeout={1000}>
+                    <Box className="success-content">
+                        <Box className="success-icon">
+                            <AutoAwesome sx={{ fontSize: 48, color: "white" }} />
+                        </Box>
+                        <Typography variant="h3" className="success-title">
+                            ברוכה הבאה!
+                        </Typography>
+                        <Typography variant="h6" className="success-subtitle">
+                            ההרשמה הושלמה בהצלחה
+                        </Typography>
+                    </Box>
+                </Fade>
+            </Box>
+        )
+    }
+
+    if (!showAuth) {
+        return (
+            <Box className="landing-container">
+                {/* Animated background elements */}
+                <Box className="bg-element bg-element-1"></Box>
+                <Box className="bg-element bg-element-2"></Box>
+                <Box className="bg-element bg-element-3"></Box>
+
+                {/* Grid pattern overlay */}
+                <Box className="grid-pattern"></Box>
+
+                {/* Floating elements */}
+                <Box className="floating-dot floating-dot-1"></Box>
+                <Box className="floating-dot floating-dot-2"></Box>
+                <Box className="floating-dot floating-dot-3"></Box>
+
+                <Box className="landing-content">
+                    <Grow in={true} timeout={1000}>
+                        <Box className="content-wrapper">
+                            {/* Logo and brand */}
+                            <Box className="logo-section">
+                                <Box className="logo-container">
+                                    <Box className="logo-blur"></Box>
+                                    <Box className="logo-icon">
+                                        <Checkroom sx={{ fontSize: 32, color: "white" }} />
+                                    </Box>
+                                </Box>
+                                <Typography variant="h4" className="brand-title">
+                                    WardrobeAI
+                                </Typography>
+                            </Box>
+
+                            {/* Main heading */}
+                            <Typography variant="h1" className="main-title">
+                                ארון הבגדים
+                                <br />
+                                <span className="gradient-text">החכם שלך</span>
+                            </Typography>
+
+                            {/* Subtitle */}
+                            <Typography variant="h5" className="subtitle">
+                                נהלי את ארון הבגדים שלך בצורה חכמה עם בינה מלאכותית מתקדמת.
+                                <br />
+                                קבלי המלצות אישיות, תכנני לוקים מושלמים וחסכי זמן יקר.
+                            </Typography>
+
+                            {/* Features */}
+                            <Box className="features-grid">
+                                <Fade in={true} timeout={1200}>
+                                    <Card className="feature-card">
+                                        <CardContent className="feature-content">
+                                            <Box className="feature-icon feature-icon-purple">
+                                                <AutoAwesome sx={{ fontSize: 24, color: "white" }} />
+                                            </Box>
+                                            <Typography variant="h6" className="feature-title">
+                                                בינה מלאכותית
+                                            </Typography>
+                                            <Typography variant="body2" className="feature-description">
+                                                המלצות אישיות מבוססות על הסגנון והמזג שלך
+                                            </Typography>
+                                        </CardContent>
+                                    </Card>
+                                </Fade>
+
+                                <Fade in={true} timeout={1400}>
+                                    <Card className="feature-card">
+                                        <CardContent className="feature-content">
+                                            <Box className="feature-icon feature-icon-blue">
+                                                <Bolt sx={{ fontSize: 24, color: "white" }} />
+                                            </Box>
+                                            <Typography variant="h6" className="feature-title">
+                                                ניהול חכם
+                                            </Typography>
+                                            <Typography variant="body2" className="feature-description">
+                                                ארגון אוטומטי של הבגדים לפי צבע, עונה וסגנון
+                                            </Typography>
+                                        </CardContent>
+                                    </Card>
+                                </Fade>
+
+                                <Fade in={true} timeout={1600}>
+                                    <Card className="feature-card">
+                                        <CardContent className="feature-content">
+                                            <Box className="feature-icon feature-icon-pink">
+                                                <Palette sx={{ fontSize: 24, color: "white" }} />
+                                            </Box>
+                                            <Typography variant="h6" className="feature-title">
+                                                לוקים מושלמים
+                                            </Typography>
+                                            <Typography variant="body2" className="feature-description">
+                                                יצירת קומבינציות מנצחות לכל אירוע ומזג אוויר
+                                            </Typography>
+                                        </CardContent>
+                                    </Card>
+                                </Fade>
+                            </Box>
+
+                            {/* CTA Button */}
+                            <Grow in={true} timeout={1800}>
+                                <Button
+                                    onClick={() => setShowAuth(true)}
+                                    className="cta-button"
+                                    size="large"
+                                    endIcon={<ArrowForward />}
+                                >
+                                    בואו נתחיל
+                                </Button>
+                            </Grow>
+
+                            <Typography variant="body2" className="bottom-text">
+                                הצטרפי לאלפי נשים שכבר משתמשות בפלטפורמה החכמה ביותר לניהול ארון בגדים
+                            </Typography>
+                        </Box>
+                    </Grow>
+                </Box>
+            </Box>
+        )
+    }
 
     return (
-        <div>
-            {open &&
-                <div className={`modal ${open ? 'open' : ''}`}>
-                    <div className="modal-content">
-                        <span className="close" onClick={() => setOpenLogin(false)}>
-                            ×
-                        </span>
+        <Box className="auth-container">
+            {/* Same animated background */}
+            <Box className="bg-element bg-element-1"></Box>
+            <Box className="bg-element bg-element-2"></Box>
+            <Box className="bg-element bg-element-3"></Box>
+            <Box className="grid-pattern"></Box>
 
-                        <form onSubmit={handleSubmitLogin(onSubmitLogin)}>
-                            <TextField id="outlined-basic" label="User Name" variant="outlined" color='secondary' {...registeLogin("userName")} />
-                            {errorsLogin.userName && <p style={{ color: "red" }}></p>}
+            <Box className="auth-content">
+                {/* Back button */}
+                <Button onClick={() => setShowAuth(false)} className="back-button">
+                    ← חזרה
+                </Button>
 
-                            <TextField id="outlined-basic" label="Password" variant="outlined" color='secondary' {...registeLogin("password")} />
-                            {errorsLogin.password && <p style={{ color: "red" }}></p>}
-                            <Button variant="contained" color={"secondary"} type='submit' >
-                                Send
-                            </Button>
+                {/* Logo */}
+                <Box className="auth-logo-section">
+                    <Box className="logo-container-small">
+                        <Box className="logo-blur"></Box>
+                        <Box className="logo-icon-small">
+                            <Checkroom sx={{ fontSize: 24, color: "white" }} />
+                        </Box>
+                    </Box>
+                    <Typography variant="h5" className="brand-title-small">
+                        WardrobeAI
+                    </Typography>
+                </Box>
 
-                        </form>
-                    </div>
-                </div>
-            }
-            {send && <RouterProvider router={router} />}
+                {/* Auth Card */}
+                <Grow in={true} timeout={800}>
+                    <Card className="auth-card">
+                        <CardContent className="auth-card-content">
+                            <Box className="auth-header">
+                                <Typography variant="h4" className="auth-title">
+                                    ברוכה הבאה!
+                                </Typography>
+                                <Typography variant="body1" className="auth-subtitle">
+                                    הצטרפי לקהילת הנשים החכמות
+                                </Typography>
+                            </Box>
 
-            <Button variant="contained" onClick={() => setOpenRegister(true)}>הרשמה</Button>
-            <Button variant="contained" onClick={() => setOpenLogin(true)}>התחברות</Button>
+                            <Box className="tabs-container">
+                                <Tabs
+                                    value={tabValue}
+                                    onChange={(_, newValue) => setTabValue(newValue)}
+                                    className="custom-tabs"
+                                    variant="fullWidth"
+                                >
+                                    <Tab label="הרשמה" className="custom-tab" />
+                                    <Tab label="התחברות" className="custom-tab" />
+                                </Tabs>
 
-        </div>
+                                {/* Register Tab */}
+                                {tabValue === 0 && (
+                                    <Fade in={true} timeout={500}>
+                                        <Box className="tab-content">
+                                            <form onSubmit={handleSubmitRegister(onSubmitRegister as any)}>
+                                                <Box className="form-field">
+                                                    <TextField
+                                                        fullWidth
+                                                        label="שם משתמש"
+                                                        placeholder="הכניסי שם משתמש"
+                                                        className="custom-textfield"
+                                                        {...registerRegister("userName")}
+                                                        error={!!errorsRegister.userName}
+                                                        helperText={typeof errorsRegister.userName?.message === "string" ? errorsRegister.userName.message : undefined}
+                                                    />
+                                                </Box>
+
+                                                <Box className="form-field">
+                                                    <TextField
+                                                        fullWidth
+                                                        label="אימייל"
+                                                        type="email"
+                                                        placeholder="example@email.com"
+                                                        className="custom-textfield"
+                                                        {...registerRegister("email")}
+                                                        error={!!errorsRegister.email}
+                                                        helperText={typeof errorsRegister.email?.message === "string" ? errorsRegister.email.message : undefined}
+                                                    />
+                                                </Box>
+
+                                                <Box className="form-field">
+                                                    <FormControl fullWidth className="custom-textfield">
+                                                        <InputLabel>עיר</InputLabel>
+                                                        <Controller
+                                                            name="city"
+                                                            control={controlRegister}
+                                                            render={({ field }) => (
+                                                                <Select {...field} label="עיר">
+                                                                    {cities.map((city) => (
+                                                                        <MenuItem key={city} value={city}>
+                                                                            {city}
+                                                                        </MenuItem>
+                                                                    ))}
+                                                                </Select>
+                                                            )}
+                                                        />
+                                                        {errorsRegister.city && (
+                                                            <FormHelperText error>{errorsRegister.root?.message}</FormHelperText>
+                                                        )}
+                                                    </FormControl>
+                                                </Box>
+
+                                                <Box className="form-field">
+                                                    <TextField
+                                                        fullWidth
+                                                        label="סיסמה"
+                                                        type={showPassword ? "text" : "password"}
+                                                        placeholder="בחרי סיסמה חזקה"
+                                                        className="custom-textfield"
+                                                        {...registerRegister("password")}
+                                                        error={!!errorsRegister.password}
+                                                        helperText={typeof errorsRegister.password?.message === "string" ? errorsRegister.password.message : undefined}
+                                                        InputProps={{
+                                                            endAdornment: (
+                                                                <InputAdornment position="end">
+                                                                    <IconButton
+                                                                        onClick={() => setShowPassword(!showPassword)}
+                                                                        className="password-toggle"
+                                                                    >
+                                                                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                                                                    </IconButton>
+                                                                </InputAdornment>
+                                                            ),
+                                                        }}
+                                                    />
+                                                </Box>
+
+                                                <Button type="submit" fullWidth className="submit-button">
+                                                    צרי חשבון חדש
+                                                </Button>
+                                            </form>
+                                        </Box>
+                                    </Fade>
+                                )}
+
+                                {/* Login Tab */}
+                                {tabValue === 1 && (
+                                    <Fade in={true} timeout={500}>
+                                        <Box className="tab-content">
+                                            <form onSubmit={handleSubmitLogin(onSubmitLogin)}>
+                                                <Box className="form-field">
+                                                    <TextField
+                                                        fullWidth
+                                                        label="שם משתמש"
+                                                        placeholder="הכניסי שם משתמש"
+                                                        className="custom-textfield"
+                                                        {...registerLogin("userName")}
+                                                        error={!!errorsLogin.userName}
+                                                        helperText={errorsLogin.userName?.message}
+                                                    />
+                                                </Box>
+
+                                                <Box className="form-field">
+                                                    <TextField
+                                                        fullWidth
+                                                        label="סיסמה"
+                                                        type={showPassword ? "text" : "password"}
+                                                        placeholder="הכניסי את הסיסמה שלך"
+                                                        className="custom-textfield"
+                                                        {...registerLogin("password")}
+                                                        error={!!errorsLogin.password}
+                                                        helperText={errorsLogin.password?.message}
+                                                        InputProps={{
+                                                            endAdornment: (
+                                                                <InputAdornment position="end">
+                                                                    <IconButton
+                                                                        onClick={() => setShowPassword(!showPassword)}
+                                                                        className="password-toggle"
+                                                                    >
+                                                                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                                                                    </IconButton>
+                                                                </InputAdornment>
+                                                            ),
+                                                        }}
+                                                    />
+                                                </Box>
+
+                                                <Box className="forgot-password">
+                                                    <Link href="#" className="forgot-link">
+                                                        שכחת סיסמה?
+                                                    </Link>
+                                                </Box>
+
+                                                <Button type="submit" fullWidth className="submit-button">
+                                                    התחברי
+                                                </Button>
+                                            </form>
+                                        </Box>
+                                    </Fade>
+                                )}
+                            </Box>
+
+                            <Box className="terms-section">
+                                <Typography variant="body2" className="terms-text">
+                                    בהרשמה את מסכימה ל
+                                    <Link href="#" className="terms-link">
+                                        תנאי השימוש
+                                    </Link>
+                                    ול
+                                    <Link href="#" className="terms-link">
+                                        מדיניות הפרטיות
+                                    </Link>
+                                </Typography>
+                            </Box>
+                        </CardContent>
+                    </Card>
+                </Grow>
+            </Box>
+        </Box>
     )
 }
-
-
-
 export default Register

@@ -14,7 +14,6 @@ import {
   Paper
 } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
-import AddItem_Alert from "./oldPages/AddItem_Alert";
 import { useState } from "react";
 import Item from "../interfaces/Items"; // ייבוא ה-interface
 import { zodResolver } from "@hookform/resolvers/zod";

@@ -12,17 +12,18 @@ import { selectUser } from "../redux/slices/userSlice"
 import { selectItemInLaundry, setAllItems, setItemsInLaundry, updateAllItems } from "../redux/slices/itemSlice"
 import { useDispatch } from "react-redux"
 import "../css/LaundryBasket.css"
-import Weather from "../pages/Weather"
+import Weather from "./Weather"
+import { useCookies } from "react-cookie"
 
 const Header = () => {
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [updateItemInLaundry] = useUpdateItemInLaundryBasketMutation()
   const [isSideNavOpen, setIsSideNavOpen] = useState(false)
   const user: Users = useSelector(selectUser)
+ const [, , removeCookie] = useCookies(['token']);  
   const { data, error, isLoading } = useGetAllItemsQuery(user._id)
   const itemInLaundryBasket = useSelector(selectItemInLaundry)
   const dispatch = useDispatch()
-
   const handleUpdateItem = async (_id: string) => {
     try {
       const { itemsInLaundry, updatedItem } = await updateItemInLaundry({
@@ -41,7 +42,10 @@ const Header = () => {
   const closeBasket = () => {
     setIsSideNavOpen(false)
   }
-
+  const logOut=()=>{
+     removeCookie('token');
+     localStorage.clear();
+  }
   const allItemsInLaundry = async () => {
     setIsSideNavOpen(true)
     await fetchWardrobe()
@@ -72,7 +76,7 @@ const Header = () => {
         <Tooltip
           title={
             <Paper sx={{ p: 2, minWidth: 250, bgcolor: "rgba(255, 255, 255, 0.98)" }}>
-              <Weather city="תל אביב" />
+              <Weather city={user.city.trim()} />
             </Paper>
           }
           arrow
@@ -138,6 +142,7 @@ const Header = () => {
             />
           )}
         </IconButton>
+        <button onClick={logOut}>התנתק</button>;
       </header>
 
       <nav className="drawer" style={{ right: `${drawerOpen ? "0" : "-300px"}` }}>

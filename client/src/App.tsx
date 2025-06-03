@@ -6,7 +6,6 @@ import store from './redux/store'
 import router from './routes/AppRoute'
 import Register from './pages/Register'
 import './css/try.css'
-import Register2 from './pages/Register2'
 
 
 
@@ -19,7 +18,7 @@ function App() {
         {cookies.token ?
           <RouterProvider router={router}>
           </RouterProvider>
-          : <Register2/>}
+          : <Register/>}
       </Provider>
 
     </>

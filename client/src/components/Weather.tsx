@@ -8,7 +8,7 @@
 // Weather.js
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import ShirtHangerLoader from '../components/ShirtHangerLoader';
+import ShirtHangerLoader from './ShirtHangerLoader';
 interface WeatherAProps {
   city: String;
 }
@@ -33,7 +33,9 @@ const
           console.log(response);
 
         } catch (err) {
-          setError('לא ניתן לשלוף נתונים.');
+          setError('לא ניתן לשלוף נתונים');
+          console.log(city,"city");
+          
           setLoading(false);
         }
       };
