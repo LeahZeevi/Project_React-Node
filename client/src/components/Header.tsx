@@ -1,11 +1,10 @@
-"use client"
-
 import { useEffect, useState } from "react"
 import { NavLink } from "react-router"
-import { Drawer, Box, Typography, IconButton, Card, CardMedia, Fade, Zoom, Chip } from "@mui/material"
+import { Drawer, Box, Typography, IconButton, Card, CardMedia, Fade, Zoom, Chip, Tooltip, Paper } from "@mui/material"
 import CloseIcon from "@mui/icons-material/Close"
 import LocalLaundryServiceIcon from "@mui/icons-material/LocalLaundryService"
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline"
+import WbSunnyIcon from "@mui/icons-material/WbSunny"
 import { useGetAllItemsQuery, useUpdateItemInLaundryBasketMutation } from "../redux/api/apiSllices/itemsApiSlice"
 import type { Users } from "../interfaces/Users"
 import { useSelector } from "react-redux"
@@ -13,6 +12,7 @@ import { selectUser } from "../redux/slices/userSlice"
 import { selectItemInLaundry, setAllItems, setItemsInLaundry, updateAllItems } from "../redux/slices/itemSlice"
 import { useDispatch } from "react-redux"
 import "../css/LaundryBasket.css"
+import Weather from "../pages/Weather"
 
 const Header = () => {
   const [drawerOpen, setDrawerOpen] = useState(false)
@@ -61,7 +61,7 @@ const Header = () => {
   useEffect(() => {
     fetchWardrobe()
   }, [])
-
+  console.log(user.city + " ciry of user");
   return (
     <div className="app">
       <header className="header">
@@ -69,6 +69,42 @@ const Header = () => {
           ☰
         </button>
         <h1>הארון הדיגיטלי שלי</h1>
+        <Tooltip
+          title={
+            <Paper sx={{ p: 2, minWidth: 250, bgcolor: "rgba(255, 255, 255, 0.98)" }}>
+              <Weather city="תל אביב" />
+            </Paper>
+          }
+          arrow
+          placement="bottom"
+          PopperProps={{
+            sx: {
+              "& .MuiTooltip-tooltip": {
+                bgcolor: "transparent",
+                p: 0,
+                boxShadow: 3,
+                borderRadius: 2,
+              },
+            },
+          }}
+        >
+          <IconButton
+            sx={{
+              background: "linear-gradient(45deg, rgba(194, 18, 146, 0.85), rgba(99, 102, 241, 0.85))",
+              color: "white",
+              "&:hover": {
+                background: "linear-gradient(45deg, rgba(194, 18, 146, 0.95), rgba(99, 102, 241, 0.95))",
+                transform: "scale(1.05)",
+              },
+              transition: "all 0.3s ease",
+              width: 48,
+              height: 48,
+              marginLeft:3
+            }}
+          >
+            <WbSunnyIcon />
+          </IconButton>
+        </Tooltip>
         <IconButton
           onClick={allItemsInLaundry}
           className="basket-icon-btn"
@@ -80,6 +116,8 @@ const Header = () => {
               transform: "scale(1.05)",
             },
             transition: "all 0.3s ease",
+              width: 48,
+              height: 48,
           }}
         >
           <LocalLaundryServiceIcon />

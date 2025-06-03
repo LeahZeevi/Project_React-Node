@@ -68,6 +68,7 @@ const ShirtHangerLoader: React.FC = () => {
         <line x1="95" y1="55" x2="95" y2="120" stroke="#3f6ccf" strokeWidth="1" />
         <line x1="80" y1="70" x2="80" y2="130" stroke="#2f4eb2" strokeWidth="1" strokeDasharray="3 2" />
       </svg>
+      
     </div>
   );
 };
