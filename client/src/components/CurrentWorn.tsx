@@ -20,8 +20,8 @@ const MotionFavoriteIcon = motion(FavoriteIcon);
 const MotionFavoriteBorderIcon = motion(FavoriteBorderIcon);
 
 
-const CurrentWorn = () => {
 
+const CurrentWorn = () => {
   const user: Users = useSelector(selectUser);
   const [addEventWearning] = useAddEventWearningMutation()
   const [addHistory] = useAddHistoryItemMutation();
@@ -114,6 +114,7 @@ const CurrentWorn = () => {
           <div className="outfit-items">
             {wornItems.map(item => (
               <div key={item._id} className="outfit-chip">
+
                 <button onClick={() => updateItem(item, false)} className="remove-btn">×</button>
                 <span>{item.itemName}</span>
               </div>

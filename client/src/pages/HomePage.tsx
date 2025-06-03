@@ -48,6 +48,7 @@ const HomePage = () => {
     return (
 
         <div className="page-content">
+
             {/* <WeatherWidget city={user.city.trim()} /> */}
             <CurrentWorn />
             <div className="stats-grid">
