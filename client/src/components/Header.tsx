@@ -99,7 +99,7 @@ const Header = () => {
               transition: "all 0.3s ease",
               width: 48,
               height: 48,
-              marginLeft:3
+              marginLeft: 3
             }}
           >
             <WbSunnyIcon />
@@ -116,8 +116,8 @@ const Header = () => {
               transform: "scale(1.05)",
             },
             transition: "all 0.3s ease",
-              width: 48,
-              height: 48,
+            width: 48,
+            height: 48,
           }}
         >
           <LocalLaundryServiceIcon />
@@ -156,6 +156,14 @@ const Header = () => {
         >
           <span className="menu-icon">👔</span>
           הארון שלי
+        </NavLink>
+        <NavLink
+          to="/myLocks"
+          className={`menu-item ${location.pathname === "/myLocks" ? "active" : ""}`}
+          onClick={() => setDrawerOpen(false)}
+        >
+          <span className="menu-icon">👞👖👕</span>
+          הלוקים שלי
         </NavLink>
         <NavLink to="/graphs" className={`menu-item ${location.pathname === '/graphs' ? 'active' : ''}`} onClick={() => setDrawerOpen(false)} >
           <span className="menu-icon">📊</span>
