@@ -72,7 +72,7 @@ const Header = () => {
         <Tooltip
           title={
             <Paper sx={{ p: 2, minWidth: 250, bgcolor: "rgba(255, 255, 255, 0.98)" }}>
-              <Weather city="תל אביב" />
+              <Weather city={user.city}/>
             </Paper>
           }
           arrow
