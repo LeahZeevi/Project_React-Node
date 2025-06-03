@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { NavLink } from "react-router"
 import { Drawer, Box, Typography, IconButton, Card, CardMedia, Fade, Zoom, Chip, Tooltip, Paper } from "@mui/material"
+import ExitToAppIcon from "@mui/icons-material/ExitToApp"
 import CloseIcon from "@mui/icons-material/Close"
 import LocalLaundryServiceIcon from "@mui/icons-material/LocalLaundryService"
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline"
@@ -142,7 +143,6 @@ const Header = () => {
             />
           )}
         </IconButton>
-        <button onClick={logOut}>התנתק</button>;
       </header>
 
       <nav className="drawer" style={{ right: `${drawerOpen ? "0" : "-300px"}` }}>
@@ -166,6 +166,10 @@ const Header = () => {
           <span className="menu-icon">📊</span>
           ניתוח נתוני לבישה
         </NavLink>
+        <div className={`menu-item ${location.pathname === '/graphs' ? 'active' : ''} exit`} onClick={logOut} >
+          <span className="menu-icon">🎯</span>
+          יציאה
+        </div>
       </nav>
 
       <Drawer
