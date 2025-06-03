@@ -1,10 +1,10 @@
 import { z } from "zod";
 
 export const RegisterUserSchema = z.object({
-  userName: z.string().min(2, "שם משתמש חייב להכיל לפחות 2 תווים"),
-  city: z.string().min(1, "יש לבחור עיר"),
-  email: z.string().email("כתובת אימייל לא תקינה"),
-  password: z.string().min(6, "סיסמה חייבת להכיל לפחות 6 תווים"),
+  userName: z.string().min(2,"Username must contain at least 2 characters" ),
+  city: z.string().min(1, "You have to choose a city"),
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(6, "Password must contain at least 6 characters"),
 })
 
 export const UserSchema = z.object({

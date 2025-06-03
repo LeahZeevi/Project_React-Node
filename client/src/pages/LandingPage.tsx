@@ -104,7 +104,7 @@ const LandingPage = () => {
                                     </Fade>
                                 </Box>
 
-                                {/* CTA Button */}
+                                {/* Start Button */}
                                 <Grow in={true} timeout={1800}>
                                     <Button
                                         onClick={() => setIsRegister(true)}

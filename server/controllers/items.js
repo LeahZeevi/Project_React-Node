@@ -31,7 +31,7 @@ exports.addItem = async (req, res) => {
     const newItem = await Item.create(item);
 
     if (newItem) {
-      return res.status(201).json(newItem);
+      return res.status(201).json({newItem:newItem});
     } else {
       return res.status(500).json({ message: "Item creation failed. Please try again later." });
     }

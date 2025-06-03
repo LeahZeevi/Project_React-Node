@@ -1,19 +1,5 @@
-import {
-  Button,
-  TextField,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  RadioGroup,
-  FormControlLabel,
-  Radio,
-  Box,
-  Stack,
-  Typography,
-  Paper,
-  Alert
-} from "@mui/material";
+import {Button,TextField,FormControl,InputLabel,Select,MenuItem,RadioGroup,FormControlLabel,Radio,
+  Box,Stack,Typography,Paper,Alert} from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import { useState } from "react";
 import Item from "../interfaces/Items"; // ייבוא ה-interface
@@ -24,6 +10,7 @@ import { useAddItemMutation } from '../redux/api/apiSllices/itemsApiSlice';
 import { useNavigate } from "react-router";
 import { useSelector, useDispatch } from "react-redux"; // ייבוא useDispatch
 import { selectUser } from "../redux/slices/userSlice";
+import { setAllItems } from "../redux/slices/itemSlice";
 
 const AddItem = () => {
   const { register, handleSubmit, formState: { errors }, control, reset } = useForm({ mode: "onChange", resolver: zodResolver(ItemSchema) });
@@ -31,9 +18,19 @@ const AddItem = () => {
   const [image, setImage] = useState<string | null>(null);
   const navigate = useNavigate();
   const [addItem] = useAddItemMutation();
+  const dispatch = useDispatch();
   const user: Users = useSelector(selectUser)
   const [message, setMessage] = useState("");
   const [alertError, setAlertError] = useState(false);
+
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      setImage(URL.createObjectURL(event.target.files[0]));
+      console.log("תמונה שהועלתה:", event.target.files[0]);
+    }
+  };
+
+
   const onSubmit = async (data: any) => {
     const formData = new FormData();
     if (data.image && data.image[0]) {
@@ -42,7 +39,6 @@ const AddItem = () => {
         method: "POST",
         body: formData
       });
-
       const result = await flaskResponse.json();
       console.log("זיהוי המודל:", result);
       formData.append("userId", user._id);
@@ -54,15 +50,14 @@ const AddItem = () => {
       console.log("data.image[0]:", data.image[0]);
 
       try {
-        const response = await addItem({ _id: user._id, newItem: formData });
+        const response: { newItem: Item } = await addItem({ _id: user._id, newItem: formData }).unwrap();
+        if (response) {
+          dispatch(setAllItems(response.newItem))
+        }
         setImage(null);
-        reset({
-          itemName: '',
-          session: 'חורף',
-          style: '',
-          image: "",
-        });
+        reset({ itemName: '', session: 'חורף', style: '', image: "", });
         navigate("/");
+
       }
       catch (error: any) {
         if (error?.data?.message) {
@@ -77,13 +72,8 @@ const AddItem = () => {
     }
   }
 
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files[0]) {
-      setImage(URL.createObjectURL(event.target.files[0]));
-      console.log("תמונה שהועלתה:", event.target.files[0]);
 
-    }
-  };
+
 
   return (
     <div>
@@ -92,6 +82,7 @@ const AddItem = () => {
           <Typography variant="h5" color="secondary" textAlign="center" mb={3}>
             הוספת בגד לארון
           </Typography>
+          
           <form onSubmit={handleSubmit(onSubmit)}>
             <Stack spacing={3}>
               <TextField label="שם הפריט" variant="outlined" color='secondary' {...register("itemName")} fullWidth />
