@@ -69,7 +69,6 @@ const CurrentWorn = () => {
 
   return (
     <div>
-
       <div className="current-outfit">
         {wornItems.length > 1 && (
           <IconButton

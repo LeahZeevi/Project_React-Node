@@ -66,7 +66,6 @@ const Header = () => {
   useEffect(() => {
     fetchWardrobe()
   }, [])
-  console.log(user.city + " ciry of user");
   return (
     <div className="app">
       <header className="header">
