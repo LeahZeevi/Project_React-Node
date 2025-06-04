@@ -8,6 +8,7 @@ import axios from "axios"
 import {
     Box, Typography, Button, TextField, Card, CardContent, Tabs, Tab, Select, MenuItem,
     FormControl, InputLabel, IconButton, InputAdornment, FormHelperText, Link, Fade, Grow, Alert,
+    Autocomplete,
 } from "@mui/material"
 import { Visibility, VisibilityOff, Checkroom, } from "@mui/icons-material"
 import "../css/Register.css"
@@ -213,7 +214,7 @@ const Register = () => {
                                                                 />
                                                             </Box>
 
-                                                            <Box className="form-field">
+                                                            {/* <Box className="form-field">
                                                                 <FormControl fullWidth className="custom-textfield">
                                                                     <InputLabel>עיר</InputLabel>
                                                                     <Controller name="city" control={controlRegister}
@@ -230,6 +231,31 @@ const Register = () => {
                                                                     {errorsRegister.city && (
                                                                         <FormHelperText error>{errorsRegister.root?.message}</FormHelperText>
                                                                     )}
+                                                                </FormControl>
+                                                            </Box> */}
+
+                                                            <Box className="form-field">
+                                                                <FormControl fullWidth className="custom-textfield">
+                                                                    <Controller
+                                                                        name="city"
+                                                                        control={controlRegister}
+                                                                        render={({ field }) => (
+                                                                            <Autocomplete
+                                                                                options={cities}
+                                                                                freeSolo // אם תרצי לאפשר גם הקלדה חופשית ולא רק מהרשימה
+                                                                                onChange={(_, value) => field.onChange(value)}
+                                                                                value={field.value || ''}
+                                                                                renderInput={(params) => (
+                                                                                    <TextField
+                                                                                        {...params}
+                                                                                        label="עיר"
+                                                                                        error={!!errorsRegister.city}
+                                                                                        helperText={errorsRegister.city?.message}
+                                                                                    />
+                                                                                )}
+                                                                            />
+                                                                        )}
+                                                                    />
                                                                 </FormControl>
                                                             </Box>
 
