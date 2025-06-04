@@ -1,12 +1,12 @@
 // src/pages/SharedLookPage.tsx
 import { useParams } from 'react-router';
 import { useEffect, useState } from 'react';
-import { Look } from '../interfaces/Look';
+import { Looks } from '../interfaces/Looks';
 import { Typography, Card, CardMedia, CardContent, Button, TextField } from '@mui/material';
 
 export default function SharedLookPage() {
   const { lookId } = useParams<{ lookId: string }>();
-  const [look, setLook] = useState<Look | null>(null);
+  const [look, setLook] = useState<Looks | null>(null);
   const [comment, setComment] = useState('');
 
   useEffect(() => {
@@ -18,10 +18,10 @@ export default function SharedLookPage() {
     if (!look) return;
     const updatedLook = {
       ...look,
-      comments: [...(look.comments || []), comment],
+      comments: [...(look.itemsInlook || []), comment],
     };
     const savedLooks = JSON.parse(localStorage.getItem('sharedLooks') || '{}');
-    savedLooks[look.id] = updatedLook;
+    savedLooks[look._id] = updatedLook;
     localStorage.setItem('sharedLooks', JSON.stringify(savedLooks));
     setLook(updatedLook);
     setComment('');
@@ -31,9 +31,9 @@ export default function SharedLookPage() {
 
   return (
     <div style={{ padding: 20 }}>
-      <Typography variant="h4" gutterBottom>{look.title}</Typography>
+      <Typography variant="h4" gutterBottom>{look.nameLook}</Typography>
       <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-        {look.items.map((item, i) => (
+        {look.itemsInlook.map((item, i) => (
           <Card key={i} style={{ width: 150 }}>
             <CardMedia image={item.image} style={{ height: 150 }} />
             <CardContent>
@@ -57,8 +57,8 @@ export default function SharedLookPage() {
 
       <div style={{ marginTop: 30 }}>
         <Typography variant="h6">תגובות</Typography>
-        {look.comments?.map((c, i) => (
-          <Typography key={i} style={{ borderBottom: '1px solid #ccc' }}>{c}</Typography>
+        {look.itemsInlook?.map((c, i) => (
+          <Typography key={i} style={{ borderBottom: '1px solid #ccc' }}>{c.itemName}</Typography>
         ))}
       </div>
     </div>

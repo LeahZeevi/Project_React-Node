@@ -15,6 +15,7 @@ const itemsRouter = require('./routes/items')
 const historyRouter = require('./routes/history')
 const wearning=require('./routes/wearnings')
 const predictRoute = require('./routes/predictRoute');
+const looks = require('./routes/looks');
 const app=express();
 
 const cachePath = path.join(__dirname, 'predictions_cache.json');
@@ -37,6 +38,8 @@ app.use('/items', itemsRouter)
 app.use('/weather', weatherRouter); 
 app.use('/history', historyRouter)
 app.use('/wearnings', wearning)
+app.use('/looks', looks)
+
 app.use(express.static("public"))
 // בשרת Node.js (backend)
 app.use('/uploadsPic', express.static(path.join(__dirname, 'uploadsPic')));

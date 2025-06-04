@@ -1,14 +1,17 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import Item from "../../interfaces/Items";
+import { Looks } from "../../interfaces/Looks";
 interface Items {
   allItems: Item[];
   itemsInUse: Item[];
   itemInLaundry: Item[];
+  looks: Looks[];
 }
 const initialState: Items = {
   allItems: [],
   itemsInUse: [],
-  itemInLaundry: []
+  itemInLaundry: [],
+  looks: []
 };
 
 
@@ -23,7 +26,15 @@ const itemSlice = createSlice({
         item.inLaundryBasket&&state.itemInLaundry.push(item);
       })
     },
-    
+      setAllLooks(state, action: PayloadAction<Looks[]>) {
+      state.looks= action.payload
+      action.payload.map(look=>{
+        look.itemsInlook.map(item=>{
+        item&&state.itemsInUse.push(item);
+        item.inLaundryBasket&&state.itemInLaundry.push(item);
+      })
+    })
+    },
     updateAllItems(state, action: PayloadAction<Item[]>) {
       const updatedItems = action.payload;
       state.allItems = state.allItems.map(item => {
@@ -48,16 +59,24 @@ const itemSlice = createSlice({
       } else {
         state.itemInLaundry.push(payload); // אם זה פריט יחיד
       }
+    },
+    addLook(state, action: PayloadAction<Looks>) {
+      const look = action.payload;
+      if (!state.looks.some(existingLook => existingLook._id === look._id)) {
+        state.looks.push(look);
+      }
     }
   }
 });
 export const selectItemInUse = (state: { items: Items }): Item[] => { return state.items.itemsInUse };
 export const selectItemInLaundry = (state: { items: Items }): Item[] => { return state.items.itemInLaundry };
 export const selectAllItems = (state: { items: Items }): Item[] => { return state.items.allItems }
+export const selectAllLooks = (state: { items: Items }): Looks[] => { return state.items.looks }
+
 // export const selectCurrentWorn = (state: { items: Items }): Item[] => {
 //   return state.items.allItems.filter(item => item.inUse);
 // };
-export const { setItemsInUse, setItemsInLaundry, setAllItems,updateAllItems} = itemSlice.actions;
+export const { setItemsInUse, setItemsInLaundry, setAllItems,updateAllItems,setAllLooks} = itemSlice.actions;
 
 
 

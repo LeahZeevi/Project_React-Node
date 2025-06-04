@@ -13,6 +13,7 @@ import { selectItemInLaundry, setAllItems, setItemsInLaundry, updateAllItems } f
 import { useDispatch } from "react-redux"
 import "../css/LaundryBasket.css"
 import Weather from "../pages/Weather"
+import { Style } from "@mui/icons-material"
 
 const Header = () => {
   const [drawerOpen, setDrawerOpen] = useState(false)
@@ -162,7 +163,19 @@ const Header = () => {
           className={`menu-item ${location.pathname === "/myLocks" ? "active" : ""}`}
           onClick={() => setDrawerOpen(false)}
         >
-          <span className="menu-icon">👞👖👕</span>
+          {/* <span className="menu-icon">👞👖👕</span> */}
+           <Box
+      sx={{
+        background: "linear-gradient(135deg, rgb(187, 2, 156) 0%, rgb(101, 120, 227) 100%)",
+        borderRadius: "8px",
+        p: 0.5,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <Style sx={{ fontSize: 18, color: "white" }} />
+    </Box>
           הלוקים שלי
         </NavLink>
         <NavLink to="/graphs" className={`menu-item ${location.pathname === '/graphs' ? 'active' : ''}`} onClick={() => setDrawerOpen(false)} >
@@ -262,7 +275,7 @@ const Header = () => {
                       <Box sx={{ position: "relative", p: 1 }}>
                         <CardMedia
                           component="img"
-                          image={`http://localhost:3000/${item.image.replace(/^public[\\/]/, "")}`}
+                          image={`http://localhost:3001/${item.image.replace(/^public[\\/]/, "")}`}
                           alt={item.itemName}
                         />
                         <IconButton

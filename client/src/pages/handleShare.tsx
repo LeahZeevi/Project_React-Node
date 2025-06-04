@@ -1,20 +1,20 @@
 // בתוך הקומפוננטה שמציגה את הלוקים
 
 import { Button } from '@mui/material';
-import { Look } from '../interfaces/Look';
+import { Looks } from '../interfaces/Looks';
 
-const handleShare = (look: Look) => {
+const handleShare = (look: Looks) => {
   const savedLooks = JSON.parse(localStorage.getItem('sharedLooks') || '{}');
-  savedLooks[look.id] = look;
+  savedLooks[look._id] = look;
   localStorage.setItem('sharedLooks', JSON.stringify(savedLooks));
-  const url = `${window.location.origin}/share/${look.id}`;
+  const url = `${window.location.origin}/share/${look._id}`;
   navigator.clipboard.writeText(url);
   alert('קישור לשיתוף הועתק');
 };
 
 // לדוגמה בלולאת map של לוקים:
-const looks: Look[] = []; // TODO: Replace with your actual data source
+const looks: Looks[] = []; // TODO: Replace with your actual data source
 
-{looks.map((look: Look) => (
-  <Button key={look.id} onClick={() => handleShare(look)} variant="outlined">שתפי</Button>
+{looks.map((look: Looks) => (
+  <Button key={look._id} onClick={() => handleShare(look)} variant="outlined">שתפי</Button>
 ))}

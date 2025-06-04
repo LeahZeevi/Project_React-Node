@@ -45,7 +45,7 @@ const Register = () => {
 
     useEffect(() => {
 
-        axios.get('http://localhost:3000/users/excel-column') // כתובת השרת של
+        axios.get('http://localhost:3001/users/excel-column') // כתובת השרת של
             .then((response) => {
                 console.log(response.data);
 

@@ -1,533 +1,673 @@
-
-
-import { useState } from "react"
+import { use, useEffect, useState } from "react"
 import {
-  Box,
-  Card,
-  CardContent,
-  Typography,
-  IconButton,
-  Button,
-  Grid,
-  Fab,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TextField,
+    Box,
+    Card,
+    Typography,
+    IconButton,
+    Button,
+    Fab,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
+    TextField,
+    Chip,
+    Avatar,
+    Collapse,
+    Divider,
+    Tooltip,
 } from "@mui/material"
-import { Checkroom, Delete, Add, LocalLaundryService } from "@mui/icons-material"
+import {
+    Delete,
+    Add,
+    LocalLaundryService,
+    Style,
+    ExpandMore,
+    ExpandLess,
+    CheckCircle,
+    Wash,
+    Edit,
+    CheckBox,
+} from "@mui/icons-material"
+import { Looks } from "../interfaces/Looks"
+import Item from "../interfaces/Items"
+import { Users } from "../interfaces/Users"
+import { useDispatch, useSelector } from "react-redux"
+import { selectUser } from "../redux/slices/userSlice"
+import { useAddLookMutation, useDeleteLookMutation, useGetAllLooksQuery, useUpdateNameOfLookMutation } from "../redux/api/apiSllices/looksApiSlice"
+import { useUpdateItemInUseMutation, useUpdateItemInLaundryBasketMutation } from "../redux/api/apiSllices/itemsApiSlice"
+import { selectAllLooks, setAllLooks, updateAllItems } from "../redux/slices/itemSlice"
 
-// Types
-interface Item {
-  _id: string
-  itemName: string
-  categoryName: string
-  image: string
-  inUse: boolean
-  inLaundryBasket: boolean
-}
 
-interface Look {
-  _id: string
-  name: string
-  items: Item[]
-}
 
-// Mock data
-const mockLooks: Look[] = [
-  {
-    _id: "1",
-    name: "לוק עבודה קלאסי",
-    items: [
-      {
-        _id: "1",
-        itemName: "חולצה לבנה",
-        categoryName: "חולצות",
-        image: "/placeholder.svg?height=150&width=150",
-        inUse: false,
-        inLaundryBasket: false,
-      },
-      {
-        _id: "2",
-        itemName: "מכנסי חליפה שחורים",
-        categoryName: "מכנסים",
-        image: "/placeholder.svg?height=150&width=150",
-        inUse: true,
-        inLaundryBasket: false,
-      },
-      {
-        _id: "3",
-        itemName: "נעלי עקב שחורות",
-        categoryName: "נעלים",
-        image: "/placeholder.svg?height=150&width=150",
-        inUse: false,
-        inLaundryBasket: true,
-      },
-    ],
-  },
-  {
-    _id: "2",
-    name: "לוק קז'ואל סוף שבוע",
-    items: [
-      {
-        _id: "4",
-        itemName: "חולצת טי שירט",
-        categoryName: "חולצות",
-        image: "/placeholder.svg?height=150&width=150",
-        inUse: false,
-        inLaundryBasket: false,
-      },
-      {
-        _id: "5",
-        itemName: "ג'ינס כחול",
-        categoryName: "מכנסים",
-        image: "/placeholder.svg?height=150&width=150",
-        inUse: false,
-        inLaundryBasket: false,
-      },
-      {
-        _id: "6",
-        itemName: "סניקרס לבנות",
-        categoryName: "נעלים",
-        image: "/placeholder.svg?height=150&width=150",
-        inUse: false,
-        inLaundryBasket: false,
-      },
-    ],
-  },
-  {
-    _id: "3",
-    name: "לוק ערב אלגנטי",
-    items: [
-      {
-        _id: "7",
-        itemName: "שמלה שחורה",
-        categoryName: "שמלות",
-        image: "/placeholder.svg?height=150&width=150",
-        inUse: false,
-        inLaundryBasket: false,
-      },
-      {
-        _id: "8",
-        itemName: "נעלי עקב זהב",
-        categoryName: "נעלים",
-        image: "/placeholder.svg?height=150&width=150",
-        inUse: false,
-        inLaundryBasket: false,
-      },
-    ],
-  },
-]
+const MyLooksPage = () => {
+    const user: Users = useSelector(selectUser);
+    console.log("MyLooksPage user:", user);
+    const looks = useSelector(selectAllLooks);
 
-const MyLooks = () => {
-  const [looks, setLooks] = useState<Look[]>(mockLooks)
-  const [openDialog, setOpenDialog] = useState(false)
-  const [newLookName, setNewLookName] = useState("")
+    // const [looks, setLooks] = useState<Looks[]>([])
+    const [openDialog, setOpenDialog] = useState(false)
+    const [openEditDialog, setOpenEditDialog] = useState(false)
+    const [newLookName, setNewLookName] = useState("")
+    const [editLookId, setEditLookId] = useState<string | null>(null)
+    const [editLookName, setEditLookName] = useState("")
+    const [expandedLook, setExpandedLook] = useState<string | null>(null)
+    const dispatch = useDispatch();
+    const [deleteLook] = useDeleteLookMutation();
+    const [addLook] = useAddLookMutation();
+    const [updateLook] = useUpdateNameOfLookMutation()
+    const [updateItemInUse] = useUpdateItemInUseMutation();
+    const [updateItemInLaundryBasket] = useUpdateItemInLaundryBasketMutation();
+    const { data, error, isLoading } = useGetAllLooksQuery(user._id, {
+        skip: !user._id,
+    });
 
-  const handleDeleteLook = (lookId: string) => {
-    setLooks((prev) => prev.filter((look) => look._id !== lookId))
-  }
+    const handleDeleteLook = async (lookId: string) => {
+        // setLooks((prev) => prev.filter((look) => look._id !== lookId))
+        // deleteLook(lookId)
+        //     .then(() => {
+        //         console.log("לוק נמחק בהצלחה")
+        //     })
+        //     .catch((err) => {
+        //         console.error("שגיאה במחיקת הלוק:", err)
+        //     })
+        try {
+            await deleteLook(lookId).unwrap();
+            // setMyWardrobe(prev => prev.filter(item => item._id !== itemForRemove._id));
+        } catch (err) {
+            console.error("שגיאה בהסרה:", err);
+        }
+    }
 
-  const handleSendToLaundry = (itemId: string, lookId: string) => {
-    setLooks((prev) =>
-      prev.map((look) =>
-        look._id === lookId
-          ? {
-              ...look,
-              items: look.items.map((item) =>
-                item._id === itemId ? { ...item, inLaundryBasket: true, inUse: false } : item,
-              ),
+    const handleSendToLaundry = (itemId: string, lookId: string) => {
+        updateItemInLaundryBasket({
+            _id: itemId,
+            inLaundryBasket: true,
+            userId: user._id,
+        })
+            .unwrap()
+            .then(() => {
+                console.log("פריט הועבר לסל הכביסה בהצלחה")
+            })
+            .catch((err) => {
+                console.error("שגיאה בהעברת הפריט לסל הכביסה:", err)
+            })
+    }
+
+    const handleWearLook = async (lookId: string) => {
+        const selectedLook = looks.find((look) => look._id === lookId);
+        if (!selectedLook) return;
+
+        try {
+            const allUpdatedItems: Item[] = [];
+
+            for (const look of looks) {
+                const shouldBeInUse = look._id === lookId;
+
+                const updatePromises = look.itemsInlook.map(async (item) => {
+                    const updatedItem = await updateItemInUse({
+                        _id: item._id,
+                        inUse: shouldBeInUse,
+                        userId: user._id,
+                    }).unwrap();
+                    const result = await updateItemInUse({
+                        _id: item._id,
+                        inUse: shouldBeInUse,
+                        userId: user._id,
+                    }).unwrap();
+
+                    allUpdatedItems.push(...result.inUseItems);
+                });
+
+                await Promise.all(updatePromises);
             }
-          : look,
-      ),
-    )
-  }
 
-  const getItemStatusColor = (item: Item) => {
-    if (item.inUse) return "#10b981"
-    if (item.inLaundryBasket) return "#f59e0b"
-    return "transparent"
-  }
+            // אחרי שכל העדכונים בוצעו, מעדכנים את הסטייט הגלובלי
+            dispatch(updateAllItems(allUpdatedItems));
+        } catch (err) {
+            console.error("שגיאה בלבישת הלוק:", err);
+        }
+    };
 
-  const getItemStatusText = (item: Item) => {
-    if (item.inUse) return "בלבישה"
-    if (item.inLaundryBasket) return "בכביסה"
-    return ""
-  }
 
-  return (
-    <Box
-      sx={{
-        minHeight: "100vh",
-        // background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-        padding: 3,
-        position: "relative",
-        "&::before": {
-          content: '""',
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background:
-            'url(\'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="%23ffffff" opacity="0.05"/><circle cx="75" cy="75" r="1" fill="%23ffffff" opacity="0.05"/><circle cx="50" cy="10" r="0.5" fill="%23ffffff" opacity="0.03"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>\')',
-          pointerEvents: "none",
-        },
-      }}
-    >
-      {/* Header */}
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          mb: 4,
-          position: "relative",
-          zIndex: 1,
-        }}
-      >
-     
-      </Box>
+    const handleEditLook = (lookId: string) => {
+        const look = looks.find((l) => l._id === lookId)
+        if (look) {
+            setEditLookId(lookId)
+            setEditLookName(look.nameLook || "")
+            setOpenEditDialog(true)
+        }
+    }
 
-      {/* Looks List */}
-      <Box sx={{ display: "flex", flexDirection: "column", gap: 3, position: "relative", zIndex: 1 }}>
-        {looks.map((look, index) => (
-          <Card
-            key={look._id}
+    const handleSaveEditLook = () => {
+        if (editLookId) {
+            updateLook({ _id: editLookId, nameLook: editLookName })
+                .unwrap()
+                .then(() => {
+                    const updatedLooks = looks.map((look: Looks) =>
+                        look._id === editLookId
+                            ? {
+                                ...look,
+                                nameLook: editLookName,
+                            }
+                            : look,
+                    );
+                    dispatch(setAllLooks(updatedLooks));
+                    setOpenEditDialog(false);
+                    setEditLookId(null);
+                    setEditLookName("");
+                })
+                .catch((err) => {
+                    console.error("שגיאה בעדכון לוק:", err);
+                });
+        }
+    };
+
+    const toggleExpandLook = (lookId: string) => {
+        setExpandedLook(expandedLook === lookId ? null : lookId)
+    }
+
+    const getItemStatusColor = (item: Item) => {
+        if (item.inUse) return "#10b981"
+        if (item.inLaundryBasket) return "#f59e0b"
+        return "#e2e8f0"
+    }
+
+    const getItemStatusText = (item: Item) => {
+        if (item.inUse) return "בלבישה"
+        if (item.inLaundryBasket) return "בכביסה"
+        return "זמין"
+    }
+
+    useEffect(() => {
+        if (data) {
+            // setLooks(data);
+        }
+    }, [data]);
+
+    const fetchWardrobe = async () => {
+        if (looks.length === 0) {
+            try {
+                const looks = data ? data : [];
+                dispatch(setAllLooks(looks));
+            } catch (err) {
+                console.error('שגיאה בקבלת פריטים:', err);
+            }
+        }
+    };
+
+    useEffect(() => {
+        fetchWardrobe();
+    }, [data]);
+
+    useEffect(() => {
+    }, [looks]);
+
+    return (
+        <Box
             sx={{
-              borderRadius: "24px",
-              overflow: "hidden",
-              background: "rgba(255,255,255,0.95)",
-              backdropFilter: "blur(20px)",
-              border: "1px solid rgba(255,255,255,0.3)",
-              boxShadow: "0 20px 40px rgba(0,0,0,0.1)",
-              transition: "all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-              transform: `translateY(${index * 2}px)`,
-              "&:hover": {
-                transform: "translateY(-8px) scale(1.02)",
-                boxShadow: "0 30px 60px rgba(0,0,0,0.2)",
-              },
+                minHeight: "100vh",
+                padding: 3,
             }}
-          >
-            {/* Look Header */}
-            <Box
-              sx={{
-                p: 3,
-                background: `linear-gradient(135deg, 
-                  ${index % 3 === 0 ? "#ff6b6b, #feca57" : index % 3 === 1 ? "#48cae4, #023e8a" : "#f72585, #b5179e"})`,
-                color: "white",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                position: "relative",
-                "&::before": {
-                  content: '""',
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  background: "linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%)",
-                  animation: "shimmer 3s infinite",
-                },
-                "@keyframes shimmer": {
-                  "0%": { transform: "translateX(-100%)" },
-                  "100%": { transform: "translateX(100%)" },
-                },
-              }}
-            >
-              <Box sx={{ display: "flex", alignItems: "center", zIndex: 1 }}>
-                <Box
-                  sx={{
-                    background: "rgba(255,255,255,0.2)",
-                    borderRadius: "12px",
-                    p: 1,
-                    mr: 2,
-                  }}
-                >
-                  <Checkroom sx={{ fontSize: 20 }} />
-                </Box>
-                <Typography
-                  variant="h5"
-                  sx={{
-                    fontWeight: "700",
-                    textShadow: "0 2px 10px rgba(0,0,0,0.3)",
-                    letterSpacing: "-0.3px",
-                  }}
-                >
-                  {look.name}
-                </Typography>
-              </Box>
-              <IconButton
-                onClick={() => handleDeleteLook(look._id)}
-                sx={{
-                  color: "white",
-                  background: "rgba(255,255,255,0.2)",
-                  "&:hover": {
-                    background: "rgba(255,255,255,0.3)",
-                    transform: "scale(1.1)",
-                  },
-                  zIndex: 1,
-                }}
-              >
-                <Delete />
-              </IconButton>
+        >
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+                {looks.map((look, index) => (
+                    <Card
+                        key={look._id}
+                        sx={{
+                            borderRadius: "16px",
+                            overflow: "hidden",
+                            background: "white",
+                            boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
+                            border: "1px solid #f1f5f9",
+                            transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                            "&:hover": {
+                                transform: "translateY(-4px)",
+                                boxShadow: "0 8px 30px rgba(0,0,0,0.12)",
+                            },
+                        }}
+                    >
+                        {/* Look Header - Only colored part */}
+                        <Box
+                            sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "space-between",
+                                p: 2.5,
+                                background: "linear-gradient(135deg, rgb(187, 2, 156) 0%, rgb(101, 120, 227) 100%)",
+                            }}
+                        >
+                            <Box sx={{ display: "flex", alignItems: "center" }}>
+                                <Typography
+                                    variant="h6"
+                                    sx={{
+                                        fontWeight: "700",
+                                        color: "white",
+                                        textShadow: "0 1px 2px rgba(0,0,0,0.1)",
+                                    }}
+                                >
+                                    {look.nameLook || `לוק ${index + 1}`}
+                                </Typography>
+                                <Chip
+                                    label={`${look.itemsInlook.length} פריטים`}
+                                    size="small"
+                                    sx={{
+                                        ml: 2,
+                                        height: 24,
+                                        fontWeight: "600",
+                                        fontSize: "0.7rem",
+                                        background: "rgba(255,255,255,0.2)",
+                                        color: "white",
+                                        borderRadius: "8px",
+                                    }}
+                                />
+                            </Box>
+                            <Box sx={{ display: "flex", gap: 0.5 }}>
+                                <Tooltip title="לבש את הלוק">
+                                    <IconButton
+                                        size="small"
+                                        onClick={() => handleWearLook(look._id)}
+                                        sx={{
+                                            color: "white",
+                                            background: "rgba(255,255,255,0.2)",
+                                            "&:hover": { background: "rgba(255,255,255,0.3)" },
+                                            width: 32,
+                                            height: 32,
+                                        }}
+                                    >
+                                        <CheckBox fontSize="small" />
+                                    </IconButton>
+                                </Tooltip>
+                                <Tooltip title="ערוך שם">
+                                    <IconButton
+                                        size="small"
+                                        onClick={() => handleEditLook(look._id)}
+                                        sx={{
+                                            color: "white",
+                                            background: "rgba(255,255,255,0.2)",
+                                            "&:hover": { background: "rgba(255,255,255,0.3)" },
+                                            width: 32,
+                                            height: 32,
+                                        }}
+                                    >
+                                        <Edit fontSize="small" />
+                                    </IconButton>
+                                </Tooltip>
+                                <Tooltip title={expandedLook === look._id ? "סגור" : "פתח"}>
+                                    <IconButton
+                                        size="small"
+                                        onClick={() => toggleExpandLook(look._id)}
+                                        sx={{
+                                            color: "white",
+                                            background: "rgba(255,255,255,0.2)",
+                                            "&:hover": { background: "rgba(255,255,255,0.3)" },
+                                            width: 32,
+                                            height: 32,
+                                        }}
+                                    >
+                                        {expandedLook === look._id ? <ExpandLess fontSize="small" /> : <ExpandMore fontSize="small" />}
+                                    </IconButton>
+                                </Tooltip>
+                                <Tooltip title="מחק">
+                                    <IconButton
+                                        size="small"
+                                        onClick={() => handleDeleteLook(look._id)}
+                                        sx={{
+                                            color: "white",
+                                            background: "rgba(255,255,255,0.2)",
+                                            "&:hover": { background: "rgba(255,255,255,0.3)" },
+                                            width: 32,
+                                            height: 32,
+                                        }}
+                                    >
+                                        <Delete fontSize="small" />
+                                    </IconButton>
+                                </Tooltip>
+                            </Box>
+                        </Box>
+
+                        {/* Look Content - White background */}
+                        <Box sx={{ p: 3, background: "white" }}>
+                            <Box
+                                sx={{
+                                    display: "flex",
+                                    overflowX: "auto",
+                                    gap: 2,
+                                    pb: 1,
+                                    "&::-webkit-scrollbar": {
+                                        height: 6,
+                                    },
+                                    "&::-webkit-scrollbar-track": {
+                                        background: "#f1f5f9",
+                                        borderRadius: 3,
+                                    },
+                                    "&::-webkit-scrollbar-thumb": {
+                                        background: "#cbd5e1",
+                                        borderRadius: 3,
+                                    },
+                                }}
+                            >
+                                {look.itemsInlook.map((item) => (
+                                    <Box
+                                        key={item._id}
+                                        sx={{
+                                            display: "flex",
+                                            flexDirection: "row",
+                                            alignItems: "center",
+                                            minWidth: "auto",
+                                            background: "#f8fafc",
+                                            borderRadius: "12px",
+                                            border: `2px solid ${item.inUse ? "#10b981" : item.inLaundryBasket ? "#f59e0b" : "#e2e8f0"}`,
+                                            overflow: "hidden",
+                                            transition: "transform 0.2s ease, box-shadow 0.2s ease",
+                                            "&:hover": {
+                                                transform: "translateY(-2px)",
+                                                boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                                            },
+                                        }}
+                                    >
+                                        <Box
+                                            sx={{
+                                                position: "relative",
+                                                width: 70,
+                                                height: 70,
+                                            }}
+                                        >
+                                            <Box
+                                                sx={{
+                                                    width: "100%",
+                                                    height: "100%",
+                                                    backgroundImage: `url(http://localhost:3001/${item.image.replace(/^public[\\/]/, '')} )`,
+
+
+                                                    backgroundSize: "cover",
+                                                    backgroundPosition: "center",
+                                                }}
+                                            />
+                                            {(item.inUse || item.inLaundryBasket) && (
+                                                <Box
+                                                    sx={{
+                                                        position: "absolute",
+                                                        top: 4,
+                                                        right: 4,
+                                                        background: item.inUse ? "#10b981" : "#f59e0b",
+                                                        borderRadius: "50%",
+                                                        width: 20,
+                                                        height: 20,
+                                                        display: "flex",
+                                                        alignItems: "center",
+                                                        justifyContent: "center",
+                                                        boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
+                                                    }}
+                                                >
+                                                    {item.inUse ? (
+                                                        <CheckCircle sx={{ fontSize: 14, color: "white" }} />
+                                                    ) : (
+                                                        <Wash sx={{ fontSize: 14, color: "white" }} />
+                                                    )}
+                                                </Box>
+                                            )}
+                                        </Box>
+                                        <Box sx={{ p: 1.5, px: 2 }}>
+                                            <Typography
+                                                variant="body2"
+                                                sx={{
+                                                    fontWeight: "600",
+                                                    color: "#1e293b",
+                                                    whiteSpace: "nowrap",
+                                                    mb: 0.5,
+                                                }}
+                                            >
+                                                {item.itemName}
+                                            </Typography>
+                                            <Typography
+                                                variant="caption"
+                                                sx={{
+                                                    color: "#64748b",
+                                                    display: "block",
+                                                    mb: item.inUse && !item.inLaundryBasket ? 0.5 : 0,
+                                                }}
+                                            >
+                                                {item.categoryName}
+                                            </Typography>
+                                            {item.inUse && !item.inLaundryBasket && (
+                                                <Button
+                                                    size="small"
+                                                    variant="text"
+                                                    startIcon={<LocalLaundryService sx={{ fontSize: 12 }} />}
+                                                    onClick={() => handleSendToLaundry(item._id, look._id)}
+                                                    sx={{
+                                                        color: "#f59e0b",
+                                                        p: 0,
+                                                        minWidth: "auto",
+                                                        fontSize: "0.7rem",
+                                                        fontWeight: "600",
+                                                        "&:hover": {
+                                                            background: "transparent",
+                                                            color: "#ea580c",
+                                                        },
+                                                    }}
+                                                >
+                                                    לכביסה
+                                                </Button>
+                                            )}
+                                        </Box>
+                                    </Box>
+                                ))}
+                            </Box>
+                        </Box>
+
+                        {/* Expanded Content - White background */}
+                        <Collapse in={expandedLook === look._id}>
+                            <Divider sx={{ borderColor: "#f1f5f9" }} />
+                            <Box sx={{ p: 3, background: "white" }}>
+                                <Typography variant="subtitle2" sx={{ mb: 2, fontWeight: "600", color: "#475569" }}>
+                                    פרטי הלוק
+                                </Typography>
+                                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 3 }}>
+                                    {look.itemsInlook.map((item) => (
+                                        <Chip
+                                            key={item._id}
+                                            avatar={
+                                                <Avatar
+                                                    src={item.image ? `http://localhost:3001/${item.image.replace(/^public[\\/]/, '')}` : 'path/to/default/image.jpg'}
+                                                    sx={{
+                                                        border: `2px solid ${item.inUse ? "#10b981" : item.inLaundryBasket ? "#f59e0b" : "#e2e8f0"
+                                                            }`,
+                                                    }}
+                                                />
+                                            }
+                                            label={`${item.itemName} (${getItemStatusText(item)})`}
+                                            variant="outlined"
+                                            sx={{
+                                                borderColor: "#e2e8f0",
+                                                "& .MuiChip-label": {
+                                                    color: "#475569",
+                                                },
+                                            }}
+                                        />
+                                    ))}
+                                </Box>
+                                <Button
+                                    variant="contained"
+                                    startIcon={<CheckBox />}
+                                    onClick={() => handleWearLook(look._id)}
+                                    sx={{
+                                        background: "linear-gradient(135deg, rgb(187, 2, 156) 0%, rgb(101, 120, 227) 100%)",
+                                        color: "white",
+                                        "&:hover": {
+                                            background: "linear-gradient(135deg, rgb(167, 2, 136) 0%, rgb(81, 100, 207) 100%)",
+                                        },
+                                        borderRadius: "12px",
+                                        fontWeight: "600",
+                                        px: 3,
+                                        py: 1,
+                                    }}
+                                >
+                                    לבש את הלוק
+                                </Button>
+                            </Box>
+                        </Collapse>
+                    </Card>
+                ))}
             </Box>
 
-            {/* Items Grid */}
-            <CardContent sx={{ p: 3 }}>
-              <Grid container spacing={2}>
-                {look.items.map((item, itemIndex) => (
-                  <Grid item xs={6} sm={4} md={3} key={item._id}>
-                    <Card
-                      sx={{
-                        position: "relative",
+            {/* Add Look FAB */}
+            {/* <Fab
+                color="primary"
+                size="large"
+                sx={{
+                    position: "fixed",
+                    bottom: 24,
+                    right: 24,
+                    background: "linear-gradient(135deg, rgb(187, 2, 156) 0%, rgb(101, 120, 227) 100%)",
+                    color: "white",
+                    boxShadow: "0 8px 25px rgba(187, 2, 156, 0.3)",
+                    "&:hover": {
+                        background: "linear-gradient(135deg, rgb(167, 2, 136) 0%, rgb(81, 100, 207) 100%)",
+                        transform: "scale(1.1)",
+                    },
+                    transition: "all 0.3s ease",
+                }}
+                onClick={() => setOpenDialog(true)}
+            >
+                <Add sx={{ fontSize: 28 }} />
+            </Fab>
+
+            {/* Add Look Dialog */}
+            {/* <Dialog
+                open={openDialog}
+                onClose={() => setOpenDialog(false)}
+                maxWidth="xs"
+                fullWidth
+                PaperProps={{
+                    sx: {
                         borderRadius: "16px",
                         overflow: "hidden",
-                        background: "linear-gradient(145deg, #ffffff, #f0f0f0)",
-                        boxShadow: "0 8px 25px rgba(0,0,0,0.1)",
-                        transition: "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-                        transform: `translateY(${itemIndex * 2}px)`,
-                        "&:hover": {
-                          transform: "translateY(-4px) scale(1.05)",
-                          boxShadow: "0 15px 35px rgba(0,0,0,0.2)",
-                        },
-                        "&::before": {
-                          content: '""',
-                          position: "absolute",
-                          top: 0,
-                          left: 0,
-                          right: 0,
-                          bottom: 0,
-                          background: getItemStatusColor(item),
-                          opacity: item.inUse || item.inLaundryBasket ? 0.1 : 0,
-                          transition: "opacity 0.3s ease",
-                        },
-                      }}
+                    },
+                }}
+            >
+                <DialogTitle
+                    sx={{
+                        background: "linear-gradient(135deg, rgb(187, 2, 156) 0%, rgb(101, 120, 227) 100%)",
+                        color: "white",
+                        fontWeight: "700",
+                    }}
+                >
+                    יצירת לוק חדש
+                </DialogTitle>
+                <DialogContent sx={{ p: 3, mt: 1 }}>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        label="שם הלוק"
+                        fullWidth
+                        variant="outlined"
+                        value={newLookName}
+                        onChange={(e) => setNewLookName(e.target.value)}
+                        sx={{
+                            "& .MuiOutlinedInput-root": {
+                                borderRadius: "12px",
+                            },
+                        }}
+                    />
+                </DialogContent>
+                <DialogActions sx={{ p: 2, px: 3 }}>
+                    <Button
+                        onClick={() => setOpenDialog(false)}
+                        sx={{
+                            color: "#64748b",
+                            fontWeight: "600",
+                        }}
                     >
-                      {/* Status Badge */}
-                      {(item.inUse || item.inLaundryBasket) && (
-                        <Box
-                          sx={{
-                            position: "absolute",
-                            top: 8,
-                            right: 8,
-                            zIndex: 3,
-                            background: `linear-gradient(45deg, ${getItemStatusColor(item)}, ${getItemStatusColor(item)}dd)`,
-                            color: "white",
-                            padding: "4px 8px",
+                        ביטול
+                    </Button>
+                    <Button
+                        variant="contained"
+                        onClick={() => {
+                            setOpenDialog(false)
+                            setNewLookName("")
+                        }}
+                        sx={{
                             borderRadius: "12px",
-                            fontSize: "0.7rem",
-                            fontWeight: "700",
-                            boxShadow: "0 4px 15px rgba(0,0,0,0.2)",
-                            backdropFilter: "blur(10px)",
-                          }}
-                        >
-                          {getItemStatusText(item)}
-                        </Box>
-                      )}
-
-                      <Box
-                        sx={{
-                          height: 140,
-                          backgroundImage: `url(${item.image})`,
-                          backgroundSize: "cover",
-                          backgroundPosition: "center",
-                          position: "relative",
-                          "&::before": {
-                            content: '""',
-                            position: "absolute",
-                            inset: 0,
-                            background:
-                              "linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%)",
-                            opacity: 0,
-                            transition: "opacity 0.3s ease",
-                          },
-                          "&:hover::before": {
-                            opacity: 1,
-                          },
+                            background: "linear-gradient(135deg, rgb(187, 2, 156) 0%, rgb(101, 120, 227) 100%)",
+                            fontWeight: "600",
+                            "&:hover": {
+                                background: "linear-gradient(135deg, rgb(167, 2, 136) 0%, rgb(81, 100, 207) 100%)",
+                            },
                         }}
-                      >
-                        {/* Overlay for worn items */}
-                        {(item.inUse || item.inLaundryBasket) && (
-                          <Box
-                            sx={{
-                              position: "absolute",
-                              inset: 0,
-                              background: "rgba(0,0,0,0.6)",
-                              backdropFilter: "blur(2px)",
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              opacity: 0,
-                              transition: "opacity 0.3s ease",
-                              "&:hover": { opacity: 1 },
-                            }}
-                          >
-                            {item.inUse && !item.inLaundryBasket && (
-                              <Button
-                                variant="contained"
-                                size="small"
-                                startIcon={<LocalLaundryService />}
-                                onClick={() => handleSendToLaundry(item._id, look._id)}
-                                sx={{
-                                  background: "linear-gradient(45deg, #ff6b6b, #feca57)",
-                                  borderRadius: "12px",
-                                  fontWeight: "700",
-                                  fontSize: "0.7rem",
-                                  boxShadow: "0 4px 15px rgba(0,0,0,0.3)",
-                                  "&:hover": {
-                                    background: "linear-gradient(45deg, #ff5252, #ffb74d)",
-                                    transform: "scale(1.05)",
-                                  },
-                                }}
-                              >
-                                לכביסה
-                              </Button>
-                            )}
-                          </Box>
-                        )}
-                      </Box>
+                    >
+                        יצירה
+                    </Button>
+                </DialogActions>
+            </Dialog>
 
-                      <CardContent
+            {/* Edit Look Dialog */}
+            <Dialog
+                open={openEditDialog}
+                onClose={() => setOpenEditDialog(false)}
+                maxWidth="xs"
+                fullWidth
+                PaperProps={{
+                    sx: {
+                        borderRadius: "16px",
+                        overflow: "hidden",
+                    },
+                }}
+            >
+                <DialogTitle
+                    sx={{
+                        background: "linear-gradient(135deg, rgb(187, 2, 156) 0%, rgb(101, 120, 227) 100%)",
+                        color: "white",
+                        fontWeight: "700",
+                    }}
+                >
+                    עריכת שם הלוק
+                </DialogTitle>
+                <DialogContent sx={{ p: 3, mt: 1 }}>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        label="שם הלוק"
+                        fullWidth
+                        variant="outlined"
+                        value={editLookName}
+                        onChange={(e) => setEditLookName(e.target.value)}
                         sx={{
-                          p: 2,
-                          background: "linear-gradient(145deg, #ffffff, #f8f9fa)",
+                            "& .MuiOutlinedInput-root": {
+                                borderRadius: "12px",
+                            },
                         }}
-                      >
-                        <Typography
-                          variant="body2"
-                          sx={{
-                            fontWeight: "700",
-                            mb: 0.5,
-                            color: "#2d3748",
-                            letterSpacing: "-0.2px",
-                          }}
-                        >
-                          {item.itemName}
-                        </Typography>
-                        <Typography
-                          variant="caption"
-                          sx={{
-                            color: "#718096",
-                            fontWeight: "500",
-                          }}
-                        >
-                          {item.categoryName}
-                        </Typography>
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                ))}
-              </Grid>
-            </CardContent>
-          </Card>
-        ))}
-      </Box>
-
-      {/* Add Look FAB */}
-      <Fab
-        size="large"
-        sx={{
-          position: "fixed",
-          bottom: 24,
-          right: 24,
-          background: "linear-gradient(45deg, #ff6b6b, #feca57)",
-          color: "white",
-          boxShadow: "0 8px 25px rgba(255, 107, 107, 0.4)",
-          "&:hover": {
-            background: "linear-gradient(45deg, #ff5252, #ffb74d)",
-            transform: "scale(1.1) rotate(90deg)",
-            boxShadow: "0 12px 35px rgba(255, 107, 107, 0.6)",
-          },
-          transition: "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-        }}
-        onClick={() => setOpenDialog(true)}
-      >
-        <Add sx={{ fontSize: 28 }} />
-      </Fab>
-
-      {/* Add Look Dialog */}
-      <Dialog
-        open={openDialog}
-        onClose={() => setOpenDialog(false)}
-        maxWidth="xs"
-        fullWidth
-        PaperProps={{
-          sx: {
-            borderRadius: "20px",
-            background: "rgba(255,255,255,0.95)",
-            backdropFilter: "blur(20px)",
-            border: "1px solid rgba(255,255,255,0.3)",
-          },
-        }}
-      >
-        <DialogTitle
-          sx={{
-            textAlign: "center",
-            fontWeight: "700",
-            color: "#2d3748",
-            fontSize: "1.5rem",
-          }}
-        >
-          ✨ יצירת לוק חדש
-        </DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="שם הלוק"
-            fullWidth
-            variant="outlined"
-            value={newLookName}
-            onChange={(e) => setNewLookName(e.target.value)}
-            sx={{
-              mt: 2,
-              "& .MuiOutlinedInput-root": {
-                borderRadius: "12px",
-                "&:hover fieldset": {
-                  borderColor: "#ff6b6b",
-                },
-                "&.Mui-focused fieldset": {
-                  borderColor: "#ff6b6b",
-                },
-              },
-            }}
-          />
-        </DialogContent>
-        <DialogActions sx={{ p: 3, gap: 1 }}>
-          <Button
-            onClick={() => setOpenDialog(false)}
-            sx={{
-              borderRadius: "12px",
-              fontWeight: "600",
-              color: "#718096",
-            }}
-          >
-            ביטול
-          </Button>
-          <Button
-            variant="contained"
-            onClick={() => {
-              setOpenDialog(false)
-              setNewLookName("")
-            }}
-            sx={{
-              borderRadius: "12px",
-              background: "linear-gradient(45deg, #ff6b6b, #feca57)",
-              fontWeight: "700",
-              "&:hover": {
-                background: "linear-gradient(45deg, #ff5252, #ffb74d)",
-              },
-            }}
-          >
-            יצירה
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Box>
-  )
+                    />
+                </DialogContent>
+                <DialogActions sx={{ p: 2, px: 3 }}>
+                    <Button
+                        onClick={() => setOpenEditDialog(false)}
+                        sx={{
+                            color: "#64748b",
+                            fontWeight: "600",
+                        }}
+                    >
+                        ביטול
+                    </Button>
+                    <Button
+                        variant="contained"
+                        onClick={handleSaveEditLook}
+                        sx={{
+                            borderRadius: "12px",
+                            background: "linear-gradient(135deg, rgb(187, 2, 156) 0%, rgb(101, 120, 227) 100%)",
+                            fontWeight: "600",
+                            "&:hover": {
+                                background: "linear-gradient(135deg, rgb(167, 2, 136) 0%, rgb(81, 100, 207) 100%)",
+                            },
+                        }}
+                    >
+                        שמירה
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </Box>
+    )
 }
 
-export default MyLooks
-
+export default MyLooksPage

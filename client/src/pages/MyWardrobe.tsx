@@ -118,7 +118,7 @@ console.log("xxxxxxxxxx");
                     <div key={item._id} className={`item-card ${item.inUse || item.inLaundryBasket ? 'worn' : ''}`}>
                         <button className="remove-btn" onClick={() => handleRemoveItem(item)} title="הסר מהארון">✖</button>
                         <div className="item-image">
-                            <img src={`http://localhost:3000/${item.image.replace(/^public[\\/]/, '')}`} alt={item.itemName} />
+                            <img src={`http://localhost:3001/${item.image.replace(/^public[\\/]/, '')}`} alt={item.itemName} />
 
                             {(item.inUse || item.inLaundryBasket) && (
                                 <div className="worn-overlay">
