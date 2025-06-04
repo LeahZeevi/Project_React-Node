@@ -9,22 +9,22 @@ import MyLocks from "../pages/MyLocks"
 
 
 const router = createBrowserRouter([{
-        element: <AppLayout />,
-        children: [
-                {
-                        index: true,
-                        element: <HomePage />
-                },
-                // {path:"addItem",element:<AddItem/>},
-                // {path:"weather",element:<Weather city="אלעד" />},
-                { path: "myWardrobe", element: <MyWardrobe /> },
-                { path: "myLocks", element: <MyLocks /> },
-                { path: "graphs", element: <Graphs /> }
-                // {index:true,element:<MyWardrobe1/>},
-                // {path:":typeCategory", element: <GeneralCategory/>}
+    element: <AppLayout />,
+    children: [
+        {
+            index: true,
+            element: <HomePage />
+        },
+        // {path:"addItem",element:<AddItem/>},
+        // {path:"weather",element:<Weather city="אלעד" />},
+        { path: "myWardrobe", element: <MyWardrobe /> },
+        { path: "myLocks", element: <MyLocks /> },
+        { path: "graphs", element: <Graphs /> }
+        // {index:true,element:<MyWardrobe1/>},
+        // {path:":typeCategory", element: <GeneralCategory/>}
 
-                // {path:"mySets",element:<DigitalWardrobeApp/>}
-        ]
+        // {path:"mySets",element:<DigitalWardrobeApp/>}
+    ]
 }])
 export default router
 

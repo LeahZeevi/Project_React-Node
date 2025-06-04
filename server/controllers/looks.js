@@ -64,7 +64,6 @@ exports.updateNameOfLook = async (req, res) => {
 };
 exports.deletLook = async (req, res) => {
     const _id = req.params._id;
-    console.log(_id);
     try {
         const deletedLook = await Looks.findOneAndDelete({ _id });
         if (!deletedLook)

@@ -1,0 +1,507 @@
+/* Reset and root styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+}
+
+/* Landing Page Styles */
+.landing-container {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(135deg, rgb(187, 2, 156) 0%, rgb(101, 120, 227) 100%);
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Subtle grid pattern overlay */
+.grid-pattern {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  opacity: 0.7;
+}
+
+/* Content wrapper */
+.landing-content {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.content-wrapper {
+  text-align: center;
+  max-width: 1200px;
+}
+
+/* Logo section */
+.logo-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.logo-container {
+  position: relative;
+  margin-right: 16px;
+}
+
+.logo-icon {
+  position: relative;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.brand-title {
+  color: white;
+  font-weight: bold !important;
+}
+
+/* Main title */
+.main-title {
+  color: white !important;
+  font-weight: bold !important;
+  margin-bottom: 15px !important;
+  line-height: 1.1 !important;
+  font-size: clamp(2.5rem, 8vw, 4.5rem) !important;
+}
+
+.gradient-text {
+  color: white;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+/* Subtitle */
+.subtitle {
+  color: rgba(255, 255, 255, 0.9) !important;
+  margin-bottom: 20px !important;
+  max-width: 768px;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  line-height: 1.6 !important;
+  font-size: clamp(1.1rem, 3vw, 1.5rem) !important;
+}
+
+/* Features grid */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  margin-bottom: 20px;
+  max-width: 1024px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.feature-card {
+  background: rgba(255, 255, 255, 0.08) !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 12px !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.feature-content {
+  text-align: center;
+  padding: 24px !important;
+}
+
+.feature-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px auto;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.feature-title {
+  color: white !important;
+  font-weight: 600 !important;
+  margin-bottom: 8px !important;
+}
+
+.feature-description {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* CTA Button */
+.cta-button {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+  padding: 16px 40px !important;
+  font-size: 1.1rem !important;
+  font-weight: 600 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+  transition: all 0.3s ease !important;
+  text-transform: none !important;
+  margin-bottom: 17px !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.cta-button:hover {
+  background: rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15) !important;
+}
+
+.bottom-text {
+  color: rgba(255, 255, 255, 0.6) !important;
+  margin-top: 20px !important;
+}
+
+/* Auth Container */
+.auth-container {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(135deg, rgb(187, 2, 156) 0%, rgb(101, 120, 227) 100%);
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-content {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+}
+
+/* Back button */
+.back-button {
+  position: absolute !important;
+  top: 32px;
+  left: 32px;
+  color: white !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(10px);
+  border-radius: 8px !important;
+  text-transform: none !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.back-button:hover {
+  background: rgba(255, 255, 255, 0.15) !important;
+}
+
+/* Auth logo */
+.auth-logo-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 25px;
+}
+
+.logo-container-small {
+  position: relative;
+  margin-right: 12px;
+}
+
+.logo-icon-small {
+  position: relative;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 12px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.brand-title-small {
+  color: white;
+  font-weight: bold !important;
+}
+
+/* Auth card */
+.auth-card {
+  background: rgba(255, 255, 255, 0.08) !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+  max-width: 450px;
+  width: 100%;
+}
+
+.auth-card-content {
+  padding: 32px !important;
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.auth-title {
+  color: white !important;
+  font-weight: bold !important;
+  margin-bottom: 8px !important;
+}
+
+.auth-subtitle {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* Tabs */
+.tabs-container {
+  width: 100%;
+}
+
+.custom-tabs {
+  margin-bottom: 20px;
+}
+
+.custom-tabs .MuiTabs-indicator {
+  background: white !important;
+  height: 2px !important;
+}
+
+.custom-tab {
+  color: rgba(255, 255, 255, 0.7) !important;
+  font-weight: 600 !important;
+  text-transform: none !important;
+  font-size: 1rem !important;
+}
+
+.custom-tab.Mui-selected {
+  color: white !important;
+}
+
+/* Tab content */
+.tab-content {
+  margin-top: 20px;
+}
+
+/* Form fields */
+.form-field {
+  margin-bottom: 18px !important;
+}
+
+.custom-textfield .MuiOutlinedInput-root {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+}
+
+.custom-textfield .MuiOutlinedInput-root fieldset {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.custom-textfield .MuiOutlinedInput-root:hover fieldset {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.custom-textfield .MuiOutlinedInput-root.Mui-focused fieldset {
+  border-color: white;
+}
+
+.custom-textfield .MuiInputLabel-root {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.custom-textfield .MuiInputLabel-root.Mui-focused {
+  color: white;
+}
+
+.custom-textfield .MuiOutlinedInput-input {
+  color: white;
+}
+
+.custom-textfield .MuiOutlinedInput-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+  opacity: 1;
+}
+
+.custom-textfield .MuiFormHelperText-root.Mui-error {
+  color: #f87171;
+}
+
+.password-toggle {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Submit button */
+.submit-button {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+  padding: 12px 20px !important;
+  font-weight: 600 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+  transition: all 0.3s ease !important;
+  text-transform: none !important;
+  margin-top: 8px !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.submit-button:hover {
+  background: rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Forgot password */
+.forgot-password {
+  text-align: left;
+  margin-bottom: 10px;
+}
+
+.forgot-link {
+  color: rgba(255, 255, 255, 0.7) !important;
+  text-decoration: none !important;
+  font-size: 0.875rem;
+}
+
+.forgot-link:hover {
+  color: white !important;
+}
+
+/* Terms section */
+.terms-section {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.terms-text {
+  color: rgba(255, 255, 255, 0.6) !important;
+  font-size: 0.875rem !important;
+}
+
+.terms-link {
+  color: rgba(255, 255, 255, 0.8) !important;
+  text-decoration: none !important;
+  margin: 0 4px;
+}
+
+.terms-link:hover {
+  color: white !important;
+}
+
+/* Success page */
+.success-container {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(135deg, rgb(187, 2, 156) 0%, rgb(101, 120, 227) 100%);
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.success-content {
+  text-align: center;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 40px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.success-icon {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 16px;
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 14px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.success-title {
+  color: white !important;
+  font-weight: bold !important;
+  margin-bottom: 10px !important;
+}
+
+.success-subtitle {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .features-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .cta-button {
+    padding: 14px 32px !important;
+    font-size: 1rem !important;
+  }
+
+  .auth-card-content {
+    padding: 24px !important;
+  }
+
+  .back-button {
+    top: 16px !important;
+    left: 16px !important;
+  }
+}

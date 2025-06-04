@@ -16,6 +16,7 @@ import {
     Collapse,
     Divider,
     Tooltip,
+    Alert,
 } from "@mui/material"
 import {
     Delete,
@@ -42,16 +43,16 @@ import { selectAllLooks, setAllLooks, updateAllItems } from "../redux/slices/ite
 
 const MyLooksPage = () => {
     const user: Users = useSelector(selectUser);
-    console.log("MyLooksPage user:", user);
     const looks = useSelector(selectAllLooks);
-
-    // const [looks, setLooks] = useState<Looks[]>([])
-    const [openDialog, setOpenDialog] = useState(false)
+    // const [openDialog, setOpenDialog] = useState(false)
     const [openEditDialog, setOpenEditDialog] = useState(false)
-    const [newLookName, setNewLookName] = useState("")
+    // const [newLookName, setNewLookName] = useState("")
     const [editLookId, setEditLookId] = useState<string | null>(null)
     const [editLookName, setEditLookName] = useState("")
     const [expandedLook, setExpandedLook] = useState<string | null>(null)
+    const [message, setMessage] = useState("");
+    const [isError, setIsError] = useState(false);
+    const [isAlert, setIsAlert] = useState(false);
     const dispatch = useDispatch();
     const [deleteLook] = useDeleteLookMutation();
     const [addLook] = useAddLookMutation();
@@ -63,67 +64,40 @@ const MyLooksPage = () => {
     });
 
     const handleDeleteLook = async (lookId: string) => {
-        // setLooks((prev) => prev.filter((look) => look._id !== lookId))
-        // deleteLook(lookId)
-        //     .then(() => {
-        //         console.log("לוק נמחק בהצלחה")
-        //     })
-        //     .catch((err) => {
-        //         console.error("שגיאה במחיקת הלוק:", err)
-        //     })
+
         try {
             await deleteLook(lookId).unwrap();
-            // setMyWardrobe(prev => prev.filter(item => item._id !== itemForRemove._id));
-        } catch (err) {
-            console.error("שגיאה בהסרה:", err);
+
+        } catch (err: any) {
+            if (err.status === 404) {
+                setMessage(err.data.message)
+            }
+            if (err.status === 500) {
+                setMessage("Unable to delete at this time, please try again later.")
+            }
+            setIsAlert(true)
         }
     }
 
-    const handleSendToLaundry = (itemId: string, lookId: string) => {
-        updateItemInLaundryBasket({
-            _id: itemId,
-            inLaundryBasket: true,
-            userId: user._id,
-        })
-            .unwrap()
-            .then(() => {
-                console.log("פריט הועבר לסל הכביסה בהצלחה")
-            })
-            .catch((err) => {
-                console.error("שגיאה בהעברת הפריט לסל הכביסה:", err)
-            })
-    }
 
-    const handleWearLook = async (lookId: string) => {
-        const selectedLook = looks.find((look) => look._id === lookId);
-        if (!selectedLook) return;
 
+    const handleWearLook = async (look: Looks) => {
         try {
-            const allUpdatedItems: Item[] = [];
+            console.log("look", look);
 
-            for (const look of looks) {
-                const shouldBeInUse = look._id === lookId;
+            const UpdatedItems: Item[] = [];
+            const updatePromises = look.itemsInlook.map(async (item) => {
+                const newUpdatedItem: { inUseItems: Item[], updatedItem: Item } = await updateItemInUse({
+                    _id: item._id,
+                    inUse: true,
+                    userId: user._id,
+                }).unwrap();
+                UpdatedItems.push(newUpdatedItem.updatedItem);
+            });
+            await Promise.all(updatePromises);
+            console.log("updateiteminlook", UpdatedItems);
 
-                const updatePromises = look.itemsInlook.map(async (item) => {
-                    const updatedItem = await updateItemInUse({
-                        _id: item._id,
-                        inUse: shouldBeInUse,
-                        userId: user._id,
-                    }).unwrap();
-                    const result = await updateItemInUse({
-                        _id: item._id,
-                        inUse: shouldBeInUse,
-                        userId: user._id,
-                    }).unwrap();
-
-                    allUpdatedItems.push(...result.inUseItems);
-                });
-
-                await Promise.all(updatePromises);
-            }
-
-            // אחרי שכל העדכונים בוצעו, מעדכנים את הסטייט הגלובלי
-            dispatch(updateAllItems(allUpdatedItems));
+            dispatch(updateAllItems(UpdatedItems));
         } catch (err) {
             console.error("שגיאה בלבישת הלוק:", err);
         }
@@ -204,6 +178,7 @@ const MyLooksPage = () => {
     }, [looks]);
 
     return (
+
         <Box
             sx={{
                 minHeight: "100vh",
@@ -266,7 +241,7 @@ const MyLooksPage = () => {
                                 <Tooltip title="לבש את הלוק">
                                     <IconButton
                                         size="small"
-                                        onClick={() => handleWearLook(look._id)}
+                                        onClick={() => handleWearLook(look)}
                                         sx={{
                                             color: "white",
                                             background: "rgba(255,255,255,0.2)",
@@ -377,7 +352,7 @@ const MyLooksPage = () => {
                                                 sx={{
                                                     width: "100%",
                                                     height: "100%",
-                                                    backgroundImage: `url(http://localhost:3001/${item.image.replace(/^public[\\/]/, '')} )`,
+                                                    backgroundImage: `url(http://localhost:3000/${item.image.replace(/^public[\\/]/, '')} )`,
 
 
                                                     backgroundSize: "cover",
@@ -430,27 +405,6 @@ const MyLooksPage = () => {
                                             >
                                                 {item.categoryName}
                                             </Typography>
-                                            {item.inUse && !item.inLaundryBasket && (
-                                                <Button
-                                                    size="small"
-                                                    variant="text"
-                                                    startIcon={<LocalLaundryService sx={{ fontSize: 12 }} />}
-                                                    onClick={() => handleSendToLaundry(item._id, look._id)}
-                                                    sx={{
-                                                        color: "#f59e0b",
-                                                        p: 0,
-                                                        minWidth: "auto",
-                                                        fontSize: "0.7rem",
-                                                        fontWeight: "600",
-                                                        "&:hover": {
-                                                            background: "transparent",
-                                                            color: "#ea580c",
-                                                        },
-                                                    }}
-                                                >
-                                                    לכביסה
-                                                </Button>
-                                            )}
                                         </Box>
                                     </Box>
                                 ))}
@@ -491,7 +445,7 @@ const MyLooksPage = () => {
                                 <Button
                                     variant="contained"
                                     startIcon={<CheckBox />}
-                                    onClick={() => handleWearLook(look._id)}
+                                    onClick={() => handleWearLook(look)}
                                     sx={{
                                         background: "linear-gradient(135deg, rgb(187, 2, 156) 0%, rgb(101, 120, 227) 100%)",
                                         color: "white",
@@ -512,97 +466,6 @@ const MyLooksPage = () => {
                 ))}
             </Box>
 
-            {/* Add Look FAB */}
-            {/* <Fab
-                color="primary"
-                size="large"
-                sx={{
-                    position: "fixed",
-                    bottom: 24,
-                    right: 24,
-                    background: "linear-gradient(135deg, rgb(187, 2, 156) 0%, rgb(101, 120, 227) 100%)",
-                    color: "white",
-                    boxShadow: "0 8px 25px rgba(187, 2, 156, 0.3)",
-                    "&:hover": {
-                        background: "linear-gradient(135deg, rgb(167, 2, 136) 0%, rgb(81, 100, 207) 100%)",
-                        transform: "scale(1.1)",
-                    },
-                    transition: "all 0.3s ease",
-                }}
-                onClick={() => setOpenDialog(true)}
-            >
-                <Add sx={{ fontSize: 28 }} />
-            </Fab>
-
-            {/* Add Look Dialog */}
-            {/* <Dialog
-                open={openDialog}
-                onClose={() => setOpenDialog(false)}
-                maxWidth="xs"
-                fullWidth
-                PaperProps={{
-                    sx: {
-                        borderRadius: "16px",
-                        overflow: "hidden",
-                    },
-                }}
-            >
-                <DialogTitle
-                    sx={{
-                        background: "linear-gradient(135deg, rgb(187, 2, 156) 0%, rgb(101, 120, 227) 100%)",
-                        color: "white",
-                        fontWeight: "700",
-                    }}
-                >
-                    יצירת לוק חדש
-                </DialogTitle>
-                <DialogContent sx={{ p: 3, mt: 1 }}>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        label="שם הלוק"
-                        fullWidth
-                        variant="outlined"
-                        value={newLookName}
-                        onChange={(e) => setNewLookName(e.target.value)}
-                        sx={{
-                            "& .MuiOutlinedInput-root": {
-                                borderRadius: "12px",
-                            },
-                        }}
-                    />
-                </DialogContent>
-                <DialogActions sx={{ p: 2, px: 3 }}>
-                    <Button
-                        onClick={() => setOpenDialog(false)}
-                        sx={{
-                            color: "#64748b",
-                            fontWeight: "600",
-                        }}
-                    >
-                        ביטול
-                    </Button>
-                    <Button
-                        variant="contained"
-                        onClick={() => {
-                            setOpenDialog(false)
-                            setNewLookName("")
-                        }}
-                        sx={{
-                            borderRadius: "12px",
-                            background: "linear-gradient(135deg, rgb(187, 2, 156) 0%, rgb(101, 120, 227) 100%)",
-                            fontWeight: "600",
-                            "&:hover": {
-                                background: "linear-gradient(135deg, rgb(167, 2, 136) 0%, rgb(81, 100, 207) 100%)",
-                            },
-                        }}
-                    >
-                        יצירה
-                    </Button>
-                </DialogActions>
-            </Dialog>
-
-            {/* Edit Look Dialog */}
             <Dialog
                 open={openEditDialog}
                 onClose={() => setOpenEditDialog(false)}
@@ -666,6 +529,9 @@ const MyLooksPage = () => {
                     </Button>
                 </DialogActions>
             </Dialog>
+            {isAlert && (<Box sx={{ position: "fixed", bottom: 16, left: 16, zIndex: 9999, }}>
+                <Alert severity="error">{message}</Alert>
+            </Box>)}
         </Box>
     )
 }

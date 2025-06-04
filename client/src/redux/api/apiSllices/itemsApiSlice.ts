@@ -8,7 +8,7 @@ export const itemsApiSlice = apiSlices.injectEndpoints({
             providesTags: ["Items"]
         }),
 
-        addItem: builder.mutation<string, { _id: string, newItem: FormData }>({
+        addItem: builder.mutation<{newItem:Item}, { _id: string, newItem: FormData }>({
             query: ({ _id, newItem }: { _id: string; newItem: FormData }) => ({
                 url: `/items/${_id}`,
                 method: "POST",

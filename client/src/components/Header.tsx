@@ -12,18 +12,19 @@ import { selectUser } from "../redux/slices/userSlice"
 import { selectItemInLaundry, setAllItems, setItemsInLaundry, updateAllItems } from "../redux/slices/itemSlice"
 import { useDispatch } from "react-redux"
 import "../css/LaundryBasket.css"
-import Weather from "../pages/Weather"
 import { Style } from "@mui/icons-material"
+import Weather from "./Weather"
+import { useCookies } from "react-cookie"
 
 const Header = () => {
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [updateItemInLaundry] = useUpdateItemInLaundryBasketMutation()
   const [isSideNavOpen, setIsSideNavOpen] = useState(false)
   const user: Users = useSelector(selectUser)
+ const [, , removeCookie] = useCookies(['token']);  
   const { data, error, isLoading } = useGetAllItemsQuery(user._id)
   const itemInLaundryBasket = useSelector(selectItemInLaundry)
   const dispatch = useDispatch()
-
   const handleUpdateItem = async (_id: string) => {
     try {
       const { itemsInLaundry, updatedItem } = await updateItemInLaundry({
@@ -42,7 +43,10 @@ const Header = () => {
   const closeBasket = () => {
     setIsSideNavOpen(false)
   }
-
+  const logOut=()=>{
+     removeCookie('token');
+     localStorage.clear();
+  }
   const allItemsInLaundry = async () => {
     setIsSideNavOpen(true)
     await fetchWardrobe()
@@ -62,7 +66,6 @@ const Header = () => {
   useEffect(() => {
     fetchWardrobe()
   }, [])
-  console.log(user.city + " ciry of user");
   return (
     <div className="app">
       <header className="header">
@@ -73,7 +76,8 @@ const Header = () => {
         <Tooltip
           title={
             <Paper sx={{ p: 2, minWidth: 250, bgcolor: "rgba(255, 255, 255, 0.98)" }}>
-              <Weather city={user.city}/>
+              <Weather  city={user.city.trim()}/>
+
             </Paper>
           }
           arrow
@@ -182,6 +186,10 @@ const Header = () => {
           <span className="menu-icon">📊</span>
           ניתוח נתוני לבישה
         </NavLink>
+        <div className={`menu-item ${location.pathname === '/graphs' ? 'active' : ''} exit`} onClick={logOut} >
+          <span className="menu-icon">🎯</span>
+          יציאה
+        </div>
       </nav>
 
       <Drawer
@@ -275,7 +283,7 @@ const Header = () => {
                       <Box sx={{ position: "relative", p: 1 }}>
                         <CardMedia
                           component="img"
-                          image={`http://localhost:3001/${item.image.replace(/^public[\\/]/, "")}`}
+                          image={`http://localhost:3000/${item.image.replace(/^public[\\/]/, "")}`}
                           alt={item.itemName}
                         />
                         <IconButton

@@ -149,7 +149,7 @@ const HistoryAlert = ({ open, onClose, item_Id }: HistoryAlertProps) => {
                     >
                       <div className="suggested-item-image-wrapper">
                         <img
-                          src={`http://localhost:3001/${item.image.replace(/^public[\\/]/, '')}`}
+                          src={`http://localhost:3000/${item.image.replace(/^public[\\/]/, '')}`}
                           alt={item.itemName}
                         />
                         <button

@@ -18,7 +18,7 @@ exports.register = async (req, res) => {
     //lean(): המרה לקריאה בלבד מזרז את תהליך השאילתה
     const duplicate = await User.findOne({ userName: userName }).lean()
     if (duplicate) {
-        return res.status(409).json({ message: "Dupliacated userName" + duplicate })
+        return res.status(409).json({ message: "Dupliacated userName" })
     }//אאולי כדאי להוסיף בדקיה סיסמא אם קיים כזה שם
     const hashPassword = await bcrypt.hash(password, 10)
     const userObject = { userName, city, email, password: hashPassword, myWardobe }    
@@ -41,11 +41,11 @@ exports.login = async (req, res) => {
     }
     const foundUser = await User.findOne({ userName }).lean()
     if (!foundUser)
-        return res.status(401).json({ message: "Unauthhorized1" })
+        return res.status(401).json({ message: "No user found with this name." })
 
     const match = await bcrypt.compare(password, foundUser.password)
     if (!match)
-        return res.status(401).json({ message: "Unauthhorized2" })
+        return res.status(401).json({ message: "No user found with this password." })
       const userToken={_id:foundUser._id,userName:foundUser.userName,city:foundUser.city,
         email:foundUser.email,password:foundUser.password
       }
