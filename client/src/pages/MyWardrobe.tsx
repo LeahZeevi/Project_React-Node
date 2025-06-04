@@ -116,6 +116,7 @@ const MyWardrobe = () => {
                         {filteredItems.map(item => (
                             <div key={item._id} className={`item-card ${item.inUse || item.inLaundryBasket ? 'worn' : ''}`}>
 
+
                                 <button className="remove-btn" onClick={() => handleRemoveItem(item)} title="הסר מהארון">✖</button>
 
                                 <div className="item-image">

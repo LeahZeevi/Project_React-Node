@@ -114,8 +114,16 @@ const Register = () => {
             timerSend(response.accessToken)
             resetLogin()
         } catch (error: any) {
-            setMessage(error.data.message)
-            setIsAlert(true);
+            if (error?.status === 'FETCH_ERROR' || error?.message === 'Failed to fetch' || error?.name === 'TypeError') {
+                setMessage("Unable to connect to the server. Please check your internet connection or try again later.");
+                setIsError(true);
+            } else if (error?.data?.message) {
+                setMessage(error.data.message);
+                setIsAlert(true);
+            } else {
+                setMessage("An unexpected error occurred. Please try again.");
+                setIsAlert(true);
+            }
         }
 
     }
@@ -190,7 +198,7 @@ const Register = () => {
                                                     <Box className="tab-content">
                                                         <form onSubmit={handleSubmitRegister(onSubmitRegister as any)}>
                                                             <Box className="form-field">
-                                                                <TextField fullWidth label="שם משתמש" placeholder="הכניסי שם משתמש"  className="custom-textfield"
+                                                                <TextField fullWidth label="שם משתמש" placeholder="הכניסי שם משתמש" className="custom-textfield"
                                                                     {...registerRegister("userName")}
                                                                     error={!!errorsRegister.userName}
                                                                     helperText={typeof errorsRegister.userName?.message === "string" ? errorsRegister.userName.message : undefined}
@@ -198,7 +206,7 @@ const Register = () => {
                                                             </Box>
 
                                                             <Box className="form-field">
-                                                                <TextField fullWidth  label="אימייל" type="email" placeholder="example@email.com" className="custom-textfield"
+                                                                <TextField fullWidth label="אימייל" type="email" placeholder="example@email.com" className="custom-textfield"
                                                                     {...registerRegister("email")}
                                                                     error={!!errorsRegister.email}
                                                                     helperText={typeof errorsRegister.email?.message === "string" ? errorsRegister.email.message : undefined}

@@ -6,8 +6,8 @@ interface Item{
     categoryName:string,
     session:string,
     categoryId:Number,
-    inUse:Boolean,
-    inLaundryBasket:Boolean,
+    inUse:boolean,
+    inLaundryBasket:boolean,
     countWear:Number,
     style:string,
 

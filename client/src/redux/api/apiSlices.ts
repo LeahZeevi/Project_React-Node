@@ -15,7 +15,7 @@ const apiSlice=createApi({
   }),
   
   reducerPath:'api',
-  tagTypes:["Items","Users","History","Wearning"],
+  tagTypes:["Items","Users","History","Wearning","Looks"],
     endpoints: () => ({})
 })
 export default apiSlice;

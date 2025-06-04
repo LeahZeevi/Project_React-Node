@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react"
 import { NavLink } from "react-router"
 import { Drawer, Box, Typography, IconButton, Card, CardMedia, Fade, Zoom, Chip, Tooltip, Paper } from "@mui/material"
-import ExitToAppIcon from "@mui/icons-material/ExitToApp"
 import CloseIcon from "@mui/icons-material/Close"
 import LocalLaundryServiceIcon from "@mui/icons-material/LocalLaundryService"
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline"
@@ -13,6 +12,7 @@ import { selectUser } from "../redux/slices/userSlice"
 import { selectItemInLaundry, setAllItems, setItemsInLaundry, updateAllItems } from "../redux/slices/itemSlice"
 import { useDispatch } from "react-redux"
 import "../css/LaundryBasket.css"
+import { Style } from "@mui/icons-material"
 import Weather from "./Weather"
 import { useCookies } from "react-cookie"
 
@@ -76,7 +76,8 @@ const Header = () => {
         <Tooltip
           title={
             <Paper sx={{ p: 2, minWidth: 250, bgcolor: "rgba(255, 255, 255, 0.98)" }}>
-              <Weather city={user.city.trim()} />
+              <Weather  city={user.city.trim()}/>
+
             </Paper>
           }
           arrow
@@ -103,7 +104,7 @@ const Header = () => {
               transition: "all 0.3s ease",
               width: 48,
               height: 48,
-              marginLeft:3
+              marginLeft: 3
             }}
           >
             <WbSunnyIcon />
@@ -120,8 +121,8 @@ const Header = () => {
               transform: "scale(1.05)",
             },
             transition: "all 0.3s ease",
-              width: 48,
-              height: 48,
+            width: 48,
+            height: 48,
           }}
         >
           <LocalLaundryServiceIcon />
@@ -160,6 +161,26 @@ const Header = () => {
         >
           <span className="menu-icon">👔</span>
           הארון שלי
+        </NavLink>
+        <NavLink
+          to="/myLocks"
+          className={`menu-item ${location.pathname === "/myLocks" ? "active" : ""}`}
+          onClick={() => setDrawerOpen(false)}
+        >
+          {/* <span className="menu-icon">👞👖👕</span> */}
+           <Box
+      sx={{
+        background: "linear-gradient(135deg, rgb(187, 2, 156) 0%, rgb(101, 120, 227) 100%)",
+        borderRadius: "8px",
+        p: 0.5,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <Style sx={{ fontSize: 18, color: "white" }} />
+    </Box>
+          הלוקים שלי
         </NavLink>
         <NavLink to="/graphs" className={`menu-item ${location.pathname === '/graphs' ? 'active' : ''}`} onClick={() => setDrawerOpen(false)} >
           <span className="menu-icon">📊</span>

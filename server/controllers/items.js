@@ -64,7 +64,7 @@ exports.getAllItemsById = async (req, res) => {
         }
         return res.json(items)
     } catch (error) {
-        console.error('failed to ger user', error);
+        console.error('failed to get user', error);
         res.status(500).json({ message: 'failed to get user' })
     }
 }
@@ -129,8 +129,6 @@ exports.updateItemInUse = async (req, res) => {
 
 exports.updateItemInLaundryBasket = async (req, res) => {
     const { _id, inLaundryBasket, userId } = req.body;
-    console.log("isLaundryBasket", inLaundryBasket);
-
     if (!_id || typeof inLaundryBasket !== 'boolean' || !userId) {
         return res.status(400).json({ message: "Missing _id, inUse or userId" });
     }
