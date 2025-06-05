@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import "../css/try.css"
+import "../css/myWardrobe.css"
 import type EventWearning from "../interfaces/EventWearning"
 import type { Users } from "../interfaces/Users"
 import { useSelector } from "react-redux"

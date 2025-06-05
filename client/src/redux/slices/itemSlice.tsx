@@ -19,18 +19,15 @@ const itemSlice = createSlice({
   name: "items",
   initialState,
   reducers: {
-    setAllItems(state, action: PayloadAction<Item | Item[]>) {
+    setAllItems(state, action: PayloadAction<Item[] | Item>) {
        if (Array.isArray(action.payload)){
-       console.log(action.payload+" אשמונטה");
       state.allItems = action.payload
       action.payload.map(item=>{
         item.inUse&&state.itemsInUse.push(item);
         item.inLaundryBasket&&state.itemInLaundry.push(item);
       })}
       else{
-        state.allItems.push(action.payload);
-        console.log(action.payload+" gvdhnzVchsabmjn");
-        
+        state.allItems.push(action.payload);        
       }
     },
       setAllLooks(state, action: PayloadAction<Looks[]>) {
