@@ -45,16 +45,12 @@ import { boolean } from "zod"
 const MyLooksPage = () => {
     const user: Users = useSelector(selectUser);
     const looks: Looks[] = useSelector(selectAllLooks);
-    // const [openDialog, setOpenDialog] = useState(false)
     const [openEditDialog, setOpenEditDialog] = useState(false)
-    // const [newLookName, setNewLookName] = useState("")
     const [editLookId, setEditLookId] = useState<string | null>(null)
     const [editLookName, setEditLookName] = useState("")
     const [expandedLook, setExpandedLook] = useState<string | null>(null)
     const [message, setMessage] = useState("");
     const [isdisabled, setDisabeld] = useState(false);
-
-    // const [isError, setIsError] = useState(false);
     const [isAlert, setIsAlert] = useState(false);
     const dispatch = useDispatch();
     const [deleteLook] = useDeleteLookMutation();
