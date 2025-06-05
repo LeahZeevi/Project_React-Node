@@ -1,13 +1,13 @@
 import { useEffect } from 'react';
 import Item from '../interfaces/Items';
 import CurrentWorn from '../components/CurrentWorn';
-import '../css/try.css'
+import '../css/myWardrobe.css'
 import { useGetAllItemsQuery } from '../redux/api/apiSllices/itemsApiSlice';
 import { Users } from '../interfaces/Users';
 import { selectUser } from '../redux/slices/userSlice';
 import { useSelector } from 'react-redux';
 import CountUp from '../components/CountUp';
-import { selectAllItems, setAllItems } from '../redux/slices/itemSlice';
+import { selectAllItems, selectAllLooks, setAllItems } from '../redux/slices/itemSlice';
 import { useDispatch } from 'react-redux';
 import ErrorPage from './ErrorPage';
 import ShirtHangerLoader from '../components/ShirtHangerLoader';
@@ -16,6 +16,7 @@ import ShirtHangerLoader from '../components/ShirtHangerLoader';
 const HomePage = () => {
     const user: Users = useSelector(selectUser);
     const myWardrobe = useSelector(selectAllItems);
+    const looks = useSelector(selectAllLooks);
     const dispatch = useDispatch()
     const { data, error, isLoading } = useGetAllItemsQuery(user._id);
 
@@ -54,7 +55,7 @@ const HomePage = () => {
                             <div className="stat-label">פריטים בארון</div>
                         </div>
                         <div className="stat-card">
-                            <div className="stat-number">1</div>
+                            <div className="stat-number">{looks.length}</div>
                             <div className="stat-label">לוקים שמורים</div>
                         </div>
                         <div className="stat-card">

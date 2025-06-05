@@ -186,7 +186,7 @@ const Header = () => {
           <span className="menu-icon">📊</span>
           ניתוח נתוני לבישה
         </NavLink>
-        <div className={`menu-item ${location.pathname === '/graphs' ? 'active' : ''} exit`} onClick={logOut} >
+        <div className={`menu-item ${location.pathname === '/exit' ? 'active' : ''} exit`} onClick={logOut} >
           <span className="menu-icon">🎯</span>
           יציאה
         </div>
@@ -308,7 +308,6 @@ const Header = () => {
             )}
           </Box>
 
-          {/* Footer */}
           {itemInLaundryBasket.length > 0 && (
             <Box
               sx={{
@@ -325,5 +324,4 @@ const Header = () => {
     </div>
   )
 }
-
 export default Header

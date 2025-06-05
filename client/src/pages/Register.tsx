@@ -8,6 +8,7 @@ import axios from "axios"
 import {
     Box, Typography, Button, TextField, Card, CardContent, Tabs, Tab, Select, MenuItem,
     FormControl, InputLabel, IconButton, InputAdornment, FormHelperText, Link, Fade, Grow, Alert,
+    Autocomplete,
 } from "@mui/material"
 import { Visibility, VisibilityOff, Checkroom, } from "@mui/icons-material"
 import "../css/Register.css"
@@ -138,7 +139,6 @@ const Register = () => {
     if (send) {
         return <NewAddition />
     }
-
     return (
         <>
             {isError ? <ErrorPage errorMessage={message} /> :
@@ -150,12 +150,9 @@ const Register = () => {
                         <Box className="grid-pattern"></Box>
 
                         <Box className="auth-content">
-                            {/* Back button */}
                             <Button onClick={() => setIsBack(true)} className="back-button">
                                 ← חזרה
                             </Button>
-
-                            {/* Logo */}
                             <Box className="auth-logo-section">
                                 <Box className="logo-container-small">
                                     <Box className="logo-blur"></Box>
@@ -164,11 +161,9 @@ const Register = () => {
                                     </Box>
                                 </Box>
                                 <Typography variant="h5" className="brand-title-small">
-                                    WardrobeAI
+                                    WearTech
                                 </Typography>
                             </Box>
-
-                            {/* Auth Card */}
                             <Grow in={true} timeout={800}>
                                 <Card className="auth-card">
                                     <CardContent className="auth-card-content">
@@ -191,8 +186,6 @@ const Register = () => {
                                                 <Tab label="הרשמה" className="custom-tab" />
                                                 <Tab label="התחברות" className="custom-tab" />
                                             </Tabs>
-
-                                            {/* Register Tab */}
                                             {tabValue === 0 && (
                                                 <Fade in={true} timeout={500}>
                                                     <Box className="tab-content">
@@ -204,7 +197,6 @@ const Register = () => {
                                                                     helperText={typeof errorsRegister.userName?.message === "string" ? errorsRegister.userName.message : undefined}
                                                                 />
                                                             </Box>
-
                                                             <Box className="form-field">
                                                                 <TextField fullWidth label="אימייל" type="email" placeholder="example@email.com" className="custom-textfield"
                                                                     {...registerRegister("email")}
@@ -212,24 +204,28 @@ const Register = () => {
                                                                     helperText={typeof errorsRegister.email?.message === "string" ? errorsRegister.email.message : undefined}
                                                                 />
                                                             </Box>
-
                                                             <Box className="form-field">
                                                                 <FormControl fullWidth className="custom-textfield">
-                                                                    <InputLabel>עיר</InputLabel>
-                                                                    <Controller name="city" control={controlRegister}
+                                                                    <Controller
+                                                                        name="city"
+                                                                        control={controlRegister}
                                                                         render={({ field }) => (
-                                                                            <Select {...field} label="עיר">
-                                                                                {cities.map((city) => (
-                                                                                    <MenuItem key={city} value={city}>
-                                                                                        {city}
-                                                                                    </MenuItem>
-                                                                                ))}
-                                                                            </Select>
+                                                                            <Autocomplete
+                                                                                options={cities}
+                                                                                freeSolo // אם תרצי לאפשר גם הקלדה חופשית ולא רק מהרשימה
+                                                                                onChange={(_, value) => field.onChange(value)}
+                                                                                value={field.value || ''}
+                                                                                renderInput={(params) => (
+                                                                                    <TextField
+                                                                                        {...params}
+                                                                                        label="עיר"
+                                                                                        error={!!errorsRegister.city}
+                                                                                        helperText={errorsRegister.city?.message}
+                                                                                    />
+                                                                                )}
+                                                                            />
                                                                         )}
                                                                     />
-                                                                    {errorsRegister.city && (
-                                                                        <FormHelperText error>{errorsRegister.root?.message}</FormHelperText>
-                                                                    )}
                                                                 </FormControl>
                                                             </Box>
 
