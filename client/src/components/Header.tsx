@@ -21,7 +21,7 @@ const Header = () => {
   const [updateItemInLaundry] = useUpdateItemInLaundryBasketMutation()
   const [isSideNavOpen, setIsSideNavOpen] = useState(false)
   const user: Users = useSelector(selectUser)
- const [, , removeCookie] = useCookies(['token']);  
+  const [, , removeCookie] = useCookies(['token']);
   const { data, error, isLoading } = useGetAllItemsQuery(user._id)
   const itemInLaundryBasket = useSelector(selectItemInLaundry)
   const dispatch = useDispatch()
@@ -43,9 +43,9 @@ const Header = () => {
   const closeBasket = () => {
     setIsSideNavOpen(false)
   }
-  const logOut=()=>{
-     removeCookie('token');
-     localStorage.clear();
+  const logOut = () => {
+    removeCookie('token');
+    localStorage.clear();
   }
   const allItemsInLaundry = async () => {
     setIsSideNavOpen(true)
@@ -76,7 +76,7 @@ const Header = () => {
         <Tooltip
           title={
             <Paper sx={{ p: 2, minWidth: 250, bgcolor: "rgba(255, 255, 255, 0.98)" }}>
-              <Weather  city={user.city.trim()}/>
+              <Weather city={user.city.trim()} />
 
             </Paper>
           }
@@ -162,26 +162,26 @@ const Header = () => {
           <span className="menu-icon">👔</span>
           הארון שלי
         </NavLink>
-        <NavLink
+        {/* <NavLink
           to="/myLocks"
           className={`menu-item ${location.pathname === "/myLocks" ? "active" : ""}`}
           onClick={() => setDrawerOpen(false)}
         >
           {/* <span className="menu-icon">👞👖👕</span> */}
-           <Box
-      sx={{
-        background: "linear-gradient(135deg, rgb(187, 2, 156) 0%, rgb(101, 120, 227) 100%)",
-        borderRadius: "8px",
-        p: 0.5,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <Style sx={{ fontSize: 18, color: "white" }} />
-    </Box>
+          {/* <Box
+            sx={{
+              background: "linear-gradient(135deg, rgb(187, 2, 156) 0%, rgb(101, 120, 227) 100%)",
+              borderRadius: "8px",
+              p: 0.5,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Style sx={{ fontSize: 18, color: "white" }} />
+          </Box>
           הלוקים שלי
-        </NavLink>
+        </NavLink> */}
         <NavLink to="/graphs" className={`menu-item ${location.pathname === '/graphs' ? 'active' : ''}`} onClick={() => setDrawerOpen(false)} >
           <span className="menu-icon">📊</span>
           ניתוח נתוני לבישה

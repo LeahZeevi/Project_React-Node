@@ -22,34 +22,6 @@ exports.addWearning = async (req, res) => {
     }
 };
 
-// exports.getEventWearByItemId = async (req, res) => {
-//     const { item_id } = req.params
-//     console.log("itemName", item_id);
-//     try {
-//         if (!item_id) {
-//             return res.status(400).json({ message: "Missing itemName" });
-//         }
-//         const histories = await History.find({ item_id: item_id }).populate('wornEvent');
-//         console.log("histories", histories);
-//         if (!histories) {
-//             return res.status(404).json({ message: "not found history" });
-//         }
-//         const allWornEventsData = []; //מערך אוביקטים של כל הארועים שהפריט השתתף בהם
-
-//         for (let doc of histories) {
-//             if (doc.wornEvent && doc.wornEvent.length > 0) {
-//                 allWornEventsData.push(...doc.wornEvent);
-//             }
-//         }
-//         console.log("allWornEventsData",allWornEventsData);
-        
-//         return res.status(200).json({allWornEventsData:allWornEventsData});
-//         // return res.json(history)
-//     } catch (error) {
-//         console.error('failed to ger user', error);
-//         res.status(500).json({ message: 'failed to get user' })
-//     }
-// }
 
 
 exports.getEventWearByItemId = async (req, res) => {

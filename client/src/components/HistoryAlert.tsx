@@ -45,6 +45,7 @@ const HistoryAlert = ({ open, onClose, item_Id }: HistoryAlertProps) => {
     setHistoryItems([]);
     onClose();
   }
+  
   return (
     <Drawer
       anchor="top"
