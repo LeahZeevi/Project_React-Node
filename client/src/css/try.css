@@ -870,6 +870,92 @@
 } */
 
 
+/* עיצוב כפתור ההסרה עם אפקט hover */
+.item-card {
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.item-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.remove-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  color: #000000;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(0.8);
+  transition: all 0.3s ease;
+  z-index: 10;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.remove-btn:hover {
+  background: rgba(0, 0, 0, 0.1);
+  color: #000000;
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.item-card:hover .remove-btn {
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1);
+}
+
+/* אנימציה עדינה לכפתור */
+.remove-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 50%;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.remove-btn:hover::before {
+  opacity: 1;
+}
+
+/* עיצוב נוסף לכרטיס */
+.item-card {
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.item-image {
+  position: relative;
+  overflow: hidden;
+}
+
+/* אפקט נוסף - עמעום קל של התמונה בעת hover על כפתור ההסרה */
+.remove-btn:hover ~ .item-image img,
+.remove-btn:hover + .item-image img {
+  filter: brightness(0.8);
+  transition: filter 0.3s ease;
+}
+
+
 
         /* קשור לינווט */
         .header {

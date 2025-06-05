@@ -424,7 +424,7 @@ const MyLooksPage = () => {
                                             key={item._id}
                                             avatar={
                                                 <Avatar
-                                                    src={item.image ? `http://localhost:3001/${item.image.replace(/^public[\\/]/, '')}` : 'path/to/default/image.jpg'}
+                                                    src={item.image ? `http://localhost:3000/${item.image.replace(/^public[\\/]/, '')}` : 'path/to/default/image.jpg'}
                                                     sx={{
                                                         border: `2px solid ${item.inUse ? "#10b981" : item.inLaundryBasket ? "#f59e0b" : "#e2e8f0"
                                                             }`,
