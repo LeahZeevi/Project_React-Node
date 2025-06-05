@@ -6,7 +6,7 @@ import { useDeleteItemMutation, useGetAllItemsQuery, useUpdateItemInLaundryBaske
 import { Users } from '../interfaces/Users';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectUser } from '../redux/slices/userSlice';
-import { selectAllItems, selectItemInUse, setAllItems, setItemsInLaundry, setItemsInUse, updateAllItems, removeLook } from '../redux/slices/itemSlice';
+import { selectAllItems, setAllItems, setItemsInLaundry, setItemsInUse, updateAllItems } from '../redux/slices/itemSlice';
 import AddItemDialog from '../components/AddItemDialog';
 import CurrentWorn from '../components/CurrentWorn';
 import HistoryAlert from '../components/HistoryAlert';
@@ -30,9 +30,9 @@ const MyWardrobe = () => {
     const [updateItemInLaundry] = useUpdateItemInLaundryBasketMutation();
     const user: Users = useSelector(selectUser);
     const myWardrobe = useSelector(selectAllItems);
-
     const { updateItem } = useUpdateItem();
     const { data, error, isLoading } = useGetAllItemsQuery(user._id);
+console.log("data",data);
 
     //Filters the items according to the desired category.
     const filteredItems = myWardrobe.filter(item => {
@@ -86,6 +86,7 @@ const MyWardrobe = () => {
     };
     //Reorganizing the items in the wardrobe
     useEffect(() => {
+        fetchWardrobe()
     }, [data]);
 
     //Listen to the status. If you update something, they will see the updates on the screen.

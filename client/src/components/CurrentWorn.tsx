@@ -15,6 +15,7 @@ import { AnimatePresence, motion } from "framer-motion"
 import { useDispatch } from "react-redux"
 import { selectItemInUse, setItemsInUse, updateAllItems } from "../redux/slices/itemSlice"
 import useUpdateItem from "../hooks/useUpdateItem"
+import { useUpdateItemInUseMutation } from "../redux/api/apiSllices/itemsApiSlice"
 
 const MotionFavoriteIcon = motion(FavoriteIcon)
 const MotionFavoriteBorderIcon = motion(FavoriteBorderIcon)
@@ -22,6 +23,7 @@ const MotionFavoriteBorderIcon = motion(FavoriteBorderIcon)
 const CurrentWorn = () => {
   const user: Users = useSelector(selectUser)
   const [addEventWearning] = useAddEventWearningMutation()
+  const [updateItemInuse]=useUpdateItemInUseMutation();
   const [addHistory] = useAddHistoryItemMutation()
   const [liked, setLiked] = useState(false)
   const [showTooltip, setShowTooltip] = useState(false)
@@ -36,14 +38,20 @@ const CurrentWorn = () => {
       try {
         const newEventWearning: { newWearn: EventWearning } = await addEventWearning(wearning).unwrap()
 
-        await Promise.all(
-          wornItems.map((item) =>
+             await Promise.all(
+        wornItems.map((item) => {
+          return Promise.all([
+            // 1. הוספה להיסטוריה
             addHistory({
               item_id: item._id,
               wornEvent: [newEventWearning.newWearn._id],
             }).unwrap(),
-          ),
-        )
+            // 2. עדכון מצב הפריט (לדוגמה, להגדיר אותו כ"לא בשימוש" ולעדכן מונה לבישות)
+            // הפונקציה updateItem שלך מקבלת את האובייקט המלא של הפריט ואת המצב (false)
+            updateItemInuse({_id:item._id,inUse: false,userId:user._id})
+          ]);
+        })
+      );
         const updatedItems = wornItems.map((item) => ({ ...item, inUse: false, countWear: Number(item.countWear) + 1 }))
         dispatch(updateAllItems(updatedItems))
         dispatch(setItemsInUse([]))
@@ -52,6 +60,7 @@ const CurrentWorn = () => {
       }
     }
   }
+console.log("current.length",wornItems.length);
 
   return (
     <div>
