@@ -44,14 +44,13 @@ import { selectAllLooks, setAllLooks, updateAllItems } from "../redux/slices/ite
 const MyLooksPage = () => {
     const user: Users = useSelector(selectUser);
     const looks = useSelector(selectAllLooks);
-    // const [openDialog, setOpenDialog] = useState(false)
+     const [openDialog, setOpenDialog] = useState(false)
     const [openEditDialog, setOpenEditDialog] = useState(false)
-    // const [newLookName, setNewLookName] = useState("")
     const [editLookId, setEditLookId] = useState<string | null>(null)
     const [editLookName, setEditLookName] = useState("")
     const [expandedLook, setExpandedLook] = useState<string | null>(null)
     const [message, setMessage] = useState("");
-    const [isError, setIsError] = useState(false);
+    const [isdisabled, setDisabeld] = useState(false);
     const [isAlert, setIsAlert] = useState(false);
     const dispatch = useDispatch();
     const [deleteLook] = useDeleteLookMutation();
