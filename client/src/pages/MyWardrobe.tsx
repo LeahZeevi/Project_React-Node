@@ -1,12 +1,12 @@
 
 import { useEffect, useState } from 'react';
-import '../css/try.css';
+import '../css/myWardrobe.css';
 import Item from '../interfaces/Items';
 import { useDeleteItemMutation, useGetAllItemsQuery, useUpdateItemInLaundryBasketMutation, useUpdateItemInUseMutation } from '../redux/api/apiSllices/itemsApiSlice';
 import { Users } from '../interfaces/Users';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectUser } from '../redux/slices/userSlice';
-import { selectAllItems, selectItemInUse, setAllItems, setItemsInLaundry, setItemsInUse, updateAllItems } from '../redux/slices/itemSlice';
+import { selectAllItems, selectItemInUse, setAllItems, setItemsInLaundry, setItemsInUse, updateAllItems, removeLook } from '../redux/slices/itemSlice';
 import AddItemDialog from '../components/AddItemDialog';
 import CurrentWorn from '../components/CurrentWorn';
 import HistoryAlert from '../components/HistoryAlert';
@@ -30,10 +30,11 @@ const MyWardrobe = () => {
     const [updateItemInLaundry] = useUpdateItemInLaundryBasketMutation();
     const user: Users = useSelector(selectUser);
     const myWardrobe = useSelector(selectAllItems);
+
     const { updateItem } = useUpdateItem();
     const { data, error, isLoading } = useGetAllItemsQuery(user._id);
 
-//Filters the items according to the desired category.
+    //Filters the items according to the desired category.
     const filteredItems = myWardrobe.filter(item => {
         if (selectedCategory !== 'all' && item.categoryName !== selectedCategory)
             return false;
@@ -49,11 +50,16 @@ const MyWardrobe = () => {
     const handleRemoveItem = async (itemForRemove: Item) => {
         try {
             await deleteItem(itemForRemove).unwrap();
+            //  dispatch(removeLook(itemForRemove._id));
+            // dispatch(updateAllItems(myWardrobe.filter(item => item._id !== itemForRemove._id)));
+            dispatch(setAllItems(myWardrobe.filter(item => item._id !== itemForRemove._id)));
+            // dispatch(setItemsInUse(myWardrobe.filter(item => item._id !== itemForRemove._id)));
+            // dispatch(setItemsInLaundry(myWardrobe.filter(item => item._id !== itemForRemove._id)));
         } catch (err) {
             console.error("שגיאה בהסרה:", err);
         }
     };
-//Sending the item to the laundry basket
+    //Sending the item to the laundry basket
     const handleSendToLaundry = async (item: Item, inLaundry: boolean) => {//כאן רק מכניסים לסל הכביסה ולא מוציאים
         try {
             const { itemsInLaundry, updatedItem } = await updateItemInLaundry({ _id: item._id, inLaundryBasket: inLaundry, userId: user._id }).unwrap();
@@ -63,7 +69,7 @@ const MyWardrobe = () => {
             console.error('שגיאה בשליחת לכביסה:', err);
         }
     };
-//Updates a single item's usage status
+    //Updates a single item's usage status
     const handleUpdateItem = async (item: Item, inUse: boolean) => {
         updateItem(item, inUse);
         if (inUse === true) {
@@ -71,19 +77,18 @@ const MyWardrobe = () => {
             setShowAlert(true)
         }
     };
-//Reorganizing the items in the wardrobe
+    //Reorganizing the items in the wardrobe
     const fetchWardrobe = async () => {
         if (myWardrobe.length === 0) {
             const items = data ? data : [];
             dispatch(setAllItems(items));
         }
     };
-//Reorganizing the items in the wardrobe
+    //Reorganizing the items in the wardrobe
     useEffect(() => {
-        fetchWardrobe();
     }, [data]);
-    
-//Listen to the status. If you update something, they will see the updates on the screen.
+
+    //Listen to the status. If you update something, they will see the updates on the screen.
     useEffect(() => {
     }, [myWardrobe]);
 
@@ -96,7 +101,7 @@ const MyWardrobe = () => {
             ) : (
                 <div className='page-content'>
 
-            {/* Shows the details of the clothing */}
+                    {/* Shows the details of the clothing */}
                     <CurrentWorn />
 
                     <div className="category-tabs">

@@ -90,6 +90,8 @@ exports.deletItem = async (req, res) => {
     console.log(_id);
     try {
         const deletedItem = await Item.findOneAndDelete({ _id });
+        console.log(deletedItem);
+        
         if (!deletedItem)
             return res.status(404).json({ message: "not found item " })
 
