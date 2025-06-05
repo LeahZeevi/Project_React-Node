@@ -35,16 +35,15 @@ import Item from "../interfaces/Items"
 import { Users } from "../interfaces/Users"
 import { useDispatch, useSelector } from "react-redux"
 import { selectUser } from "../redux/slices/userSlice"
-import { useAddLookMutation, useDeleteLookMutation, useGetAllLooksQuery, useUpdateLookInClothingMutation, useUpdateNameOfLookMutation } from "../redux/api/apiSllices/looksApiSlice"
+import { useAddLookMutation, useDeleteLookMutation, useGetAllLooksQuery, useUpdateNameOfLookMutation } from "../redux/api/apiSllices/looksApiSlice"
 import { useUpdateItemInUseMutation, useUpdateItemInLaundryBasketMutation } from "../redux/api/apiSllices/itemsApiSlice"
-import { selectAllLooks, setAllLooks, updateAllItems, updateAllLooks } from "../redux/slices/itemSlice"
-import { boolean } from "zod"
+import { selectAllLooks, setAllLooks, updateAllItems } from "../redux/slices/itemSlice"
 
 
 
 const MyLooksPage = () => {
     const user: Users = useSelector(selectUser);
-    const looks: Looks[] = useSelector(selectAllLooks);
+    const looks = useSelector(selectAllLooks);
     // const [openDialog, setOpenDialog] = useState(false)
     const [openEditDialog, setOpenEditDialog] = useState(false)
     // const [newLookName, setNewLookName] = useState("")
@@ -52,13 +51,10 @@ const MyLooksPage = () => {
     const [editLookName, setEditLookName] = useState("")
     const [expandedLook, setExpandedLook] = useState<string | null>(null)
     const [message, setMessage] = useState("");
-    const [isdisabled, setDisabeld] = useState(false);
-
-    // const [isError, setIsError] = useState(false);
+    const [isError, setIsError] = useState(false);
     const [isAlert, setIsAlert] = useState(false);
     const dispatch = useDispatch();
     const [deleteLook] = useDeleteLookMutation();
-    const [updateLookinClothing] = useUpdateLookInClothingMutation();
     const [addLook] = useAddLookMutation();
     const [updateLook] = useUpdateNameOfLookMutation()
     const [updateItemInUse] = useUpdateItemInUseMutation();
@@ -71,8 +67,7 @@ const MyLooksPage = () => {
 
         try {
             await deleteLook(lookId).unwrap();
-            const updatelooks: Looks[] = looks.filter(look => look._id !== lookId);
-            dispatch(setAllLooks(updatelooks))
+
         } catch (err: any) {
             if (err.status === 404) {
                 setMessage(err.data.message)
@@ -84,42 +79,29 @@ const MyLooksPage = () => {
         }
     }
 
+
+
     const handleWearLook = async (look: Looks) => {
         try {
-            const { inClothingLooks, updatedLook } = await updateLookinClothing({
-                _id: look._id,
-                inClothing: true,
-                userId: user._id
-            }).unwrap()
+            console.log("look", look);
 
-            const updatedItems: Item[] = [];
+            const UpdatedItems: Item[] = [];
             const updatePromises = look.itemsInlook.map(async (item) => {
                 const newUpdatedItem: { inUseItems: Item[], updatedItem: Item } = await updateItemInUse({
                     _id: item._id,
                     inUse: true,
                     userId: user._id,
                 }).unwrap();
-                updatedItems.push(newUpdatedItem.updatedItem);
+                UpdatedItems.push(newUpdatedItem.updatedItem);
             });
-
             await Promise.all(updatePromises);
+            console.log("updateiteminlook", UpdatedItems);
 
-            if (look.inClothing === true) {
-                console.log("updateAllItems", look.inClothing);
-
-                dispatch(updateAllLooks(inClothingLooks))
-            }
-            else {
-                const looks: Looks[] = [...inClothingLooks, updatedLook];
-                dispatch(updateAllLooks(looks));
-
-            }
-            dispatch(updateAllItems(updatedItems));
+            dispatch(updateAllItems(UpdatedItems));
         } catch (err) {
             console.error("שגיאה בלבישת הלוק:", err);
         }
     };
-
 
 
     const handleEditLook = (lookId: string) => {
@@ -159,6 +141,11 @@ const MyLooksPage = () => {
         setExpandedLook(expandedLook === lookId ? null : lookId)
     }
 
+    const getItemStatusColor = (item: Item) => {
+        if (item.inUse) return "#10b981"
+        if (item.inLaundryBasket) return "#f59e0b"
+        return "#e2e8f0"
+    }
 
     const getItemStatusText = (item: Item) => {
         if (item.inUse) return "בלבישה"
@@ -175,7 +162,7 @@ const MyLooksPage = () => {
     const fetchWardrobe = async () => {
         if (looks.length === 0) {
             try {
-                const looks: Looks[] = data ? data.allLooks : [];
+                const looks = data ? data : [];
                 dispatch(setAllLooks(looks));
             } catch (err) {
                 console.error('שגיאה בקבלת פריטים:', err);
@@ -185,14 +172,10 @@ const MyLooksPage = () => {
 
     useEffect(() => {
         fetchWardrobe();
-
     }, [data]);
 
     useEffect(() => {
-
     }, [looks]);
-
-console.log("looks",looks);
 
     return (
 
@@ -259,9 +242,6 @@ console.log("looks",looks);
                                     <IconButton
                                         size="small"
                                         onClick={() => handleWearLook(look)}
-                                        disabled={look.inClothing===true||look.itemsInlook.some(i => i.inUse || i.inLaundryBasket)}
-                                        // כאן
-
                                         sx={{
                                             color: "white",
                                             background: "rgba(255,255,255,0.2)",
@@ -342,7 +322,6 @@ console.log("looks",looks);
                                     },
                                 }}
                             >
-                                {/* <h1>{look.dateCreation}</h1> */}
                                 {look.itemsInlook.map((item) => (
                                     <Box
                                         key={item._id}
@@ -353,7 +332,7 @@ console.log("looks",looks);
                                             minWidth: "auto",
                                             background: "#f8fafc",
                                             borderRadius: "12px",
-                                            border: `2px solid ${item.inUse && look.inClothing ? "#10b981" : item.inLaundryBasket ? "#f59e0b" : "#e2e8f0"}`,
+                                            border: `2px solid ${item.inUse ? "#10b981" : item.inLaundryBasket ? "#f59e0b" : "#e2e8f0"}`,
                                             overflow: "hidden",
                                             transition: "transform 0.2s ease, box-shadow 0.2s ease",
                                             "&:hover": {
@@ -380,7 +359,7 @@ console.log("looks",looks);
                                                     backgroundPosition: "center",
                                                 }}
                                             />
-                                            {(look.inClothing === true && (item.inUse || item.inLaundryBasket)) && (
+                                            {(item.inUse || item.inLaundryBasket) && (
                                                 <Box
                                                     sx={{
                                                         position: "absolute",
@@ -396,7 +375,7 @@ console.log("looks",looks);
                                                         boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
                                                     }}
                                                 >
-                                                    {item.inUse && look.inClothing ? (
+                                                    {item.inUse ? (
                                                         <CheckCircle sx={{ fontSize: 14, color: "white" }} />
                                                     ) : (
                                                         <Wash sx={{ fontSize: 14, color: "white" }} />
@@ -421,7 +400,7 @@ console.log("looks",looks);
                                                 sx={{
                                                     color: "#64748b",
                                                     display: "block",
-                                                    mb: item.inUse && !item.inLaundryBasket && look.inClothing ? 0.5 : 0,
+                                                    mb: item.inUse && !item.inLaundryBasket ? 0.5 : 0,
                                                 }}
                                             >
                                                 {item.categoryName}
@@ -447,7 +426,7 @@ console.log("looks",looks);
                                                 <Avatar
                                                     src={item.image ? `http://localhost:3000/${item.image.replace(/^public[\\/]/, '')}` : 'path/to/default/image.jpg'}
                                                     sx={{
-                                                        border: `2px solid ${item.inUse && look.inClothing ? "#10b981" : item.inLaundryBasket ? "#f59e0b" : "#e2e8f0"
+                                                        border: `2px solid ${item.inUse ? "#10b981" : item.inLaundryBasket ? "#f59e0b" : "#e2e8f0"
                                                             }`,
                                                     }}
                                                 />
