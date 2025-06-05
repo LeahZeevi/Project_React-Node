@@ -165,7 +165,7 @@ const Register = () => {
                                     </Box>
                                 </Box>
                                 <Typography variant="h5" className="brand-title-small">
-                                    WardrobeAI
+                                    WearTech
                                 </Typography>
                             </Box>
 

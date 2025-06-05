@@ -973,3 +973,116 @@
           object-fit: contain;
           cursor: pointer;
         }
+
+
+
+
+        /* שייך לCURRENTWORN
+        /* קונטיינר הלב עם הטולטיפ */
+.heart-container {
+  position: relative;
+  display: inline-block;
+}
+
+/* עיצוב הטולטיפ */
+.heart-tooltip {
+  position: absolute;
+  top: -45px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+}
+
+/* החץ של הטולטיפ */
+.tooltip-arrow {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid #667eea;
+}
+
+/* אנימציה עדינה לטולטיפ */
+.heart-tooltip::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1));
+  border-radius: 8px;
+  pointer-events: none;
+}
+
+
+/* עיצוב משופר לאייקון הלב */
+.heart-icon {
+  color: red;
+  filter: drop-shadow(0 2px 4px rgba(255, 107, 157, 0.3));
+  transition: all 0.2s ease;
+}
+
+.heart-icon.liked {
+  color: red;
+  filter: drop-shadow(0 2px 8px rgba(255, 71, 87, 0.5));
+}
+
+.heart-icon:hover {
+  filter: drop-shadow(0 4px 8px rgba(255, 107, 157, 0.4));
+}
+
+/* גרסה אלטרנטיבה עם רקע שקוף */
+.heart-tooltip.glass {
+  background: rgba(255, 255, 255, 0.9);
+  color: #333;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.heart-tooltip.glass .tooltip-arrow {
+  border-top-color: rgba(255, 255, 255, 0.9);
+}
+
+/* אנימציה נוספת לטקסט */
+.tooltip-text {
+  display: inline-block;
+  animation: gentle-pulse 2s ease-in-out infinite;
+}
+
+@keyframes gentle-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+/* עיצוב רספונסיבי */
+@media (max-width: 768px) {
+  .heart-tooltip {
+    font-size: 12px;
+    padding: 6px 10px;
+    top: -40px;
+  }
+  
+  .tooltip-arrow {
+    border-left-width: 5px;
+    border-right-width: 5px;
+    border-top-width: 5px;
+  }
+}
