@@ -124,6 +124,8 @@ const MyWardrobe = () => {
 
                                 <button className="remove-btn" onClick={() => handleRemoveItem(item)} title="הסר מהארון">✖</button>
 
+
+
                                 <div className="item-image">
                                     <img src={`http://localhost:3000/${item.image.replace(/^public[\\/]/, '')}`} alt={item.itemName} />
 

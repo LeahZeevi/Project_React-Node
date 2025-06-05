@@ -3,9 +3,9 @@ import apiSlice from "../apiSlices";
 
 const looksApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        getAllLooks: builder.query<Looks[], string>({
+        getAllLooks: builder.query<{allLooks:Looks[]}, string>({
             query: (user_id) => `/looks/${user_id}`,
-            
+
             providesTags: ["Looks"],
         }),
         addLook: builder.mutation<{ newLook: Looks }, Looks>({
@@ -34,6 +34,17 @@ const looksApiSlice = apiSlice.injectEndpoints({
 
         }),
 
+        updateLookInClothing: builder.mutation<{ inClothingLooks:Looks[], updatedLook: Looks }, { _id: string, inClothing: boolean, userId: string }>({
+            query: ({ _id, inClothing, userId }: { _id: string; inClothing: boolean, userId: string }) => ({
+                url: `/looks/update`,
+                method: "PATCH",
+                body: { _id, inClothing, userId }
+
+            }),
+            invalidatesTags: ["Looks"]
+
+        }),
+
     })
 })
 
@@ -41,6 +52,7 @@ export const {
     useGetAllLooksQuery,
     useAddLookMutation,
     useDeleteLookMutation,
-    useUpdateNameOfLookMutation
+    useUpdateNameOfLookMutation,
+    useUpdateLookInClothingMutation
 } = looksApiSlice;
 
