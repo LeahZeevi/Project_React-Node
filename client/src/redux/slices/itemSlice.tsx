@@ -19,8 +19,9 @@ const itemSlice = createSlice({
   name: "items",
   initialState,
   reducers: {
-    setAllItems(state, action: PayloadAction<Item[] | Item>) {
+    setAllItems(state, action: PayloadAction<Item | Item[]>) {
        if (Array.isArray(action.payload)){
+       console.log(action.payload+" אשמונטה");
       state.allItems = action.payload
       action.payload.map(item=>{
         item.inUse&&state.itemsInUse.push(item);
@@ -28,6 +29,8 @@ const itemSlice = createSlice({
       })}
       else{
         state.allItems.push(action.payload);
+        console.log(action.payload+" gvdhnzVchsabmjn");
+        
       }
     },
       setAllLooks(state, action: PayloadAction<Looks[]>) {
@@ -69,7 +72,12 @@ const itemSlice = createSlice({
       if (!state.looks.some(existingLook => existingLook._id === look._id)) {
         state.looks.push(look);
       }
-    }
+    },
+    removeLook(state, action: PayloadAction<string>) {
+      const lookId = action.payload;
+      state.looks = state.looks.filter(look => look._id !== lookId);
+      
+    },
   }
 });
 export const selectItemInUse = (state: { items: Items }): Item[] => { return state.items.itemsInUse };
@@ -77,7 +85,7 @@ export const selectItemInLaundry = (state: { items: Items }): Item[] => { return
 export const selectAllItems = (state: { items: Items }): Item[] => { return state.items.allItems }
 export const selectAllLooks = (state: { items: Items }): Looks[] => { return state.items.looks }
 
-export const { setItemsInUse, setItemsInLaundry, setAllItems,updateAllItems,setAllLooks} = itemSlice.actions;
+export const { setItemsInUse, setItemsInLaundry, setAllItems,updateAllItems,setAllLooks,removeLook} = itemSlice.actions;
 
 
 
