@@ -13,6 +13,7 @@ const initialState: Items = {
   itemInLaundry: [],
   looks: []
 };
+console.log("itemSlice initialState", initialState);
 
 
 const itemSlice = createSlice({
