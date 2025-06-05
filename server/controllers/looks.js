@@ -78,7 +78,7 @@ exports.updateLookInClothing = async (req, res) => {
             return res.status(404).json({ message: "Look not found" });
         }
 
-        // עדכון הפריטים הכלולים בלוק ל־inUse: true
+        // Update the items contained in a block to inUse: true
         if (inClothing && updatedLook.itemsInlook?.length) {
             const itemIds = updatedLook.itemsInlook.map(item => item._id);
             await Item.updateMany(
@@ -87,7 +87,7 @@ exports.updateLookInClothing = async (req, res) => {
             );
         }
 
-        // שליפת כל הלוקים שבארון עבור המשתמש
+        // Retrieve all the locks in the closet for the user
         const inClothingLooks = await Looks.find({ user_id: userId, inClothing: true }).populate("itemsInlook");
 
         return res.status(200).json({ updatedLook, inClothingLooks });

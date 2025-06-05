@@ -3,7 +3,7 @@ const { status } = require("express/lib/response");
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
 
-    // פונקציה לשלוח בקשה ל-API של OpenWeatherMap ולקבל את מזג האוויר
+// Function to send a request to the OpenWeatherMap API and get the weather
 exports.getWeather = async (req, res) => {
     const city = req.params.city;
     const apiKey =process.env.apiKey

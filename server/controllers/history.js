@@ -1,5 +1,7 @@
 const { default: mongoose } = require("mongoose");
 const History = require("../models/history");
+
+//Returns the array of events that the item participated in
 exports.addHistoryItem = async (req, res) => {
     try {
         let { item_id, wornEvent } = req.body;
@@ -28,4 +30,4 @@ exports.addHistoryItem = async (req, res) => {
     }
 }
 
-//מחזירה את מערך הארועים שהפריט השתתף בהם
+

@@ -153,25 +153,6 @@ exports.updateItemInLaundryBasket = async (req, res) => {
 };
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 exports.predictCategory = async (req, res) => {
     try {
         console.log("req.file:", req.file);
@@ -195,21 +176,3 @@ exports.predictCategory = async (req, res) => {
         fs.unlinkSync(req.file.path); // מוחק את הקובץ הזמני
     }
 };
-
-
-
-//לא נראה לי שצריך
-// exports.getItemsByCategoryId = async (req, res) => {
-//     const { categoryId } = req.params;
-//     console.log(categoryId);
-//     try {
-//         const items = await Item.find({ category: categoryId });
-//         if (!items)
-//             return res.status(404).json({ message: "not found itemd in this category" })
-//         res.json(items);
-
-//     } catch (error) {
-//         console.log('Failed to get item in this Category:', error);
-//         res.status(500).json({ message: "Failed to get item in this Category: " })
-//     }
-// }

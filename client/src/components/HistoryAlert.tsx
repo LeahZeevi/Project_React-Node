@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Drawer from '@mui/material/Drawer';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -17,13 +17,26 @@ type HistoryAlertProps = {
   item_Id: string;
 };
 
+//Displays worn histories for a specific item.
 const HistoryAlert = ({ open, onClose, item_Id }: HistoryAlertProps) => {
   const [historyItems, setHistoryItems] = useState<Item[]>([]);
   const { data, error, isLoading } = useGetEventsWearningQuery(item_Id);
-
   const { updateItem } = useUpdateItem();
-  console.log(error);
 
+
+  const handleWear = (item: Item) => {
+    updateItem(item, true);
+    setHistoryItems(prevItems =>
+      prevItems.map(prevItem =>
+        prevItem._id === item._id ? { ...prevItem, inUse: true } : prevItem
+      ))
+  };
+
+
+  const handelCloseAlsert = () => {
+    setHistoryItems([]);
+    onClose();
+  }
 
   useEffect(() => {
     if (error || (!isLoading && data?.length === 0)) {
@@ -34,18 +47,9 @@ const HistoryAlert = ({ open, onClose, item_Id }: HistoryAlertProps) => {
     }
 
   }, [data, error]);
-  const handleWear = (item: Item) => {
-    updateItem(item, true);
-    setHistoryItems(prevItems =>
-      prevItems.map(prevItem =>
-        prevItem._id === item._id ? { ...prevItem, inUse: true } : prevItem
-      ))
-  };
-  const handelCloseAlsert = () => {
-    setHistoryItems([]);
-    onClose();
-  }
-  
+
+
+
   return (
     <Drawer
       anchor="top"
