@@ -11,7 +11,11 @@ const looksSchema = new mongoose.Schema({
     ], dateCreation: {
         type: Date,
         default: Date.now
-    }
+    },
+    inClothing: {
+        type: Boolean,
+        default: false
+    },
 });
 
 

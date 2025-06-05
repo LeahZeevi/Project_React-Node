@@ -5,5 +5,6 @@ export interface Looks {
   _id: string,
   nameLook?: string;
   itemsInlook: Item[];
-  dateCreation?: Date;
+  dateCreation?: string;
+  inClothing:boolean
 }

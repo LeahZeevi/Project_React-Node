@@ -20,25 +20,60 @@ const itemSlice = createSlice({
   initialState,
   reducers: {
     setAllItems(state, action: PayloadAction<Item[] | Item>) {
-       if (Array.isArray(action.payload)){
-      state.allItems = action.payload
-      action.payload.map(item=>{
-        item.inUse&&state.itemsInUse.push(item);
-        item.inLaundryBasket&&state.itemInLaundry.push(item);
-      })}
-      else{
-        state.allItems.push(action.payload);
+      const addUnique = (array: Item[], item: Item) => {
+        const exists = array.some(existing => existing._id === item._id);
+        if (!exists) {
+          array.push(item);
+        }
+      };
+
+      if (Array.isArray(action.payload)) {
+        action.payload.forEach(item => {
+          addUnique(state.allItems, item);
+
+          if (item.inUse) {
+            addUnique(state.itemsInUse, item);
+          }
+
+          if (item.inLaundryBasket) {
+            addUnique(state.itemInLaundry, item);
+          }
+        });
+      } else {
+        addUnique(state.allItems, action.payload);
+
+        if (action.payload.inUse) {
+          addUnique(state.itemsInUse, action.payload);
+        }
+
+        if (action.payload.inLaundryBasket) {
+          addUnique(state.itemInLaundry, action.payload);
+        }
       }
     },
-      setAllLooks(state, action: PayloadAction<Looks[]>) {
-      state.looks= action.payload
-      action.payload.map(look=>{
-        look.itemsInlook.map(item=>{
-        item&&state.itemsInUse.push(item);
-        item.inLaundryBasket&&state.itemInLaundry.push(item);
-      })
-    })
+
+    setAllLooks(state, action: PayloadAction<Looks[] | Looks>) {
+      const looksArray = Array.isArray(action.payload) ? action.payload : [action.payload];
+      if (Array.isArray(action.payload)) {
+        state.looks = action.payload;
+      } else {
+        state.looks.push(action.payload);
+      }
+      looksArray.forEach(look => {
+        look.itemsInlook.forEach(item => {
+          if (item) {
+            if (!state.itemsInUse.find(existing => existing._id === item._id)) {
+              state.itemsInUse.push(item);
+            }
+
+            if (item.inLaundryBasket && !state.itemInLaundry.find(existing => existing._id === item._id)) {
+              state.itemInLaundry.push(item);
+            }
+          }
+        });
+      });
     },
+
     updateAllItems(state, action: PayloadAction<Item[]>) {
       const updatedItems = action.payload;
       state.allItems = state.allItems.map(item => {
@@ -46,6 +81,14 @@ const itemSlice = createSlice({
         return updated ? updated : item;
       });
     },
+    updateAllLooks(state, action: PayloadAction<Looks[]>) {
+      const updateLook = action.payload;
+      state.looks = state.looks.map(look => {
+        const updated = updateLook.find(l => l._id === look._id);
+        return updated ? updated : look;
+      });
+    },
+
 
     setItemsInUse(state, action: PayloadAction<Item | Item[]>) {
       const payload = action.payload;
@@ -55,6 +98,7 @@ const itemSlice = createSlice({
         state.itemsInUse.push(payload); // אם זה פריט יחיד
       }
     },
+
     setItemsInLaundry(state, action: PayloadAction<Item | Item[]>) {
       const payload = action.payload;
 
@@ -77,7 +121,7 @@ export const selectItemInLaundry = (state: { items: Items }): Item[] => { return
 export const selectAllItems = (state: { items: Items }): Item[] => { return state.items.allItems }
 export const selectAllLooks = (state: { items: Items }): Looks[] => { return state.items.looks }
 
-export const { setItemsInUse, setItemsInLaundry, setAllItems,updateAllItems,setAllLooks} = itemSlice.actions;
+export const { setItemsInUse, setItemsInLaundry, setAllItems, updateAllItems, updateAllLooks, setAllLooks } = itemSlice.actions;
 
 
 

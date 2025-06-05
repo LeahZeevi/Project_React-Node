@@ -14,8 +14,12 @@ import IconButton from '@mui/material/IconButton';
 import { AnimatePresence, motion } from 'framer-motion';
 import Item from '../interfaces/Items';
 import { useDispatch } from 'react-redux';
-import { selectItemInUse, setItemsInLaundry, setItemsInUse, updateAllItems } from '../redux/slices/itemSlice';
+import { selectItemInUse, setAllLooks, setItemsInLaundry, setItemsInUse, updateAllItems } from '../redux/slices/itemSlice';
 import useUpdateItem from '../hooks/useUpdateItem';
+import { Looks } from '../interfaces/Looks';
+import { date } from 'zod';
+import { useAddLookMutation } from '../redux/api/apiSllices/looksApiSlice';
+import { Alert, Box } from '@mui/material';
 const MotionFavoriteIcon = motion(FavoriteIcon);
 const MotionFavoriteBorderIcon = motion(FavoriteBorderIcon);
 
@@ -25,25 +29,46 @@ const CurrentWorn = () => {
   const user: Users = useSelector(selectUser);
   const [addEventWearning] = useAddEventWearningMutation()
   const [addHistory] = useAddHistoryItemMutation();
+  const [addLook] = useAddLookMutation();
   const [liked, setLiked] = useState(false);
-  const wornItems = useSelector(selectItemInUse)
+  const wornItems: Item[] = useSelector(selectItemInUse)
   const dispatch = useDispatch();
   const { updateItem } = useUpdateItem();
-  // interface SavedLook {
-  //   name: string;
-  //   items: string[];
-  //   date: string;
-  // }
+  const [message, setMessage] = useState("");
+  const [alertError, setAlertError] = useState(false);
 
 
-  // const toggleLike = () => {
-  //   setLiked(!liked);
-  //   if (!liked) {
-  //     alert("אהבתי");
-  //   }
-  // }
 
   const saveLook = async () => {
+    setLiked(!liked);
+    const today = new Date().toISOString().split('T')[0];
+    const newLook: Looks = {
+      user_id: user._id,
+      _id: "",
+      nameLook: "",
+      itemsInlook: wornItems,
+      dateCreation: today,
+      inClothing: false
+    };
+    try {
+      const response: { newLook: Looks } = await addLook(newLook).unwrap();
+      if (response) {
+        dispatch(setAllLooks(newLook));
+        setMessage("Look saved successfully!");
+        setAlertError(false);
+      }
+    }
+    catch (error: any) {
+      const errorMessage =
+        error?.data?.message || "There was a problem. Please try again later!";
+      setMessage(errorMessage);
+      setAlertError(true);
+    }
+  };
+
+
+  const saveWearning = async () => {
+    setLiked(!liked)
     if (wornItems.length > 1) {
       const items_id: string[] = wornItems.map(item => item._id)
       const wearning: EventWearning = { _id: "", user_id: user._id, items: items_id }
@@ -66,13 +91,15 @@ const CurrentWorn = () => {
       }
     }
   }
+  console.log("CurrentWorn",wornItems);
+  
 
   return (
     <div>
       <div className="current-outfit">
         {wornItems.length > 1 && (
           <IconButton
-            onClick={() => setLiked(!liked)}
+            onClick={saveLook}
             className="heart-button"
             sx={{
               outline: 'none',
@@ -118,12 +145,15 @@ const CurrentWorn = () => {
                 <span>{item.itemName}</span>
               </div>
             ))}
-            <button onClick={saveLook} className="save-look-btn">סיימתי </button>
+            <button onClick={saveWearning} className="save-look-btn">סיימתי </button>
           </div>
         ) : (
           <p className="no-outfit">בחר בגדים מהארון</p>
         )}
       </div>
+      {alertError && (<Box sx={{ position: "fixed", bottom: 16, left: 16, zIndex: 9999, }}>
+        <Alert severity="error">{message}</Alert>
+      </Box>)}
     </div>
   )
 }
