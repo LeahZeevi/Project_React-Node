@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import Item from '../interfaces/Items';
 import CurrentWorn from '../components/CurrentWorn';
-import '../css/try.css'
+import '../css/myWardrobe.css'
 import { useGetAllItemsQuery } from '../redux/api/apiSllices/itemsApiSlice';
 import { Users } from '../interfaces/Users';
 import { selectUser } from '../redux/slices/userSlice';

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import "../css/try.css"
+import "../css/myWardrobe.css"
 import type EventWearning from "../interfaces/EventWearning"
 import type { Users } from "../interfaces/Users"
 import { useSelector } from "react-redux"
@@ -35,6 +35,7 @@ const CurrentWorn = () => {
       const wearning: EventWearning = { _id: "", user_id: user._id, items: items_id }
       try {
         const newEventWearning: { newWearn: EventWearning } = await addEventWearning(wearning).unwrap()
+
         await Promise.all(
           wornItems.map((item) =>
             addHistory({
@@ -43,7 +44,7 @@ const CurrentWorn = () => {
             }).unwrap(),
           ),
         )
-        const updatedItems = wornItems.map((item) => ({ ...item, inUse: false }))
+        const updatedItems = wornItems.map((item) => ({ ...item, inUse: false, countWear: Number(item.countWear) + 1 }))
         dispatch(updateAllItems(updatedItems))
         dispatch(setItemsInUse([]))
       } catch {

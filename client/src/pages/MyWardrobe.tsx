@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from 'react';
-import '../css/try.css';
+import '../css/myWardrobe.css';
 import Item from '../interfaces/Items';
 import { useDeleteItemMutation, useGetAllItemsQuery, useUpdateItemInLaundryBasketMutation, useUpdateItemInUseMutation } from '../redux/api/apiSllices/itemsApiSlice';
 import { Users } from '../interfaces/Users';
