@@ -17,6 +17,7 @@ const wearning=require('./routes/wearnings')
 const predictRoute = require('./routes/predictRoute');
 const looks = require('./routes/looks');
 const app=express();
+require('./background/autoAssignJob');
 
 const cachePath = path.join(__dirname, 'predictions_cache.json');
 let predictionCache = {};

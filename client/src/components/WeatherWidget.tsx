@@ -1,6 +1,6 @@
 import React from 'react';
 import Weather from './Weather'; // Assuming Weather is a separate component you have
-import '../css/try.css'
+import '../css/myWardrobe.css'
 interface WeatherWidgetProps {
   city: String;
 }

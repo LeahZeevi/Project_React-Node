@@ -24,11 +24,13 @@ import { useAddItemMutation } from '../redux/api/apiSllices/itemsApiSlice';
 import { useNavigate } from "react-router";
 import { useSelector, useDispatch } from "react-redux"; // ייבוא useDispatch
 import { selectUser } from "../redux/slices/userSlice";
+import { setAllItems } from "../redux/slices/itemSlice";
 
 const AddItem = () => {
   const { register, handleSubmit, formState: { errors }, control, reset } = useForm({ mode: "onChange", resolver: zodResolver(ItemSchema) });
   const [isAlertOpen, setIsAlertOpen] = useState<boolean>(false);
   const [image, setImage] = useState<string | null>(null);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [addItem] = useAddItemMutation();
   const user: Users = useSelector(selectUser)
@@ -54,7 +56,13 @@ const AddItem = () => {
       console.log("data.image[0]:", data.image[0]);
 
       try {
-        const response = await addItem({ _id: user._id, newItem: formData });
+        console.log("trrrrrrrrr");
+        alert("הפריט נוסף בהצלחה!");
+        
+        const response: { newItem: Item } = await addItem({ _id: user._id, newItem: formData }).unwrap();
+         if (response) {
+          dispatch(setAllItems(response.newItem));
+        }
         console.log("response add item", response);
         setImage(null);
         reset({

@@ -4,7 +4,7 @@ import { useCookies } from 'react-cookie'
 import { Provider } from 'react-redux'
 import store from './redux/store'
 import router from './routes/AppRoute'
-import './css/try.css'
+import './css/myWardrobe.css'
 import LandingPage from './pages/LandingPage'
 
 
