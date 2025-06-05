@@ -1815,7 +1815,8 @@ const StyledFormControl = styled(FormControl)({
   },
 })
 
-const ImageUploadButton = styled(Button)({
+import type { ButtonProps } from "@mui/material/Button";
+const ImageUploadButton = styled(Button)<ButtonProps & { component?: React.ElementType }>({
   height: "50px",
   borderRadius: "10px",
   borderStyle: "dashed",
