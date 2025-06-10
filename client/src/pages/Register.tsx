@@ -212,7 +212,7 @@ const Register = () => {
                                                                         render={({ field }) => (
                                                                             <Autocomplete
                                                                                 options={cities}
-                                                                                freeSolo // אם תרצי לאפשר גם הקלדה חופשית ולא רק מהרשימה
+                                                                                freeSolo 
                                                                                 onChange={(_, value) => field.onChange(value)}
                                                                                 value={field.value || ''}
                                                                                 renderInput={(params) => (

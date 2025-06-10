@@ -16,7 +16,7 @@ import ShirtHangerLoader from '../components/ShirtHangerLoader';
 import ErrorPage from './ErrorPage';
 
 
-//Showing my entire wardrobe
+
 const MyWardrobe = () => {
 
     const categories = ['כל הקטגוריות', 'חולצות', 'חצאיות', 'מכנסים', 'שמלות', 'נעלים'];
@@ -34,7 +34,7 @@ const MyWardrobe = () => {
     const { data, error, isLoading } = useGetAllItemsQuery(user._id);
 console.log("data",data);
 
-    //Filters the items according to the desired category.
+
     const filteredItems = myWardrobe.filter(item => {
         if (selectedCategory !== 'all' && item.categoryName !== selectedCategory)
             return false;
@@ -46,21 +46,19 @@ console.log("data",data);
         );
     });
 
-    //לא גמור
+
     const handleRemoveItem = async (itemForRemove: Item) => {
         try {
             await deleteItem(itemForRemove).unwrap();
-            //  dispatch(removeLook(itemForRemove._id));
-            // dispatch(updateAllItems(myWardrobe.filter(item => item._id !== itemForRemove._id)));
             dispatch(setAllItems(myWardrobe.filter(item => item._id !== itemForRemove._id)));
-            // dispatch(setItemsInUse(myWardrobe.filter(item => item._id !== itemForRemove._id)));
-            // dispatch(setItemsInLaundry(myWardrobe.filter(item => item._id !== itemForRemove._id)));
+            
         } catch (err) {
             console.error("שגיאה בהסרה:", err);
         }
     };
+    
     //Sending the item to the laundry basket
-    const handleSendToLaundry = async (item: Item, inLaundry: boolean) => {//כאן רק מכניסים לסל הכביסה ולא מוציאים
+    const handleSendToLaundry = async (item: Item, inLaundry: boolean) => {
         try {
             const { itemsInLaundry, updatedItem } = await updateItemInLaundry({ _id: item._id, inLaundryBasket: inLaundry, userId: user._id }).unwrap();
             dispatch(setItemsInLaundry(itemsInLaundry));
@@ -102,7 +100,6 @@ console.log("data",data);
             ) : (
                 <div className='page-content'>
 
-                    {/* Shows the details of the clothing */}
                     <CurrentWorn />
 
                     <div className="category-tabs">

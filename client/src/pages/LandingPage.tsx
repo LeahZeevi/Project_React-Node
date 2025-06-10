@@ -10,15 +10,13 @@ const LandingPage = () => {
         <>
             {isRegister ? <Register /> :
                 (<Box className="landing-container">
-                    {/* Animated background elements */}
+                
                     <Box className="bg-element bg-element-1"></Box>
                     <Box className="bg-element bg-element-2"></Box>
                     <Box className="bg-element bg-element-3"></Box>
 
-                    {/* Grid pattern overlay */}
                     <Box className="grid-pattern"></Box>
 
-                    {/* Floating elements */}
                     <Box className="floating-dot floating-dot-1"></Box>
                     <Box className="floating-dot floating-dot-2"></Box>
                     <Box className="floating-dot floating-dot-3"></Box>
@@ -26,7 +24,7 @@ const LandingPage = () => {
                     <Box className="landing-content">
                         <Grow in={true} timeout={1000}>
                             <Box className="content-wrapper">
-                                {/* Logo and brand */}
+
                                 <Box className="logo-section">
                                     <Box className="logo-container">
                                         <Box className="logo-blur"></Box>
@@ -39,21 +37,21 @@ const LandingPage = () => {
                                     </Typography>
                                 </Box>
 
-                                {/* Main heading */}
+                             
                                 <Typography variant="h1" className="main-title">
                                     ארון הבגדים
                                     <br />
                                     <span className="gradient-text">החכם שלך</span>
                                 </Typography>
 
-                                {/* Subtitle */}
+                              
                                 <Typography variant="h5" className="subtitle">
                                     נהלי את ארון הבגדים שלך בצורה חכמה עם בינה מלאכותית מתקדמת.
                                     <br />
                                     קבלי המלצות אישיות, תכנני לוקים מושלמים וחסכי זמן יקר.
                                 </Typography>
 
-                                {/* Features */}
+                          
                                 <Box className="features-grid">
                                     <Fade in={true} timeout={1200}>
                                         <Card className="feature-card">
@@ -104,7 +102,7 @@ const LandingPage = () => {
                                     </Fade>
                                 </Box>
 
-                                {/* Start Button */}
+                             
                                 <Grow in={true} timeout={1800}>
                                     <Button
                                         onClick={() => setIsRegister(true)}

@@ -7,12 +7,12 @@ interface WeatherAProps {
 
 const
   Weather: React.FC<WeatherAProps> = ({ city }) => {
-    const [weather, setWeather] = useState<any>(null); // טיפוס כללי עבור נתוני מזג האוויר
+    const [weather, setWeather] = useState<any>(null); 
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
 
-    const apiKey = '47fa8cac82de9fb95d74187722119d68';  // הכנס את המפתח שלך כאן
+    const apiKey = '47fa8cac82de9fb95d74187722119d68';  
     const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=he`;
 
     useEffect(() => {

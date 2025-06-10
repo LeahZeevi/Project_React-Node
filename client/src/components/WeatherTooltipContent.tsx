@@ -5,7 +5,7 @@ import { Typography, Box, Chip } from "@mui/material"
 interface Props {
   city: String
 }
-const apiKey = '47fa8cac82de9fb95d74187722119d68';  // הכנס את המפתח שלך כאן
+const apiKey = '47fa8cac82de9fb95d74187722119d68';  
 
 
 const WeatherTooltipContent = ({ city }: Props) => {

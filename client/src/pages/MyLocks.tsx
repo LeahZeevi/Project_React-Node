@@ -139,7 +139,7 @@ const MyLooksPage = () => {
                             },
                         }}
                     >
-                        {/* Look Header - Only colored part */}
+              
                         <Box
                             sx={{
                                 display: "flex",
@@ -223,7 +223,7 @@ const MyLooksPage = () => {
                             </Box>
                         </Box>
 
-                        {/* Look Content - White background */}
+                     
                         <Box sx={{ p: 3, background: "white" }}>
                             <Box
                                 sx={{
@@ -309,7 +309,7 @@ const MyLooksPage = () => {
                             </Box>
                         </Box>
 
-                        {/* Expanded Content - White background */}
+                    
                         <Collapse in={expandedLook === look._id}>
                             <Divider sx={{ borderColor: "#f1f5f9" }} />
                             <Box sx={{ p: 3, background: "white" }}>

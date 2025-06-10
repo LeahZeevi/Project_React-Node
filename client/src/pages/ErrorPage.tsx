@@ -9,12 +9,11 @@ const ErrorPage: FC<ErrorPageProps> = ({ errorMessage = "An unexpected error occ
   return (
     <div className="error-container">
       <div className="error-content">
-        {/* Decorative elements */}
+  
         <div className="decorative-circle circle-1"></div>
         <div className="decorative-circle circle-2"></div>
         <div className="decorative-circle circle-3"></div>
 
-        {/* Content */}
         <div className="error-content-inner">
           <div className="error-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
@@ -27,7 +26,7 @@ const ErrorPage: FC<ErrorPageProps> = ({ errorMessage = "An unexpected error occ
         </div>
       </div>
 
-      {/* Error code */}
+
       <div className="error-code">ERROR</div>
     </div>
   )

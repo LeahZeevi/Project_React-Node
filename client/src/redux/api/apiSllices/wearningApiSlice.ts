@@ -1,5 +1,4 @@
 import EventWearning from "../../../interfaces/EventWearning";
-import HistoryItem from "../../../interfaces/HistoryItem";
 import Item from "../../../interfaces/Items";
 import apiSlice from "../apiSlices";
 

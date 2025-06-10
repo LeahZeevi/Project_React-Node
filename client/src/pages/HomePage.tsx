@@ -44,7 +44,6 @@ const HomePage = () => {
             ) : (
                 <div className="page-content">
 
-                    {/* Shows the details of the clothing */}
                     <CurrentWorn />
 
                     <div className="stats-grid">
