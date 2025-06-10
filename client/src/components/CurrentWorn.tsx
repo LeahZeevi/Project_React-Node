@@ -41,13 +41,10 @@ const CurrentWorn = () => {
              await Promise.all(
         wornItems.map((item) => {
           return Promise.all([
-            // 1. הוספה להיסטוריה
             addHistory({
               item_id: item._id,
               wornEvent: [newEventWearning.newWearn._id],
             }).unwrap(),
-            // 2. עדכון מצב הפריט (לדוגמה, להגדיר אותו כ"לא בשימוש" ולעדכן מונה לבישות)
-            // הפונקציה updateItem שלך מקבלת את האובייקט המלא של הפריט ואת המצב (false)
             updateItemInuse({_id:item._id,inUse: false,userId:user._id})
           ]);
         })

@@ -30,7 +30,7 @@ const CustomLineChart: React.FC<CustomLineChartProps> = ({ myWardrobe }) => {
       map.set(item.categoryName, prev + Number(item.countWear));
     });
 
-    // הפוך למערך שמתאים ל־Recharts
+   
     return Array.from(map.entries()).map(([category, count]) => ({
       category,
       countWear: count,

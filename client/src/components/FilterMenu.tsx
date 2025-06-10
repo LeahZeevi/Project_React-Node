@@ -61,7 +61,7 @@ const FilterMenu: React.FC<FilterMenuProps> = ({ onFilterSelect }) => {
           }
         }}
       >
-        {/* ללא סינון */}
+      
         <MenuItem
           onClick={() => handleSelect('')}
           sx={{
@@ -78,7 +78,6 @@ const FilterMenu: React.FC<FilterMenuProps> = ({ onFilterSelect }) => {
           <ListItemText primary="ללא סינון" />
         </MenuItem>
 
-        {/* לפי עונה */}
         <MenuItem
           onClick={(e) => {
             setSeasonMenuAnchor(e.currentTarget);
@@ -99,7 +98,7 @@ const FilterMenu: React.FC<FilterMenuProps> = ({ onFilterSelect }) => {
           </ListItemIcon>
         </MenuItem>
 
-        {/* לפי סגנון */}
+
         <MenuItem
           onClick={(e) => {
             setStyleMenuAnchor(e.currentTarget);
@@ -121,7 +120,7 @@ const FilterMenu: React.FC<FilterMenuProps> = ({ onFilterSelect }) => {
         </MenuItem>
       </Menu>
 
-      {/* תת-תפריט עונה */}
+
       <Menu
         anchorEl={seasonMenuAnchor}
         open={Boolean(seasonMenuAnchor)}
@@ -134,7 +133,7 @@ const FilterMenu: React.FC<FilterMenuProps> = ({ onFilterSelect }) => {
         <MenuItem onClick={() => handleSelect("כללי")}>כללי</MenuItem>
       </Menu>
 
-      {/* תת-תפריט סגנון */}
+{/* Style submenu */}
       <Menu
         anchorEl={styleMenuAnchor}
         open={Boolean(styleMenuAnchor)}
