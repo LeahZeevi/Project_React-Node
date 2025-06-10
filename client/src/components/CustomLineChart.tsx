@@ -30,7 +30,6 @@ const CustomLineChart: React.FC<CustomLineChartProps> = ({ myWardrobe }) => {
       map.set(item.categoryName, prev + Number(item.countWear));
     });
 
-   
     return Array.from(map.entries()).map(([category, count]) => ({
       category,
       countWear: count,
@@ -73,11 +72,6 @@ const CustomLineChart: React.FC<CustomLineChartProps> = ({ myWardrobe }) => {
                 <YAxis />
                 <Tooltip />
                 <Legend />
-                {/* <Line type="monotone" dataKey="ביסיק" stroke=" rgb(230, 31, 204)" name="ביסיק" />
-                <Line type="monotone" dataKey="ספורט" stroke="rgb(200, 27, 227)" name="ספורט" />
-                <Line type="monotone" dataKey=" ספורט אלגנט " stroke="rgb(144, 39, 219)" name=" ספורט אלגנט" />
-                <Line type="monotone" dataKey="אלגנט" stroke="rgb(96, 94, 229)" name="  אלגנט" />
-                <Line type="monotone" dataKey="11+" stroke="rgb(7, 41, 234)" name="אחר" /> */}
                 <Line type="monotone" dataKey="countWear" stroke="rgb(234, 7, 200)" name="כמות לבישות" />
 
               </LineChart>

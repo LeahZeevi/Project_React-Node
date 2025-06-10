@@ -1,4 +1,4 @@
-/* עיצוב כללי */
+
 .charts-container {
   padding: 24px;
   background: linear-gradient(135deg, rgb(187, 2, 156, 0.03) 0%, rgb(101, 120, 227, 0.03) 100%);
@@ -33,7 +33,6 @@
   margin-top: 16px;
 }
 
-/* עיצוב כרטיסי גרפים */
 .charts-grid {
   margin-top: 16px;
 }
@@ -80,7 +79,7 @@
   padding: 8px;
 }
 
-/* עיצוב רספונסיבי */
+
 @media (max-width: 960px) {
   .charts-container {
     padding: 16px;

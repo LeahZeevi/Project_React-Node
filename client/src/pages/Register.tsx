@@ -289,13 +289,6 @@ const Register = () => {
                                                                     }}
                                                                 />
                                                             </Box>
-
-                                                            {/* <Box className="forgot-password">
-                                                                <Link href="#" className="forgot-link">
-                                                                    שכחת סיסמה?
-                                                                </Link>
-                                                            </Box> */}
-
                                                             <Button type="submit" fullWidth className="submit-button">
                                                                 התחברי
                                                             </Button>

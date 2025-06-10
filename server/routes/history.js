@@ -2,7 +2,7 @@ const express = require("express")
 const { addHistoryItem } = require("../controllers/history")
 const router = express.Router()
 
-
-router.post('/',addHistoryItem);
+const verifyJWT=require("../middlwares/verifyJWT")
+router.post('/',verifyJWT,addHistoryItem);
 module.exports = router
 

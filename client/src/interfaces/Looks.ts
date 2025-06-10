@@ -5,6 +5,14 @@ export interface Looks {
   _id: string,
   nameLook?: string;
   itemsInlook: Item[];
-  dateCreation?: string;
+  dateCreation?: Date;
+  inClothing:boolean
+}
+export interface SaveLook{
+    user_id: string;
+  _id: string,
+  nameLook?: string;
+  itemsInlook: string[];
+  dateCreation?: Date;
   inClothing:boolean
 }

@@ -46,7 +46,7 @@
   position: relative !important;
 }
 
-/* אנימציות */
+
 @keyframes bounceIn {
   0% {
     transform: scale(0.3);
@@ -68,7 +68,7 @@
   animation: bounceIn 0.6s ease-out;
 }
 
-/* רספונסיביות */
+
 @media (max-width: 600px) {
   .remove-btn-new {
     width: 28px !important;

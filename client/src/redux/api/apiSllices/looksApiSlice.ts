@@ -1,4 +1,4 @@
-import { Looks } from "../../../interfaces/Looks";
+import { Looks, SaveLook } from "../../../interfaces/Looks";
 import apiSlice from "../apiSlices";
 
 const looksApiSlice = apiSlice.injectEndpoints({
@@ -8,7 +8,7 @@ const looksApiSlice = apiSlice.injectEndpoints({
 
             providesTags: ["Looks"],
         }),
-        addLook: builder.mutation<{ newLook: Looks }, Looks>({
+        addLook: builder.mutation<{ newLook: Looks }, SaveLook>({
             query: (newLook) => ({
                 url: "/looks",
                 method: "POST",

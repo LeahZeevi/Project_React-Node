@@ -54,25 +54,11 @@ const itemSlice = createSlice({
     },
 
     setAllLooks(state, action: PayloadAction<Looks[] | Looks>) {
-      const looksArray = Array.isArray(action.payload) ? action.payload : [action.payload];
       if (Array.isArray(action.payload)) {
         state.looks = action.payload;
       } else {
         state.looks.push(action.payload);
       }
-      looksArray.forEach(look => {
-        look.itemsInlook.forEach(item => {
-          if (item) {
-            if (!state.itemsInUse.find(existing => existing._id === item._id)) {
-              state.itemsInUse.push(item);
-            }
-
-            if (item.inLaundryBasket && !state.itemInLaundry.find(existing => existing._id === item._id)) {
-              state.itemInLaundry.push(item);
-            }
-          }
-        });
-      });
     },
 
     updateAllItems(state, action: PayloadAction<Item[]>) {
@@ -84,19 +70,17 @@ const itemSlice = createSlice({
     },
     updateAllLooks(state, action: PayloadAction<Looks[]>) {
       const updateLook = action.payload;
-      state.looks = state.looks.map(look => {
-        const updated = updateLook.find(l => l._id === look._id);
-        return updated ? updated : look;
-      });
+      state.looks=updateLook;
+     
     },
 
 
     setItemsInUse(state, action: PayloadAction<Item | Item[]>) {
       const payload = action.payload;
       if (Array.isArray(payload)) {
-        state.itemsInUse = payload; // אם זה מערך, מוסיפים את כולם
+        state.itemsInUse = payload; 
       } else {
-        state.itemsInUse.push(payload); // אם זה פריט יחיד
+        state.itemsInUse.push(payload); 
       }
     },
 
@@ -104,9 +88,9 @@ const itemSlice = createSlice({
       const payload = action.payload;
 
       if (Array.isArray(payload)) {
-        state.itemInLaundry = payload; // אם זה מערך, מוסיפים את כולם
+        state.itemInLaundry = payload; 
       } else {
-        state.itemInLaundry.push(payload); // אם זה פריט יחיד
+        state.itemInLaundry.push(payload); // אם זה פריט יחי
       }
     },
     addLook(state, action: PayloadAction<Looks>) {

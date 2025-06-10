@@ -66,6 +66,7 @@ const Header = () => {
   useEffect(() => {
     fetchWardrobe()
   }, [])
+
   return (
     <div className="app">
       <header className="header">
@@ -162,13 +163,13 @@ const Header = () => {
           <span className="menu-icon">👔</span>
           הארון שלי
         </NavLink>
-        {/* <NavLink
+        <NavLink
           to="/myLocks"
           className={`menu-item ${location.pathname === "/myLocks" ? "active" : ""}`}
           onClick={() => setDrawerOpen(false)}
         >
-          {/* <span className="menu-icon">👞👖👕</span> */}
-          {/* <Box
+          <span className="menu-icon"></span>
+          <Box
             sx={{
               background: "linear-gradient(135deg, rgb(187, 2, 156) 0%, rgb(101, 120, 227) 100%)",
               borderRadius: "8px",
@@ -181,7 +182,7 @@ const Header = () => {
             <Style sx={{ fontSize: 18, color: "white" }} />
           </Box>
           הלוקים שלי
-        </NavLink> */}
+        </NavLink>
         <NavLink to="/graphs" className={`menu-item ${location.pathname === '/graphs' ? 'active' : ''}`} onClick={() => setDrawerOpen(false)} >
           <span className="menu-icon">📊</span>
           ניתוח נתוני לבישה
