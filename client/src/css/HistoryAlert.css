@@ -129,7 +129,7 @@
     }
 }
 
-/* מותאם למסכים קטנים */
+
 @media (max-width: 600px) {
     .history-alert-title {
         font-size: 1.5em;

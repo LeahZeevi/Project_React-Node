@@ -1,140 +1,11 @@
-/* .app {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  font-family: sans-serif;
-}
-
-.open-modal-btn {
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: #f9f9f9;
-}
-
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
-}
-
-.modal.open {
-  opacity: 1;
-  visibility: visible;
-}
-
-.modal-content {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-  width: 80%;
-  max-width: 900px;
-}
-
-.close {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  font-size: 20px;
-  font-weight: bold;
-  color: #aaa;
-  cursor: pointer;
-}
-
-.close:hover {
-  color: black;
-}
-
-.category-navigation {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.category-navigation h2 {
-  margin: 0;
-}
-
-.nav-button {
-  padding: 8px 15px;
-  font-size: 16px;
-  cursor: pointer;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: #eee;
-}
-
-.nav-button:disabled {
-  background-color: #ddd;
-  color: #888;
-  cursor: not-allowed;
-}
-
-.products-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
-}
-
-.product-item {
-  border: 1px solid #eee;
-  padding: 15px;
-  border-radius: 5px;
-  text-align: center;
-}
-
-.product-item img {
-  max-width: 100%;
-  height: auto;
-  margin-bottom: 10px;
-}
-
-.product-item h3 {
-  margin-top: 0;
-  margin-bottom: 5px;
-  font-size: 18px;
-}
-
-.product-item p {
-  margin-bottom: 10px;
-  color: #555;
-}
-
-.product-item button {
-  padding: 8px 15px;
-  font-size: 14px;
-  cursor: pointer;
-  border: none;
-  border-radius: 5px;
-  background-color: #007bff;
-  color: white;
-}
-
-.product-item button:hover {
-  background-color: #0056b3;
-} */
 
 .app {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* פונט מודרני */
-  background-color: #f4f6f8; /* רקע בהיר */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f4f6f8; 
 }
 
 .open-modal-btn {
@@ -159,7 +30,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.6); /* רקע שקוף יותר */
+  background-color: rgba(0, 0, 0, 0.6); 
   display: flex;
   justify-content: center;
   align-items: center;
@@ -176,8 +47,8 @@
 .modal-content {
   background-color: #fff;
   padding: 30px;
-  border-radius: 12px; /* פינות מעוגלות יותר */
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* צל עמוק יותר */
+  border-radius: 12px; 
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); 
   width: 90%;
   max-width: 1000px;
 }
@@ -216,7 +87,7 @@
   cursor: pointer;
   border: none;
   border-radius: 8px;
-  background-color: #e0e7ed; /* צבע רקע בהיר יותר */
+  background-color: #e0e7ed; 
   color: #333;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
@@ -234,7 +105,7 @@
 
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* כרטיסים רחבים יותר */
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
   gap: 25px;
 }
 
@@ -253,9 +124,9 @@
 .product-image-container {
   position: relative;
   width: 100%;
-  height: 200px; /* גובה קבוע לתמונה */
+  height: 200px; 
   overflow: hidden;
-  background-color: #f9f9f9; /* רקע אחיד לתמונה */
+  background-color: #f9f9f9; 
   display: flex;
   justify-content: center;
   align-items: center;
@@ -265,7 +136,7 @@
   display: block;
   max-width: 100%;
   max-height: 100%;
-  object-fit: contain; /* שמירה על פרופורציות */
+  object-fit: contain; 
 }
 
 .product-info {
@@ -293,7 +164,7 @@
   cursor: pointer;
   border: none;
   border-radius: 8px;
-  background-color: #28a745; /* צבע ירוק להוספה לסל */
+  background-color: #28a745; 
   color: white;
   transition: background-color 0.3s ease;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);

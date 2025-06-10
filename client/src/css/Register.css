@@ -1,4 +1,4 @@
-/* Reset and root styles */
+
 * {
   margin: 0;
   padding: 0;
@@ -19,7 +19,6 @@ body {
   height: 100%;
 }
 
-/* Landing Page Styles */
 .landing-container {
   width: 100vw;
   height: 100vh;
@@ -35,7 +34,6 @@ body {
   justify-content: center;
 }
 
-/* Subtle grid pattern overlay */
 .grid-pattern {
   position: absolute;
   inset: 0;
@@ -45,7 +43,6 @@ body {
   opacity: 0.7;
 }
 
-/* Content wrapper */
 .landing-content {
   position: relative;
   z-index: 10;
@@ -62,7 +59,6 @@ body {
   max-width: 1200px;
 }
 
-/* Logo section */
 .logo-section {
   display: flex;
   align-items: center;
@@ -92,7 +88,6 @@ body {
   font-weight: bold !important;
 }
 
-/* Main title */
 .main-title {
   color: white !important;
   font-weight: bold !important;
@@ -106,7 +101,6 @@ body {
   text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
 }
 
-/* Subtitle */
 .subtitle {
   color: rgba(255, 255, 255, 0.9) !important;
   margin-bottom: 20px !important;
@@ -117,7 +111,6 @@ body {
   font-size: clamp(1.1rem, 3vw, 1.5rem) !important;
 }
 
-/* Features grid */
 .features-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -168,8 +161,6 @@ body {
 .feature-description {
   color: rgba(255, 255, 255, 0.7) !important;
 }
-
-/* CTA Button */
 .cta-button {
   background: rgba(255, 255, 255, 0.1) !important;
   color: white !important;
@@ -194,8 +185,6 @@ body {
   color: rgba(255, 255, 255, 0.6) !important;
   margin-top: 20px !important;
 }
-
-/* Auth Container */
 .auth-container {
   width: 100vw;
   height: 100vh;
@@ -223,8 +212,6 @@ body {
   justify-content: center;
   padding: 18px;
 }
-
-/* Back button */
 .back-button {
   position: absolute !important;
   top: 32px;
@@ -240,8 +227,6 @@ body {
 .back-button:hover {
   background: rgba(255, 255, 255, 0.15) !important;
 }
-
-/* Auth logo */
 .auth-logo-section {
   display: flex;
   align-items: center;
@@ -271,7 +256,6 @@ body {
   font-weight: bold !important;
 }
 
-/* Auth card */
 .auth-card {
   background: rgba(255, 255, 255, 0.08) !important;
   backdrop-filter: blur(10px);
@@ -301,7 +285,6 @@ body {
   color: rgba(255, 255, 255, 0.7) !important;
 }
 
-/* Tabs */
 .tabs-container {
   width: 100%;
 }

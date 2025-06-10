@@ -1,6 +1,5 @@
 const { status } = require("express/lib/response");
 const Item = require("../models/items");
-// const { saveImage } = require('../middlware/uploudPic');
 const mongoose = require('mongoose');
 const axios = require("axios");
 const fs = require("fs");
@@ -9,44 +8,44 @@ const { log } = require("console");
 
 
 exports.addItem = async (req, res) => {
-  const { _id } = req.params;
-  let { userId, itemName, categoryName, image, session, inUse, inLaundryBasket, countWear, style } = req.body;
+    const { _id } = req.params;
+    let { userId, itemName, categoryName, image, session, inUse, inLaundryBasket, countWear, style } = req.body;
 
-  let imageUrl = null;
+    let imageUrl = null;
 
-  if (req.file) {
-    imageUrl = req.file.path.replace(/\\/g, '/');
-    console.log("Request image path:", imageUrl, "req.file:", image);
-  } else {
-    return res.status(400).json({ message: "No file was uploaded. Please try again." });
-  }
-
-  if (!itemName || !categoryName) {
-    return res.status(400).json({ message: "Item name and category name are required." });
-  }
-
-  try {
-    const item = {userId,itemName,image: imageUrl,categoryName,session,inUse,inLaundryBasket,countWear,style};
-
-    const newItem = await Item.create(item);
-
-    if (newItem) {
-      return res.status(201).json({newItem:newItem});
+    if (req.file) {
+        imageUrl = req.file.path.replace(/\\/g, '/');
+        console.log("Request image path:", imageUrl, "req.file:", image);
     } else {
-      return res.status(500).json({ message: "Item creation failed. Please try again later." });
-    }
-  } catch (error) {
-
-    if (error.name === "MongoNetworkError" || error.code === 'ECONNREFUSED') {
-      return res.status(503).json({ message: "Cannot connect to the database. Please try again later." });
+        return res.status(400).json({ message: "No file was uploaded. Please try again." });
     }
 
-    // Default fallback
-    return res.status(500).json({
-      message: "An unexpected server error occurred while adding the item. Please try again later.",
-      details: error.message
-    });
-  }
+    if (!itemName || !categoryName) {
+        return res.status(400).json({ message: "Item name and category name are required." });
+    }
+
+    try {
+        const item = { userId, itemName, image: imageUrl, categoryName, session, inUse, inLaundryBasket, countWear, style };
+
+        const newItem = await Item.create(item);
+
+        if (newItem) {
+            return res.status(201).json({ newItem: newItem });
+        } else {
+            return res.status(500).json({ message: "Item creation failed. Please try again later." });
+        }
+    } catch (error) {
+
+        if (error.name === "MongoNetworkError" || error.code === 'ECONNREFUSED') {
+            return res.status(503).json({ message: "Cannot connect to the database. Please try again later." });
+        }
+
+        // Default fallback
+        return res.status(500).json({
+            message: "An unexpected server error occurred while adding the item. Please try again later.",
+            details: error.message
+        });
+    }
 };
 
 
@@ -91,7 +90,7 @@ exports.deletItem = async (req, res) => {
     try {
         const deletedItem = await Item.findOneAndDelete({ _id });
         console.log(deletedItem);
-        
+
         if (!deletedItem)
             return res.status(404).json({ message: "not found item " })
 
@@ -143,7 +142,7 @@ exports.updateItemInLaundryBasket = async (req, res) => {
         if (!updatedItem) {
             return res.status(404).json({ message: "Item not found" });
         }
-        const inLaundryBasketItems = await Item.find({ userId, inLaundryBasket: true });//מחזיר רשימה מעודכנת של פריטים בסל כביסה
+        const inLaundryBasketItems = await Item.find({ userId, inLaundryBasket: true });
 
         return res.status(200).json({ itemsInLaundry: inLaundryBasketItems, updatedItem: updatedItem });
     } catch (error) {
@@ -167,12 +166,12 @@ exports.predictCategory = async (req, res) => {
             headers: form.getHeaders()
         });
 
-        // מחזיר ל-Frontend את הקטגוריה שחוזה המודל
+
         res.json({ predictedCategory: response.data.predicted_class });
     } catch (error) {
         console.error("שגיאה בניבוי קטגוריה:", error.message);
         res.status(500).json({ error: "שגיאה בשירות החיזוי" });
     } finally {
-        fs.unlinkSync(req.file.path); // מוחק את הקובץ הזמני
+        fs.unlinkSync(req.file.path);
     }
 };

@@ -35,14 +35,10 @@
   .middle-text {
     color: white;
   }
-  
-  .bottom-section {
-   
-   }
-  
+
   .bottom-cursive-text {
-    color: #ffdd00; /* צהוב */
-     font-family: cursive; /* גופן דמוי כתב יד */
+    color: #ffdd00; 
+     font-family: cursive; 
      font-size: 2.5rem; 
   }
   .alertLogin{

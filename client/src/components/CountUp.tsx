@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import  { useEffect, useState } from 'react';
 
 type CountUpProps = {
-  target: number; // המספר שאליו רוצים להגיע
-  duration?: number; // משך האנימציה במילישניות (ברירת מחדל: 1000ms)
+  target: number;
+  duration?: number;
 };
 
 const CountUp = ({ target, duration = 1000 }: CountUpProps) => {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    const increment = target / (duration / 16); // בערך 60FPS
+    const increment = target / (duration / 16); 
 
     let current = 0;
     const interval = setInterval(() => {

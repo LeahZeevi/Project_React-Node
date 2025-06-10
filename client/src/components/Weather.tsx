@@ -1,14 +1,6 @@
-// הסבר על קוד ה-React:
-// useState ו-useEffect משמשים לשמירת המידע שמתקבל מה-API ועדכון הממשק.
-// כל פעם שה-city משתנה, מתבצעת קריאה לשרת (API backend) שמחזיר את נתוני מזג האוויר.
-// התקנת Axios ושליחת בקשה ל-API של OpenWeatherMap לקבלת מזג האוויר.
-// שימוש ב-Backend (Node.js עם Express) כדי להוציא את הנתונים ולשלוח אותם ל-Frontend (React).
-// ב-Frontend, השתמש ב-useEffect וב-axios כדי לשלוח את הבקשה ולהציג את הנתונים.
 
-// Weather.js
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import ShirtHangerLoader from './ShirtHangerLoader';
 interface WeatherAProps {
   city: String;
 }
@@ -132,7 +124,7 @@ const
           boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
         }}
       >
-        {/* כותרת */}
+      {/* Title */}
         <div
           style={{
             marginBottom: "16px",
@@ -152,7 +144,7 @@ const
           </h4>
         </div>
 
-        {/* טמפרטורה מרכזית */}
+      {/* Central temperature */}
         <div
           style={{
             textAlign: "center",

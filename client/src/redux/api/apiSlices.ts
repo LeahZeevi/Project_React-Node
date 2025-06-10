@@ -30,5 +30,4 @@ const getCookie=(name: string): string | null=> {
     }
     return null;
 }
-// Removed duplicate getCookie function declaration.
 

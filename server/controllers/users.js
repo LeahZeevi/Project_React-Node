@@ -15,11 +15,11 @@ exports.register = async (req, res) => {
         return res.status(400).json({ message: "one or more fields is not complete" })
     }
     
-    //lean(): המרה לקריאה בלבד מזרז את תהליך השאילתה
+
     const duplicate = await User.findOne({ userName: userName }).lean()
     if (duplicate) {
         return res.status(409).json({ message: "Dupliacated userName" })
-    }//אאולי כדאי להוסיף בדקיה סיסמא אם קיים כזה שם
+    }
     const hashPassword = await bcrypt.hash(password, 10)
     const userObject = { userName, city, email, password: hashPassword, myWardobe }    
     const user = await User.create(userObject)
@@ -70,14 +70,14 @@ exports.getUserById = async (req, res) => {
     }
 
 }
-
+//Getting all cities in Israel from a CSV file
 exports.getAllCities=async(req, res) => {
     
     const results = [];
-    const columnName = "cityName"; // שם העמודה שאתה רוצה לשלוף
-       await fs.createReadStream('./cities.csv') // קריאת הנתונים מהקובץ כזרם
-      .pipe(iconv.decodeStream('win1255')) // ממיר את הקובץ ל-UTF-8
-      .pipe(csv()) // העברת הנתונים דרך מנתח ה-CSV
+    const columnName = "cityName";// The name of the column you want to retrieve
+       await fs.createReadStream('./cities.csv') 
+      .pipe(iconv.decodeStream('win1255'))
+      .pipe(csv()) 
         .on('data', (data) => {
         if (data[columnName]) {
          
@@ -99,7 +99,7 @@ exports.getMyPIc = (req, res) => {
   const { image } = req.params;
   console.log('שם הקובץ המתקבל:', image);
 
-  const imagesDir = path.join("public", "uploadsPic"); // תיקיית uploadsPic ישירות בתוך public
+  const imagesDir = path.join("public", "uploadsPic"); 
   const imagePath = path.join(imagesDir, image);
   console.log('נתיב מלא לתמונה:', imagePath);
 

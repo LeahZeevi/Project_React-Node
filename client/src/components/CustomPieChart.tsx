@@ -1,4 +1,4 @@
-import { useState } from "react";
+
 import Item from "../interfaces/Items";
 import { Pie, PieChart, ResponsiveContainer, Tooltip, Legend, Cell } from "recharts";
 import { Card, CardHeader, CardContent, Box } from "@mui/material";
@@ -7,9 +7,7 @@ interface CustomPieChartProps {
   myWardrobe: Item[];
 }
 const CustomPieChart: React.FC<CustomPieChartProps> = ({ myWardrobe }) => {
-  console.log(myWardrobe);
   
-  const [tabValue, setTabValue] = useState(0)
 
   const seasonCountMap: Record<string, number> = {}
 

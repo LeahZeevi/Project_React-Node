@@ -24,6 +24,10 @@ exports.addWearning = async (req, res) => {
 
 
 
+//Returns all items that participated in the item's event:
+//Retrieves the events in which the current item participated from the history collection,
+//For each event from the events collection, retrieves all items that participated in that event from the items collection.
+
 exports.getEventWearByItemId = async (req, res) => {
     const { item_id } = req.params;
 
@@ -32,14 +36,14 @@ exports.getEventWearByItemId = async (req, res) => {
     }
 
     try {
-        // שולפים את כל ההיסטוריות שמכילות את הפריט לפי item_id, כולל populated אירועים
+       // Retrieve all histories containing the item by item_id, including populated events
         const histories = await History.find({ item_id }).populate('wornEvent');
         
         if (!histories || histories.length === 0) {
             return res.status(404).json({ message: "No histories found for this item" });
         }
 
-        // אוספים את כל הארועים מההיסטוריות
+       // Collect all events from the history
         const allEvents = [];
         for (const history of histories) {
             if (history.wornEvent && history.wornEvent.length > 0) {
@@ -47,14 +51,13 @@ exports.getEventWearByItemId = async (req, res) => {
             }
         }
       
-        // עכשיו אוספים את כל הפריטים מכל הארועים (הנחה: כל אירוע מכיל שדה items שהוא מערך מזהי פריטים)
+   // Now we collect all the items from all the events (assumption: each event contains an items field which is an array of item IDs)
         const itemsSet = new Set();
 
         for (const event of allEvents) {
             if (event.items && Array.isArray(event.items)) {
                 for (const id of event.items) {
-                    // מוסיפים את כל המזהים למערכת Set כדי למנוע כפילויות
-                    if (id.toString() !== item_id) { // לא מוסיפים את הפריט הנוכחי
+                    if (id.toString() !== item_id) {
                         itemsSet.add(id.toString());
                     }
                 }
@@ -63,7 +66,7 @@ exports.getEventWearByItemId = async (req, res) => {
 
         const uniqueItemIds = Array.from(itemsSet);
 
-        // שולפים את כל הפריטים לפי המזהים שנאספו
+        // Retrieve all items by the collected IDs
         const items = await Item.find({ _id: { $in: uniqueItemIds } });
 
         return res.status(200).json( items);
