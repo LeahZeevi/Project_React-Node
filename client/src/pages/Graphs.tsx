@@ -1,13 +1,6 @@
 import type React from "react"
 import { useEffect, useState } from "react"
-import {
-  Box,
-  Typography,
-  Paper,
-  Grid,
-  Tabs,
-  Tab,
-} from "@mui/material"
+import {Box,Typography,Paper,Grid,Tabs,Tab,} from "@mui/material"
 import "../css/Graphs.css"
 import { useDispatch, useSelector } from "react-redux"
 import { selectAllItems, setAllItems } from "../redux/slices/itemSlice"

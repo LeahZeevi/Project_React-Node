@@ -5,7 +5,7 @@ const looksSchema = new mongoose.Schema({
     itemsInlook: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'items', // שם המודל שיצרת עבור פריטי לבוש
+            ref: 'items',
             required: true
         }
     ], dateCreation: {

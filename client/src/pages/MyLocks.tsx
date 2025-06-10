@@ -1,63 +1,31 @@
+
 import { use, useEffect, useState } from "react"
-import {
-    Box,
-    Card,
-    Typography,
-    IconButton,
-    Button,
-    Fab,
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogActions,
-    TextField,
-    Chip,
-    Avatar,
-    Collapse,
-    Divider,
-    Tooltip,
-    Alert,
-} from "@mui/material"
-import {
-    Delete,
-    Add,
-    LocalLaundryService,
-    Style,
-    ExpandMore,
-    ExpandLess,
-    CheckCircle,
-    Wash,
-    Edit,
-    CheckBox,
-} from "@mui/icons-material"
+import {Box,Card,Typography,IconButton, Button,Dialog,DialogTitle,DialogContent,DialogActions,
+    TextField,Chip,Avatar,Collapse,Divider,Tooltip,Alert,} from "@mui/material"
+import {Delete,ExpandMore,ExpandLess,Edit,} from "@mui/icons-material"
 import { Looks } from "../interfaces/Looks"
 import Item from "../interfaces/Items"
 import { Users } from "../interfaces/Users"
 import { useDispatch, useSelector } from "react-redux"
 import { selectUser } from "../redux/slices/userSlice"
 import { useAddLookMutation, useDeleteLookMutation, useGetAllLooksQuery, useUpdateNameOfLookMutation } from "../redux/api/apiSllices/looksApiSlice"
-import { useUpdateItemInUseMutation, useUpdateItemInLaundryBasketMutation } from "../redux/api/apiSllices/itemsApiSlice"
-import { selectAllLooks, setAllLooks, updateAllItems } from "../redux/slices/itemSlice"
+import { selectAllLooks, setAllLooks, updateAllLooks } from "../redux/slices/itemSlice"
 
 
 
 const MyLooksPage = () => {
     const user: Users = useSelector(selectUser);
-    const looks = useSelector(selectAllLooks);
-     const [openDialog, setOpenDialog] = useState(false)
+    const looks:Looks[]= useSelector(selectAllLooks);
     const [openEditDialog, setOpenEditDialog] = useState(false)
     const [editLookId, setEditLookId] = useState<string | null>(null)
     const [editLookName, setEditLookName] = useState("")
     const [expandedLook, setExpandedLook] = useState<string | null>(null)
     const [message, setMessage] = useState("");
-    const [isdisabled, setDisabeld] = useState(false);
+    const [isError, setIsError] = useState(false);
     const [isAlert, setIsAlert] = useState(false);
     const dispatch = useDispatch();
     const [deleteLook] = useDeleteLookMutation();
-    const [addLook] = useAddLookMutation();
     const [updateLook] = useUpdateNameOfLookMutation()
-    const [updateItemInUse] = useUpdateItemInUseMutation();
-    const [updateItemInLaundryBasket] = useUpdateItemInLaundryBasketMutation();
     const { data, error, isLoading } = useGetAllLooksQuery(user._id, {
         skip: !user._id,
     });
@@ -66,7 +34,8 @@ const MyLooksPage = () => {
 
         try {
             await deleteLook(lookId).unwrap();
-
+            looks.filter(look=>look._id!==lookId)
+            dispatch(updateAllLooks(looks));
         } catch (err: any) {
             if (err.status === 404) {
                 setMessage(err.data.message)
@@ -77,30 +46,6 @@ const MyLooksPage = () => {
             setIsAlert(true)
         }
     }
-
-
-
-    const handleWearLook = async (look: Looks) => {
-        try {
-            console.log("look", look);
-
-            const UpdatedItems: Item[] = [];
-            const updatePromises = look.itemsInlook.map(async (item) => {
-                const newUpdatedItem: { inUseItems: Item[], updatedItem: Item } = await updateItemInUse({
-                    _id: item._id,
-                    inUse: true,
-                    userId: user._id,
-                }).unwrap();
-                UpdatedItems.push(newUpdatedItem.updatedItem);
-            });
-            await Promise.all(updatePromises);
-            console.log("updateiteminlook", UpdatedItems);
-
-            dispatch(updateAllItems(UpdatedItems));
-        } catch (err) {
-            console.error("שגיאה בלבישת הלוק:", err);
-        }
-    };
 
 
     const handleEditLook = (lookId: string) => {
@@ -140,11 +85,6 @@ const MyLooksPage = () => {
         setExpandedLook(expandedLook === lookId ? null : lookId)
     }
 
-    const getItemStatusColor = (item: Item) => {
-        if (item.inUse) return "#10b981"
-        if (item.inLaundryBasket) return "#f59e0b"
-        return "#e2e8f0"
-    }
 
     const getItemStatusText = (item: Item) => {
         if (item.inUse) return "בלבישה"
@@ -153,15 +93,13 @@ const MyLooksPage = () => {
     }
 
     useEffect(() => {
-        if (data) {
-            // setLooks(data);
-        }
+        
     }, [data]);
 
     const fetchWardrobe = async () => {
         if (looks.length === 0) {
             try {
-                const looks = data ? data : [];
+                const looks:Looks[] = data?.allLooks ? data.allLooks : [];
                 dispatch(setAllLooks(looks));
             } catch (err) {
                 console.error('שגיאה בקבלת פריטים:', err);
@@ -237,21 +175,6 @@ const MyLooksPage = () => {
                                 />
                             </Box>
                             <Box sx={{ display: "flex", gap: 0.5 }}>
-                                <Tooltip title="לבש את הלוק">
-                                    <IconButton
-                                        size="small"
-                                        onClick={() => handleWearLook(look)}
-                                        sx={{
-                                            color: "white",
-                                            background: "rgba(255,255,255,0.2)",
-                                            "&:hover": { background: "rgba(255,255,255,0.3)" },
-                                            width: 32,
-                                            height: 32,
-                                        }}
-                                    >
-                                        <CheckBox fontSize="small" />
-                                    </IconButton>
-                                </Tooltip>
                                 <Tooltip title="ערוך שם">
                                     <IconButton
                                         size="small"
@@ -358,29 +281,6 @@ const MyLooksPage = () => {
                                                     backgroundPosition: "center",
                                                 }}
                                             />
-                                            {(item.inUse || item.inLaundryBasket) && (
-                                                <Box
-                                                    sx={{
-                                                        position: "absolute",
-                                                        top: 4,
-                                                        right: 4,
-                                                        background: item.inUse ? "#10b981" : "#f59e0b",
-                                                        borderRadius: "50%",
-                                                        width: 20,
-                                                        height: 20,
-                                                        display: "flex",
-                                                        alignItems: "center",
-                                                        justifyContent: "center",
-                                                        boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
-                                                    }}
-                                                >
-                                                    {item.inUse ? (
-                                                        <CheckCircle sx={{ fontSize: 14, color: "white" }} />
-                                                    ) : (
-                                                        <Wash sx={{ fontSize: 14, color: "white" }} />
-                                                    )}
-                                                </Box>
-                                            )}
                                         </Box>
                                         <Box sx={{ p: 1.5, px: 2 }}>
                                             <Typography
@@ -399,7 +299,6 @@ const MyLooksPage = () => {
                                                 sx={{
                                                     color: "#64748b",
                                                     display: "block",
-                                                    mb: item.inUse && !item.inLaundryBasket ? 0.5 : 0,
                                                 }}
                                             >
                                                 {item.categoryName}
@@ -441,24 +340,6 @@ const MyLooksPage = () => {
                                         />
                                     ))}
                                 </Box>
-                                <Button
-                                    variant="contained"
-                                    startIcon={<CheckBox />}
-                                    onClick={() => handleWearLook(look)}
-                                    sx={{
-                                        background: "linear-gradient(135deg, rgb(187, 2, 156) 0%, rgb(101, 120, 227) 100%)",
-                                        color: "white",
-                                        "&:hover": {
-                                            background: "linear-gradient(135deg, rgb(167, 2, 136) 0%, rgb(81, 100, 207) 100%)",
-                                        },
-                                        borderRadius: "12px",
-                                        fontWeight: "600",
-                                        px: 3,
-                                        py: 1,
-                                    }}
-                                >
-                                    לבש את הלוק
-                                </Button>
                             </Box>
                         </Collapse>
                     </Card>

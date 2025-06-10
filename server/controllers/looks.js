@@ -33,7 +33,6 @@ exports.addLook = async (req, res) => {
 exports.getAllLooksByUserId = async (req, res) => {
     const user_id = req.params.user_id;
     console.log("userId", user_id);
-
     try {
         const looks = await Looks.find({ user_id: new mongoose.Types.ObjectId(user_id) });
 
@@ -67,7 +66,6 @@ exports.updateLookInClothing = async (req, res) => {
     }
 
     try {
-        // עדכון הלוק עצמו
         const updatedLook = await Looks.findByIdAndUpdate(
             _id,
             { inClothing },

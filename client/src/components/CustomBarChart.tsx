@@ -13,7 +13,7 @@ import Item from "../interfaces/Items";
 interface CustomBarChartProps {
   myWardrobe: Item[];
 }
-// רכיב גרף עמודות מותאם אישית
+
 const CustomBarChart: React.FC<CustomBarChartProps> = ({ myWardrobe }) => {
   const [chartType, setChartType] = useState<"vertical" | "horizontal">("vertical")
 
