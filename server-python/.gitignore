@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*.sqlite3
+*.log
+
+# Environment
+venv/
+env/
+ENV/
+dataSet/
+
+# Jupyter
+.ipynb_checkpoints
+
+# VSCode / PyCharm
+.vscode/
+.idea/
+
+# Data
+*.h5
+*.ckpt
+*.tflite
+*.npz
+*.pkl
+*.csv
+*.zip
+uploads/
+datasets/
+
+# Secrets
+*.env
